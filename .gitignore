@@ -1,0 +1,8 @@
+# Build intermediates (regenerate with the scripts in audio/ and video/)
+audio/build/
+video/build/
+video/node_modules/
+out/segments/
+out/frames/
+*.pyc
+__pycache__/

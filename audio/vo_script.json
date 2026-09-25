@@ -1,0 +1,191 @@
+{
+  "voice": "af_heart",
+  "speed": 1.0,
+  "comment": "text = what the narrator says (used for captions/docs). tts = spelling fed to the TTS for correct pronunciation. at = earliest start (s) relative to scene start. gap = minimum silence (s) after the previous line in the same scene. Scene 'min' = minimum scene duration; 'tail' = hold after the last line.",
+  "scenes": [
+    {
+      "id": "hook",
+      "tail": 0.9,
+      "min": 15.0,
+      "lines": [
+        {
+          "id": "h1",
+          "at": 1.3,
+          "text": "A creative brief."
+        },
+        {
+          "id": "h2",
+          "gap": 0.45,
+          "text": "A child's toy."
+        },
+        {
+          "id": "h3",
+          "gap": 0.45,
+          "text": "A camera feed."
+        },
+        {
+          "id": "h4",
+          "gap": 0.45,
+          "text": "A stack of evidence."
+        },
+        {
+          "id": "h5",
+          "gap": 1.0,
+          "text": "Not AI as a feature. AI as the product.",
+          "tts": "Not AI as a feature... AI as the product."
+        },
+        {
+          "id": "h6",
+          "gap": 1.0,
+          "text": "Eagerworks AI Studio turns AI capabilities into real products, workflows and measurable outcomes.",
+          "speed": 1.05
+        }
+      ],
+      "speed": 1.0
+    },
+    {
+      "id": "search",
+      "tail": 1.8,
+      "min": 21.0,
+      "lines": [
+        {
+          "id": "s1",
+          "at": 0.7,
+          "text": "A production team describes the location they need, in their own words."
+        },
+        {
+          "id": "s2",
+          "gap": 0.6,
+          "text": "AI parses every requirement, searches the catalog, evaluates each location against the brief, and returns a personalized shortlist."
+        },
+        {
+          "id": "s3",
+          "gap": 1.3,
+          "text": "Then the conversation keeps going, and every reply makes the results sharper."
+        }
+      ],
+      "speed": 1.07
+    },
+    {
+      "id": "story",
+      "tail": 1.6,
+      "min": 17.0,
+      "lines": [
+        {
+          "id": "t1",
+          "at": 0.5,
+          "text": "AI can also turn something physical into something personal."
+        },
+        {
+          "id": "t2",
+          "gap": 0.5,
+          "text": "A child places a few pieces on a board."
+        },
+        {
+          "id": "t3",
+          "gap": 0.6,
+          "text": "The system recognizes each one, reasons about how they connect, and writes a story that's entirely theirs."
+        },
+        {
+          "id": "t4",
+          "gap": 1.1,
+          "text": "We build it end to end, from the app to the story engine."
+        }
+      ],
+      "speed": 1.06
+    },
+    {
+      "id": "vision",
+      "tail": 2.0,
+      "min": 19.0,
+      "lines": [
+        {
+          "id": "v1",
+          "at": 0.4,
+          "text": "Some problems need more than an API call."
+        },
+        {
+          "id": "v2",
+          "gap": 0.5,
+          "text": "For robotics, we build the vision stack itself: hand and face detection, camera and wrist tracking, and custom datasets."
+        },
+        {
+          "id": "v3",
+          "gap": 0.7,
+          "text": "Then we train and benchmark every model, until the data is ready to teach a robot."
+        }
+      ],
+      "speed": 1.07
+    },
+    {
+      "id": "agri",
+      "tail": 1.6,
+      "min": 19.2,
+      "lines": [
+        {
+          "id": "a1",
+          "at": 0.5,
+          "text": "Computer vision turns a camera into a live source of operational data."
+        },
+        {
+          "id": "a2",
+          "gap": 0.55,
+          "text": "On a tractor, it detects, counts and measures every plant, and maps exactly where each one is."
+        },
+        {
+          "id": "a3",
+          "gap": 1.5,
+          "text": "On the packing line, every pumpkin gets its own ID the moment it appears, and keeps it until it's counted."
+        }
+      ],
+      "speed": 1.07
+    },
+    {
+      "id": "docs",
+      "tail": 1.4,
+      "min": 16.0,
+      "lines": [
+        {
+          "id": "d1",
+          "at": 0.5,
+          "text": "And when the work lives in documents, AI reads the evidence, maps it to frameworks like SOC 2 and ISO 27001, flags the gaps, and recommends what to fix.",
+          "tts": "And when the work lives in documents, AI reads the evidence, maps it to frameworks like sock two and ISO twenty-seven oh oh one, flags the gaps, and recommends what to fix."
+        },
+        {
+          "id": "d2",
+          "gap": 0.6,
+          "text": "So teams know where they stand, before the auditor does."
+        }
+      ],
+      "speed": 1.07
+    },
+    {
+      "id": "finale",
+      "tail": 2.9,
+      "min": 13.0,
+      "lines": [
+        {
+          "id": "f1",
+          "at": 0.6,
+          "text": "Different problems. One team that designs, builds and ships the whole system."
+        },
+        {
+          "id": "f2",
+          "gap": 1.3,
+          "text": "Eagerworks AI Studio."
+        },
+        {
+          "id": "f3",
+          "gap": 0.6,
+          "text": "From AI ideas to real-world products."
+        },
+        {
+          "id": "f4",
+          "gap": 1.0,
+          "text": "Let's build what's next."
+        }
+      ],
+      "speed": 1.0
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "name": "eagerworks-ai-studio-film",
+  "private": true,
+  "type": "module",
+  "description": "Deterministic motion-graphics renderer for the Eagerworks AI Studio promo film.",
+  "scripts": {
+    "stills": "node render.mjs --stills",
+    "render": "node render.mjs --video"
+  },
+  "dependencies": {
+    "playwright": "1.56.1"
+  }
+}
