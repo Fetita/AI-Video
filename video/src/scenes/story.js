@@ -2,19 +2,20 @@
 // Pieces on a board → recognition → reasoning → an illustrated story → end-to-end system.
 import { addScene, h, svg, put, prog, E, clamp, lerp, env, makeCanvas, rng, rgba, C, keys, makeNoise, rrect } from '../engine.js';
 import { makeHud, words, revealWords, tag, reticle, brackets, placeCaret, FONT_MONO } from '../lib/ui.js';
-import { piece, storyIllustration } from '../lib/story-art.js';
+import { piece, storyIllustration, PIECE_KINDS } from '../lib/story-art.js';
 
 // board-space layout (origin = board center)
 const SLOTS = [
-  { kind: 'fox', x: -470, y: -30, label: 'CHARACTER · FOX' },
-  { kind: 'lantern', x: -150, y: 70, label: 'OBJECT · LANTERN' },
-  { kind: 'moon', x: 170, y: -70, label: 'OBJECT · MOON' },
-  { kind: 'forest', x: 480, y: 40, label: 'PLACE · FOREST' },
+  { kind: 'sloth', x: -470, y: -30, label: 'CHARACTER · SLOTH' },
+  { kind: 'scout', x: -150, y: 70, label: 'CHARACTER · SCOUT' },
+  { kind: 'wizard', x: 170, y: -70, label: 'CHARACTER · WIZARD' },
+  { kind: 'samurai', x: 480, y: 40, label: 'CHARACTER · SAMURAI' },
 ];
-const EDGES = [[0, 1, 'finds', -120], [0, 2, 'wants to reach', -300], [1, 3, 'lights the way', 230], [2, 3, 'rises over', -110]];
+const EDGES = [[0, 1, 'guides', -120], [0, 2, 'befriends', -300], [1, 3, 'races', 230], [2, 3, 'travels with', -110]];
 const BW = 1560, BH = 880, PD = 230; // board size, piece diameter
-const STORY_TITLE = 'Pip and the Lantern Moon';
-const STORY_TEXT = 'Pip the fox found a lantern that only glowed for the brave. So one quiet night, Pip carried it up the tallest hill, to ask the moon for a little more light.';
+const STORY_TITLE = 'The Slowest Guide in the Woods';
+const STORY_TEXT = 'Pip, Wren and Kai were racing to find the hidden temple. Then a sleepy sloth named Mo smiled, stretched, and showed them the way: one slow, happy step at a time.';
+const ILLUS_ORDER = ['sky', 'sun', 'hills', 'trees', 'path', 'heroes', 'sloth', 'sparkles'];
 
 function drawBoard() {
   const { c, ctx: g } = makeCanvas(null, BW, BH, '');
@@ -82,8 +83,7 @@ addScene({
 
     this.pieces = SLOTS.map((s) => {
       const shadow = h('div', { class: 'abs', style: { left: '0', top: '0', width: `${PD}px`, height: `${PD}px`, borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,0,0,0.55) 40%, rgba(0,0,0,0) 70%)', transformOrigin: '50% 50%' } });
-      const el = h('div', { class: 'abs', style: { left: '0', top: '0', width: `${PD}px`, height: `${PD}px`, transformOrigin: '50% 50%' }, html: piece(s.kind, `p${s.kind}`) });
-      el.firstChild.style.cssText = 'width:100%;height:100%;display:block';
+      const el = h('div', { class: 'abs', style: { left: '0', top: '0', width: `${PD}px`, height: `${PD}px`, transformOrigin: '50% 50%' } }, piece(s.kind, `p${s.kind}`));
       R.append(shadow, el);
       return { ...s, el, shadow };
     });
@@ -100,12 +100,11 @@ addScene({
     const pageBase = 'position:absolute;top:0;width:650px;height:740px;overflow:hidden;';
     const left = h('div', { style: { cssText: `${pageBase}left:0;border-radius:14px 4px 4px 14px;background:linear-gradient(90deg,#efe5d2 0%,#f4ecdc 70%,#d9ccb3 100%)` } });
     const right = h('div', { style: { cssText: `${pageBase}left:650px;border-radius:4px 14px 14px 4px;background:linear-gradient(90deg,#d6c9b0 0%,#f2e9d8 12%,#f5eee0 100%)` } });
-    this.illus = svg('svg', { viewBox: '0 0 600 640', width: 582, height: 672, style: 'position:absolute;left:34px;top:34px;border-radius:8px' });
-    this.illus.innerHTML = `<defs>${art.defs}</defs>` + ['sky', 'stars', 'moon', 'hills', 'trees', 'lantern', 'fox', 'fireflies'].map((k) => `<g class="L-${k}">${art.layers[k]}</g>`).join('');
-    this.layers = Object.fromEntries(['sky', 'stars', 'moon', 'hills', 'trees', 'lantern', 'fox', 'fireflies'].map((k) => [k, this.illus.querySelector(`.L-${k}`)]));
-    this.starEls = [...this.illus.querySelectorAll('.star')];
-    this.flyEls = [...this.illus.querySelectorAll('.fly')];
-    this.lglow = this.illus.querySelector('.lglow');
+    this.illus = art.el;
+    this.illus.style.left = '34px'; this.illus.style.top = '34px';
+    this.layers = art.layers;
+    this.sparkEls = art.sparkEls;
+    this.sunGlow = art.sunGlow;
     left.append(this.illus);
     this.genNoise = h('div', { style: { position: 'absolute', left: '34px', top: '34px', width: '582px', height: '672px', borderRadius: '8px', background: 'repeating-radial-gradient(circle at 30% 40%, rgba(255,255,255,0.08) 0 2px, rgba(0,0,0,0.12) 2px 5px)', mixBlendMode: 'overlay' } });
     left.append(this.genNoise);
@@ -113,7 +112,7 @@ addScene({
     this.titleSpans = words(this.title, STORY_TITLE);
     this.body = h('div', { style: { position: 'absolute', left: '84px', top: '260px', right: '76px', fontFamily: 'var(--font-story)', fontSize: '29px', lineHeight: '1.55', fontWeight: 400, color: '#3b3440', fontVariationSettings: '"SOFT" 50' } });
     this.bodySpans = words(this.body, STORY_TEXT);
-    this.caret = h('span', { style: { position: 'absolute', display: 'block', width: '3px', height: '32px', background: '#8fb31f', borderRadius: '2px' } });
+    this.caret = h('span', { style: { position: 'absolute', display: 'block', width: '3px', height: '32px', background: '#8234fe', borderRadius: '2px' } });
     this.body.append(this.caret);
     const pno = h('div', { style: { position: 'absolute', bottom: '40px', right: '64px', fontFamily: 'var(--font-story)', fontSize: '20px', color: '#9a8f80', fontStyle: 'italic' } }, '1');
     const orn = h('div', { style: { position: 'absolute', left: '84px', top: '222px', width: '60px', height: '2px', background: '#c9a86a' } });
@@ -138,7 +137,7 @@ addScene({
     this.nodes = [node('Board & pieces', 'Physical input'), node('Companion app', 'Configure the experience'), node('Story engine', 'AI architecture'), node('Illustrated story', 'Personal output')];
     // node visuals
     const mini = h('div', { style: { position: 'absolute', left: '40px', top: '40px', width: '250px', height: '120px', borderRadius: '14px', background: 'linear-gradient(135deg,#6b4529,#43291a)' } });
-    ['fox', 'lantern', 'moon', 'forest'].forEach((k, i) => { const p = h('div', { style: { position: 'absolute', left: `${14 + i * 58}px`, top: `${i % 2 ? 50 : 22}px`, width: '50px', height: '50px' }, html: piece(k, `m${k}`) }); p.firstChild.style.cssText = 'width:100%;height:100%'; mini.append(p); });
+    PIECE_KINDS.forEach((k, i) => mini.append(h('div', { style: { position: 'absolute', left: `${14 + i * 58}px`, top: `${i % 2 ? 50 : 22}px`, width: '50px', height: '50px' } }, piece(k, `m${k}`))));
     this.nodes[0].vis.append(mini);
     const phone = h('div', { style: { position: 'absolute', left: '95px', top: '18px', width: '140px', height: '230px', borderRadius: '24px', border: '2px solid #2d323a', background: '#0c0e12', padding: '26px 12px' } });
     const row = (k, v, on) => h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '26px', borderBottom: '1px solid rgba(255,255,255,0.06)', fontSize: '9.5px', color: '#b9bec6' } }, h('span', {}, k),
@@ -147,13 +146,12 @@ addScene({
     this.nodes[1].vis.append(phone);
     const eng = h('div', { style: { position: 'absolute', left: '34px', top: '30px', right: '34px', display: 'flex', flexDirection: 'column', gap: '9px' } });
     this.engRows = ['Piece recognition', 'Story planning', 'Text generation', 'Illustration', 'Content guardrails'].map((k) => {
-      const r = h('div', { style: { height: '20px', borderRadius: '6px', border: '1px solid rgba(212,255,90,0.3)', background: 'rgba(212,255,90,0.06)', fontFamily: 'var(--font-mono)', fontSize: '10.5px', letterSpacing: '0.1em', textTransform: 'uppercase', color: '#dff5a8', display: 'flex', alignItems: 'center', padding: '0 10px' } }, k);
+      const r = h('div', { style: { height: '20px', borderRadius: '6px', border: '1px solid rgba(130,52,254,0.3)', background: 'rgba(130,52,254,0.06)', fontFamily: 'var(--font-mono)', fontSize: '10.5px', letterSpacing: '0.1em', textTransform: 'uppercase', color: '#ddd0ff', display: 'flex', alignItems: 'center', padding: '0 10px' } }, k);
       eng.append(r); return r;
     });
     this.nodes[2].vis.append(eng);
     this.miniBook = h('div', { style: { position: 'absolute', left: '60px', top: '40px', width: '210px', height: '120px' } });
-    const mb = svg('svg', { viewBox: '0 0 600 640', width: 100, height: 112, style: 'position:absolute;left:6px;top:4px;border-radius:4px' });
-    mb.innerHTML = `<defs>${storyIllustration('mb').defs}</defs>` + ['sky', 'stars', 'moon', 'hills', 'trees', 'lantern', 'fox'].map((k) => storyIllustration('mb').layers[k]).join('');
+    const mb = h('div', { style: { position: 'absolute', left: '6px', top: '4px', width: '582px', height: '672px', transformOrigin: '0 0', transform: `scale(${(100 / 582).toFixed(4)})` } }, storyIllustration('mb').el);
     this.miniBook.append(h('div', { style: { position: 'absolute', inset: '0', borderRadius: '6px', background: '#f4ecdc' } }), mb,
       h('div', { style: { position: 'absolute', left: '118px', top: '14px', right: '10px', display: 'flex', flexDirection: 'column', gap: '7px' } },
         ...[0, 1, 2, 3, 4, 5].map((i) => h('i', { style: { display: 'block', height: i === 0 ? '8px' : '4px', width: i === 0 ? '70%' : `${[0, 95, 88, 92, 70, 50][i]}%`, background: i === 0 ? '#2c2433' : '#9a8f80', borderRadius: '2px' } }))));
@@ -162,7 +160,7 @@ addScene({
     this.sys.append(this.sysKicker);
     this.sysLinks = svg('svg', { width: 1920, height: 1080, style: 'position:absolute;left:0;top:0' });
     this.sys.prepend(this.sysLinks);
-    this.linkEls = [0, 1, 2].map(() => { const p = svg('path', { stroke: 'rgba(212,255,90,0.5)', 'stroke-width': 1.5, fill: 'none', 'stroke-dasharray': '4 6' }); this.sysLinks.append(p); return p; });
+    this.linkEls = [0, 1, 2].map(() => { const p = svg('path', { stroke: 'rgba(130,52,254,0.5)', 'stroke-width': 1.5, fill: 'none', 'stroke-dasharray': '4 6' }); this.sysLinks.append(p); return p; });
     this.pulseEls = [0, 1, 2].map(() => { const c = svg('circle', { r: 4, fill: C.accent }); this.sysLinks.append(c); return c; });
     R.append(this.sys);
   },
@@ -175,10 +173,10 @@ addScene({
     g.clearRect(0, 0, 1920, 1080);
 
     // ---------- camera over the board
-    const fox = SLOTS[0];
+    const hero = SLOTS[0];
     const zoom = keys(t, [[0, 1.75], [3.4, 1.85], [4.6, 0.92, E.inOutCubic], [cRec, 0.95], [cGen, 1.0]]);
-    const cx = keys(t, [[0, fox.x], [3.4, fox.x], [4.6, 0, E.inOutCubic]]);
-    const cy = keys(t, [[0, fox.y], [3.4, fox.y], [4.6, 10, E.inOutCubic]]);
+    const cx = keys(t, [[0, hero.x], [3.4, hero.x], [4.6, 0, E.inOutCubic]]);
+    const cy = keys(t, [[0, hero.y], [3.4, hero.y], [4.6, 10, E.inOutCubic]]);
     const toBook = prog(t, cGen - 0.25, 0.9, E.inOutCubic);
     const W2 = (x, y) => ({ x: (x - cx) * zoom + 960, y: (y - cy) * zoom + 540 - toBook * 120 });
     const b0 = W2(-BW / 2, -BH / 2);
@@ -188,7 +186,7 @@ addScene({
     put(this.table, { x: tb.x, y: tb.y, s: zoom, o: boardO });
     this.warm.style.opacity = (0.6 + 0.4 * prog(t, 0, 2)).toFixed(3);
 
-    // ---------- pieces: fox is present from the start (hero), others drop in on "places a few pieces"
+    // ---------- pieces: the sloth is present from the start (hero), others drop in on "places a few pieces"
     const drops = [0.15, cPlace + 0.35, cPlace + 0.85, cPlace + 1.35];
     this.pieces.forEach((p, i) => {
       const d = clamp((t - drops[i]) / 0.55);
@@ -203,7 +201,7 @@ addScene({
       p.screen = P; p.r = (PD / 2) * zoom;
     });
 
-    // hero glow + sparks rising from the fox ("physical → personal")
+    // hero glow + sparks rising from the sloth ("physical → personal")
     const sparkA = env(t, 2.0, cPlace + 0.2, 0.6, 0.8);
     if (sparkA > 0) {
       const P = this.pieces[0].screen;
@@ -271,7 +269,7 @@ addScene({
         g.beginPath(); g.arc(head.x, head.y, 4, 0, Math.PI * 2); g.fill();
         if (q > 0.6) {
           const L = bez(0.5);
-          tag(g, L.x, L.y, label, { a: reA * clamp((q - 0.6) / 0.3), bg: '#0d0f12', fg: C.accent, stroke: rgba(C.accent, 0.6), size: 14, anchor: 'c', font: FONT_MONO, weight: 500, pad: 9 });
+          tag(g, L.x, L.y, label, { a: reA * clamp((q - 0.6) / 0.3), bg: '#0d0f12', fg: C.accentText, stroke: rgba(C.accent, 0.6), size: 14, anchor: 'c', font: FONT_MONO, weight: 500, pad: 9 });
         }
       });
       g.restore();
@@ -291,17 +289,16 @@ addScene({
       const gen = prog(t, cGen + 0.15, 1.8, E.outCubic);
       this.illus.style.filter = gen < 0.999 ? `blur(${((1 - gen) * 16).toFixed(2)}px) saturate(${(0.4 + 0.6 * gen).toFixed(2)})` : 'none';
       this.genNoise.style.opacity = (1 - gen).toFixed(3);
-      const order = ['sky', 'stars', 'moon', 'hills', 'trees', 'lantern', 'fox', 'fireflies'];
-      order.forEach((k, i) => { const q = prog(t, cGen + 0.1 + i * 0.12, 0.6, E.outCubic); this.layers[k].style.opacity = q.toFixed(3); this.layers[k].setAttribute('transform', `translate(0 ${((1 - q) * 18).toFixed(1)})`); });
-      this.layers.moon.setAttribute('transform', `translate(0 ${lerp(40, 0, prog(t, cGen, 3, E.outCubic)).toFixed(1)})`);
-      this.starEls.forEach((s, i) => s.setAttribute('opacity', (0.35 + 0.65 * (0.5 + 0.5 * Math.sin(t * 2.2 + i * 1.7))).toFixed(3)));
-      this.flyEls.forEach((f, i) => {
+      ILLUS_ORDER.forEach((k, i) => { const q = prog(t, cGen + 0.1 + i * 0.12, 0.6, E.outCubic); this.layers[k].style.opacity = q.toFixed(3); this.layers[k].style.transform = `translateY(${((1 - q) * 18).toFixed(1)}px)`; });
+      this.layers.sun.style.transform = `translateY(${lerp(40, 0, prog(t, cGen, 3, E.outCubic)).toFixed(1)}px)`;
+      this.layers.sloth.style.transform = `translate(${lerp(30, 0, prog(t, cGen + 0.9, 2.6, E.outCubic)).toFixed(1)}px, ${((1 - prog(t, cGen + 0.94, 0.6, E.outCubic)) * 18).toFixed(1)}px)`;
+      this.sparkEls.forEach((f, i) => {
         const a = t * (0.35 + (i % 5) * 0.07) + i;
         f.setAttribute('cx', (300 + Math.sin(a * 1.3 + i) * 220).toFixed(1));
-        f.setAttribute('cy', (420 + Math.cos(a * 0.9 + i * 2) * 120).toFixed(1));
+        f.setAttribute('cy', (360 + Math.cos(a * 0.9 + i * 2) * 140).toFixed(1));
         f.setAttribute('opacity', (0.4 + 0.6 * (0.5 + 0.5 * Math.sin(t * 5 + i))).toFixed(3));
       });
-      this.lglow.setAttribute('opacity', (0.85 + 0.15 * Math.sin(t * 6)).toFixed(3));
+      this.sunGlow.setAttribute('opacity', (0.85 + 0.15 * Math.sin(t * 1.6)).toFixed(3));
       revealWords(this.titleSpans, prog(t, cGen + 0.25, 0.6, E.linear), { rise: 6, soft: 1.5 });
       const txtP = prog(t, cGen + 0.8, cSys - cGen - 1.0, E.linear);
       revealWords(this.bodySpans, txtP, { rise: 4, soft: 2, blur: 3 });

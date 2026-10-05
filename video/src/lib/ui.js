@@ -38,7 +38,7 @@ export function makeHud(ctx, { num, title, steps = [], stepY = 58 }) {
       p.label.style.color = on > 0 ? `rgba(${lerp(108, 243, active)|0},${lerp(113, 243, active)|0},${lerp(121, 239, active)|0},1)` : '';
       p.dot.style.background = on > 0 ? rgba(C.accent, on) : 'transparent';
       p.dot.style.borderColor = on > 0 ? C.accent : '';
-      p.dot.style.boxShadow = active > 0.5 && !done ? `0 0 0 ${(4 * active).toFixed(1)}px rgba(212,255,90,${(0.18 * active).toFixed(3)})` : 'none';
+      p.dot.style.boxShadow = active > 0.5 && !done ? `0 0 0 ${(4 * active).toFixed(1)}px rgba(130,52,254,${(0.18 * active).toFixed(3)})` : 'none';
       if (p.link) p.link.firstChild.style.width = `${(E.inOutCubic(on) * 100).toFixed(1)}%`;
     });
   };
@@ -105,7 +105,7 @@ export const typed = (text, p) => text.slice(0, Math.round(clamp(p) * text.lengt
 
 // ------------------------------------------------------------------ canvas overlays
 export const FONT_MONO = '"JetBrains Mono", monospace';
-export const FONT_UI = 'Inter, sans-serif';
+export const FONT_UI = 'Manrope, sans-serif';
 
 /** Detection box in the film's style: hairline + bright corners + faint fill. */
 export function box(g, x, y, w, hh, { color = C.accent, a = 1, lw = 1.5, corner = 0.22, fill = 0.06, dash = null, glow = 0 } = {}) {
@@ -132,7 +132,7 @@ export function box(g, x, y, w, hh, { color = C.accent, a = 1, lw = 1.5, corner 
 }
 
 /** Small label tag. anchor: 'tl' puts the tag above the point's left. */
-export function tag(g, x, y, text, { bg = C.accent, fg = '#0a0c0e', size = 12, a = 1, pad = 6, hgt = null, font = FONT_MONO, weight = 600, anchor = 'bl', r = 3, stroke = null } = {}) {
+export function tag(g, x, y, text, { bg = C.accent, fg = '#ffffff', size = 12, a = 1, pad = 6, hgt = null, font = FONT_MONO, weight = 600, anchor = 'bl', r = 3, stroke = null } = {}) {
   if (a <= 0.001) return;
   g.save();
   g.globalAlpha = a;

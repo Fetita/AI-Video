@@ -193,7 +193,7 @@ export function rgba(hex, a = 1) {
 }
 export const C = {
   bg: '#07080a', panel: '#0f1115', text: '#f3f3ef', text2: '#a8acb3', text3: '#6c7179',
-  accent: '#d4ff5a', coral: '#ff6b57', amber: '#ffc45c', sky: '#7cc6ff', violet: '#a78dff', paper: '#f5efe3',
+  accent: '#8234fe', accent2: '#6686f6', accentText: '#b89cff', coral: '#ff6b57', amber: '#ffc45c', sky: '#3ed6b8', violet: '#ff8fc8', paper: '#f5efe3',
 };
 
 // ---------------------------------------------------------------- scene runtime

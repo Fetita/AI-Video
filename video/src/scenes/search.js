@@ -2,7 +2,7 @@
 // Brief → parse → search → evaluate → recommend → refine (conversation).
 import { addScene, h, svg, put, prog, E, clamp, lerp, env, makeCanvas, rng, rgba, C, hash, rrect } from '../engine.js';
 import { makeHud, words, revealWords, pop, placeCaret } from '../lib/ui.js';
-import { PLACES, thumb } from '../lib/places.js';
+import { photo, preloadCatalog, thumb } from '../lib/places.js';
 
 const BRIEF = [
   ["We're looking for a "], ['sunlit', 1], [' '], ['industrial loft', 0], [' with '], ['exposed brick', 2], [' and '], ['tall windows', 3],
@@ -61,7 +61,7 @@ const ctx0 = addScene({
         this.briefText.append(holder);
         this.wordSpans.push(...words(holder, text));
       } else {
-        const ph = h('span', { class: 'hl', style: { backgroundImage: 'linear-gradient(rgba(212,255,90,0.16), rgba(212,255,90,0.16))', backgroundRepeat: 'no-repeat', backgroundSize: '0% 100%', borderRadius: '4px', boxShadow: 'inset 0 -2px 0 rgba(212,255,90,0)', padding: '0 2px', margin: '0 -2px' } });
+        const ph = h('span', { class: 'hl', style: { backgroundImage: 'linear-gradient(rgba(130,52,254,0.16), rgba(130,52,254,0.16))', backgroundRepeat: 'no-repeat', backgroundSize: '0% 100%', borderRadius: '4px', boxShadow: 'inset 0 -2px 0 rgba(130,52,254,0)', padding: '0 2px', margin: '0 -2px' } });
         this.briefText.append(ph);
         this.wordSpans.push(...words(ph, text));
         this.phrases[key] = ph;
@@ -94,7 +94,7 @@ const ctx0 = addScene({
     this.flyLayer = h('div', { class: 'layer', style: { zIndex: 40 } });
     this.flyers = [];
     this.reqRows.forEach((r, i) => r.chips.forEach((c, j) => {
-      const f = h('span', { class: 'chip ai', style: { position: 'absolute', left: '0', top: '0', transformOrigin: '0 0', boxShadow: '0 10px 30px rgba(0,0,0,0.5), 0 0 18px rgba(212,255,90,0.25)' } }, c.textContent);
+      const f = h('span', { class: 'chip ai', style: { position: 'absolute', left: '0', top: '0', transformOrigin: '0 0', boxShadow: '0 10px 30px rgba(0,0,0,0.5), 0 0 18px rgba(130,52,254,0.25)' } }, c.textContent);
       this.flyLayer.append(f);
       this.flyers.push({ f, row: i, chip: c, src: r.src, k: j });
     }));
@@ -104,16 +104,21 @@ const ctx0 = addScene({
     this.catWrap = h('div', { class: 'abs', style: { left: '0', top: '0', width: '1920px', height: '1080px', perspective: '1500px', perspectiveOrigin: '50% 30%', maskImage: 'linear-gradient(180deg, transparent 30%, #000 44%, #000 80%, transparent 93%)', webkitMaskImage: 'linear-gradient(180deg, transparent 30%, #000 44%, #000 80%, transparent 93%)' } });
     const COLS = 22, ROWS = 14, TW = 76, TH = 50, GAP = 10;
     this.cat = { COLS, ROWS, TW, TH, GAP, W: COLS * (TW + GAP) - GAP, H: ROWS * (TH + GAP) - GAP };
-    const base = makeCanvas(null, this.cat.W, this.cat.H);
-    const r = rng(42);
-    for (let j = 0; j < ROWS; j++) for (let i = 0; i < COLS; i++) {
-      const x = i * (TW + GAP), y = j * (TH + GAP);
-      base.ctx.save();
-      rrect(base.ctx, x, y, TW, TH, 5); base.ctx.clip();
-      thumb(base.ctx, x, y, TW, TH, r);
-      base.ctx.restore();
-    }
-    this.catBase = base.c;
+    // the wall is painted on first render, once every catalog photo has decoded
+    this.catImgs = preloadCatalog(R);
+    this.catBase = makeCanvas(null, this.cat.W, this.cat.H).c;
+    this.paintCatalog = () => {
+      const g2 = this.catBase.getContext('2d');
+      const r = rng(42);
+      for (let j = 0; j < ROWS; j++) for (let i = 0; i < COLS; i++) {
+        const x = i * (TW + GAP), y = j * (TH + GAP);
+        g2.save();
+        rrect(g2, x, y, TW, TH, 5); g2.clip();
+        thumb(g2, this.catImgs, x, y, TW, TH, r);
+        g2.restore();
+      }
+      this.paintCatalog = null;
+    };
     const vis = makeCanvas(this.catWrap, this.cat.W, this.cat.H, '');
     vis.c.style.position = 'absolute';
     vis.c.style.left = `${(1920 - this.cat.W) / 2}px`;
@@ -133,11 +138,10 @@ const ctx0 = addScene({
 
     // ---------------- candidate cards
     this.cands = CANDS.map((c, i) => {
-      const art = h('div', { style: { width: '100%', height: '156px', overflow: 'hidden' }, html: PLACES[c.art](`c${i}`) });
-      art.firstChild.style.width = '100%'; art.firstChild.style.height = '100%'; art.firstChild.style.display = 'block';
+      const art = h('div', { style: { width: '100%', height: '156px', overflow: 'hidden', position: 'relative' } }, photo(c.art));
       const dots = c.checks.map(() => h('span', { style: { width: '22px', height: '22px', borderRadius: '6px', border: '1px solid var(--line2)', display: 'grid', placeItems: 'center', fontSize: '12px', fontWeight: 700, fontFamily: 'var(--font-mono)' } }, ''));
       const badge = h('span', { class: 'badge neutral', style: { position: 'absolute', right: '12px', top: '12px', backdropFilter: 'none', boxShadow: '0 0 0 1px rgba(255,255,255,0.08), 0 6px 18px rgba(0,0,0,0.45)' } }, '');
-      const scan = h('div', { style: { position: 'absolute', left: '0', top: '0', width: '2px', height: '100%', background: 'linear-gradient(180deg, transparent, var(--accent), transparent)', boxShadow: '0 0 18px rgba(212,255,90,0.6)' } });
+      const scan = h('div', { style: { position: 'absolute', left: '0', top: '0', width: '2px', height: '100%', background: 'linear-gradient(180deg, transparent, var(--accent), transparent)', boxShadow: '0 0 18px rgba(130,52,254,0.6)' } });
       const card = h('div', { class: 'panel', style: { left: '0', top: '0', width: '252px', transformOrigin: '50% 50%' } },
         art,
         h('div', { style: { padding: '14px 16px 16px' } },
@@ -150,9 +154,8 @@ const ctx0 = addScene({
 
     // ---------------- shortlist cards (large)
     const bigCard = (c, id) => {
-      const art = h('div', { style: { width: '100%', height: '250px', overflow: 'hidden', position: 'relative' }, html: PLACES[c.art](id) });
-      art.firstChild.style.cssText = 'width:100%;height:100%;display:block';
-      const rank = h('span', { class: 'mono', style: { color: 'var(--accent)', fontSize: '14px', letterSpacing: '0.14em' } }, '01');
+      const art = h('div', { style: { width: '100%', height: '250px', overflow: 'hidden', position: 'relative' } }, photo(c.art));
+      const rank = h('span', { class: 'mono', style: { color: 'var(--accent-text)', fontSize: '14px', letterSpacing: '0.14em' } }, '01');
       const upd = h('span', { class: 'badge ok', style: { position: 'absolute', left: '16px', top: '16px', opacity: 0 } }, 'New match');
       art.append(upd);
       const tags = h('div', { style: { display: 'flex', gap: '8px', margin: '14px 0 16px' } });
@@ -162,7 +165,7 @@ const ctx0 = addScene({
           h('div', { style: { display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' } }, rank, h('span', { class: 'kicker' }, c.meta)),
           h('div', { style: { fontSize: '25px', fontWeight: 600, letterSpacing: '-0.01em' } }, c.name),
           tags,
-          h('div', { style: { fontSize: '15.5px', lineHeight: 1.5, color: 'var(--text2)' } }, h('span', { style: { color: 'var(--accent)', fontFamily: 'var(--font-mono)', fontSize: '11.5px', letterSpacing: '0.14em', marginRight: '8px' } }, 'WHY IT FITS'), c.why)));
+          h('div', { style: { fontSize: '15.5px', lineHeight: 1.5, color: 'var(--text2)' } }, h('span', { style: { color: 'var(--accent-text)', fontFamily: 'var(--font-mono)', fontSize: '11.5px', letterSpacing: '0.14em', marginRight: '8px' } }, 'WHY IT FITS'), c.why)));
       R.append(card);
       return { card, rank, tags, upd };
     };
@@ -179,15 +182,15 @@ const ctx0 = addScene({
     // ---------------- chat panel
     this.chat = h('div', { class: 'panel', style: { left: '1300px', top: '262px', width: '500px', height: '500px' } });
     this.chat.append(h('div', { class: 'panel-head' },
-      h('span', { style: { width: '10px', height: '10px', borderRadius: '50%', background: 'var(--accent)', boxShadow: '0 0 12px rgba(212,255,90,0.7)' } }),
+      h('span', { style: { width: '10px', height: '10px', borderRadius: '50%', background: 'var(--accent)', boxShadow: '0 0 12px rgba(130,52,254,0.7)' } }),
       h('span', { class: 'title' }, 'Scouting assistant'), h('span', { class: 'spacer' }), h('span', { class: 'kicker' }, 'Live')));
     const bubble = (who, text) => h('div', {
       style: who === 'me'
         ? { alignSelf: 'flex-end', maxWidth: '360px', background: 'var(--panel3)', border: '1px solid var(--line2)', borderRadius: '18px 18px 4px 18px', padding: '14px 18px', fontSize: '18px', lineHeight: 1.45 }
-        : { alignSelf: 'flex-start', maxWidth: '380px', background: 'rgba(212,255,90,0.07)', border: '1px solid rgba(212,255,90,0.35)', borderRadius: '18px 18px 18px 4px', padding: '14px 18px', fontSize: '18px', lineHeight: 1.45, color: '#f1ffd0' },
+        : { alignSelf: 'flex-start', maxWidth: '380px', background: 'rgba(130,52,254,0.07)', border: '1px solid rgba(130,52,254,0.35)', borderRadius: '18px 18px 18px 4px', padding: '14px 18px', fontSize: '18px', lineHeight: 1.45, color: '#efe8ff' },
     }, text);
     this.bUser = bubble('me', 'Love the second one. Anything similar with a rooftop?');
-    this.bTyping = h('div', { style: { alignSelf: 'flex-start', display: 'flex', gap: '6px', padding: '16px 18px', borderRadius: '18px', background: 'rgba(212,255,90,0.07)', border: '1px solid rgba(212,255,90,0.3)' } },
+    this.bTyping = h('div', { style: { alignSelf: 'flex-start', display: 'flex', gap: '6px', padding: '16px 18px', borderRadius: '18px', background: 'rgba(130,52,254,0.07)', border: '1px solid rgba(130,52,254,0.3)' } },
       h('i', { style: { width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent)', display: 'block' } }),
       h('i', { style: { width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent)', display: 'block' } }),
       h('i', { style: { width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent)', display: 'block' } }));
@@ -199,7 +202,7 @@ const ctx0 = addScene({
     R.append(this.chat);
 
     // outro dot (hands off to the story scene's recognition ring)
-    this.dot = h('div', { class: 'abs', style: { left: '0', top: '0', width: '28px', height: '28px', marginLeft: '-14px', marginTop: '-14px', borderRadius: '50%', background: 'var(--accent)', boxShadow: '0 0 30px rgba(212,255,90,0.8)' } });
+    this.dot = h('div', { class: 'abs', style: { left: '0', top: '0', width: '28px', height: '28px', marginLeft: '-14px', marginTop: '-14px', borderRadius: '50%', background: 'var(--accent)', boxShadow: '0 0 30px rgba(130,52,254,0.8)' } });
     R.append(this.dot);
   },
 
@@ -227,7 +230,7 @@ const ctx0 = addScene({
       const p = prog(t, cP + 0.05 + i * 0.16, 0.4, E.outCubic);
       const ph = this.phrases[k];
       ph.style.backgroundSize = `${(p * 100).toFixed(1)}% 100%`;
-      ph.style.boxShadow = `inset 0 -2px 0 rgba(212,255,90,${(0.9 * p).toFixed(3)})`;
+      ph.style.boxShadow = `inset 0 -2px 0 rgba(130,52,254,${(0.9 * p).toFixed(3)})`;
       ph.style.color = p > 0.5 ? '#eeffc6' : '';
     });
 
@@ -262,6 +265,7 @@ const ctx0 = addScene({
       this.catCanvas.style.opacity = catVis.toFixed(3);
       const g = this.catCtx, cat = this.cat;
       g.clearRect(0, 0, cat.W, cat.H);
+      if (this.paintCatalog) this.paintCatalog();
       g.drawImage(this.catBase, 0, 0);
       const beam = lerp(-0.15, 1.15, prog(t, cS + 0.1, 1.3, E.inOutSine));
       const bx = beam * cat.W;
@@ -274,12 +278,12 @@ const ctx0 = addScene({
         if (!isLit && d > 0) { g.fillStyle = `rgba(7,8,10,${(0.72 * d).toFixed(3)})`; g.fillRect(x - 1, y - 1, cat.TW + 2, cat.TH + 2); }
       }
       const grad = g.createLinearGradient(bx - 220, 0, bx + 30, 0);
-      grad.addColorStop(0, 'rgba(212,255,90,0)');
-      grad.addColorStop(0.85, 'rgba(212,255,90,0.22)');
-      grad.addColorStop(1, 'rgba(212,255,90,0)');
+      grad.addColorStop(0, 'rgba(130,52,254,0)');
+      grad.addColorStop(0.85, 'rgba(130,52,254,0.22)');
+      grad.addColorStop(1, 'rgba(130,52,254,0)');
       g.fillStyle = grad;
       g.fillRect(bx - 220, 0, 250, cat.H);
-      g.fillStyle = 'rgba(212,255,90,0.9)';
+      g.fillStyle = 'rgba(130,52,254,0.9)';
       g.fillRect(bx, 0, 2, cat.H);
       for (const l of this.lit) {
         const x = l.i * (cat.TW + cat.GAP), y = l.j * (cat.TH + cat.GAP);
@@ -288,7 +292,7 @@ const ctx0 = addScene({
         g.save();
         g.strokeStyle = rgba(C.accent, d);
         g.lineWidth = 3;
-        g.shadowColor = 'rgba(212,255,90,0.7)';
+        g.shadowColor = 'rgba(130,52,254,0.7)';
         g.shadowBlur = 14 * d;
         rrect(g, x - 2, y - 2, cat.TW + 4, cat.TH + 4, 7);
         g.stroke();
@@ -326,7 +330,7 @@ const ctx0 = addScene({
       const [lbl, cls] = tiers[cd.c.tier];
       cd.badge.textContent = lbl;
       cd.badge.className = `badge ${cls}`;
-      cd.badge.style.background = cls === 'ok' ? '#1d2410' : cls === 'bad' ? '#2a1411' : '#1c1f24';
+      cd.badge.style.background = cls === 'ok' ? '#1e1538' : cls === 'bad' ? '#2a1411' : '#1c1f24';
       put(cd.badge, { s: bp > 0 ? lerp(0.6, 1, Math.min(bp, 1.2)) : 0.6, o: clamp(bp * 2) });
       // discarded cards dim
       const dimP = prog(t, evalAt + 0.6, 0.5);

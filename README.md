@@ -10,8 +10,9 @@ AI capabilities into real products, workflows and measurable outcomes.
 Everything in the film is generated from code in this repository. Visuals are deterministic
 HTML/Canvas/SVG scenes rendered frame by frame in headless Chromium. The voiceover comes from a
 local open-weight TTS model, and the music and sound design are synthesized with numpy.
-No stock media is used, and no client screenshots, names, logos or data appear. The Eagerworks logo
-(vectorized from the supplied PNG) is the only external asset.
+The marketplace's location photos are photoreal renders of procedural Blender scenes. No stock media is used,
+and no client screenshots, names, logos or data appear. The only external assets are the supplied Eagerworks
+logo and the story character sheets.
 
 ## Structure
 
@@ -29,8 +30,11 @@ video/
   index.html, src/      the film: engine.js (seek(t) runtime), scenes/*.js, lib/*.js
   render.mjs            Playwright renderer (stills for review, or parallel video render)
   snap.mjs              screenshot helper for debug pages
-  assets/               fonts (Google Fonts, OFL), vectorized logo, recap thumbnails
+  extract_characters.mjs  cuts the supplied character sheets into one PNG per character
+  assets/               fonts (Google Fonts, OFL), logo, characters, location photos, recap thumbnails
 scripts/
+  render_locations.py   procedural Blender (Cycles) scenes → video/assets/places/*.jpg
+  make_recap.sh         film frames → the finale's recap-wall thumbnails
   finalize.sh           delivery encode (grain, H.264 High, AAC, faststart)
   contact_sheet.py      stills → review sheet
 docs/creative-treatment.md
@@ -47,15 +51,19 @@ Kokoro model files (`kokoro-v1.0.onnx`, `voices-v1.0.bin`) come from the
 # 1. voiceover + timeline (only when the script changes)
 cd audio && python3 tts.py && python3 build_timeline.py
 
-# 2. picture (≈7 min on 4 cores); review stills with:  node render.mjs --stills 12.5,30 [--only search]
-cd ../video && npm install && node render.mjs --video --workers 4 --out build/frames.mkv
+# 2. assets (only when they change): location photos (Blender `pip install bpy`), characters, recap wall
+python3 ../scripts/render_locations.py      # slow: a few minutes per photo on CPU
+cd ../video && npm install && node extract_characters.mjs && ../scripts/make_recap.sh
 
-# 3. sound
+# 3. picture (≈7 min on 4 cores); review stills with:  node render.mjs --stills 12.5,30 [--only search]
+node render.mjs --video --workers 4 --out build/frames.mkv
+
+# 4. sound
 cd ../audio && python3 music.py && python3 sfx.py && python3 mix.py
 
-# 4. delivery file
+# 5. delivery file
 cd .. && scripts/finalize.sh
 ```
 
 Editing a scene is safe: every animation is keyed to VO clause timestamps from `video/src/timeline.js`,
-so changing the narration and re-running steps 1–4 keeps picture, music and effects in sync.
+so changing the narration and re-running steps 1–5 keeps picture, music and effects in sync.

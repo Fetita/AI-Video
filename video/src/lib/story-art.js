@@ -1,96 +1,88 @@
-// Original, fictional story-kit art: wooden pieces and the storybook illustration.
+// Story-kit art: wooden character pieces and the storybook illustration, both built around the
+// supplied character artwork (assets/characters/*.png, cut from the sheets by extract_characters.mjs).
+import { h, svg } from '../engine.js';
 
-/** Wooden disc piece (top-down). kind: fox | lantern | moon | forest. Returns SVG string (viewBox -100 -100 200 200). */
+const CH = 'assets/characters/';
+
+/** How each character sits on a piece's face: image width/left/top in % of the face circle. */
+const FACE = {
+  sloth: { src: 'sloth-lotus.png', w: 92, x: 4, y: 9 },
+  scout: { src: 'scout.png', w: 124, x: -4, y: 8 },
+  wizard: { src: 'wizard.png', w: 112, x: -6, y: 4 },
+  samurai: { src: 'samurai.png', w: 122, x: -6, y: 6 },
+};
+export const PIECE_KINDS = Object.keys(FACE);
+
+/** Wooden disc piece (top-down) with a character on its face. Returns an element that fills its parent. */
 export function piece(kind, id = kind) {
-  const glyph = {
-    fox: `
-      <path d="M-46 -30 L-34 -64 L-14 -38 Z" fill="#d9652a"/><path d="M-38 -38 L-33 -54 L-22 -40 Z" fill="#3b2418"/>
-      <path d="M46 -30 L34 -64 L14 -38 Z" fill="#d9652a"/><path d="M38 -38 L33 -54 L22 -40 Z" fill="#3b2418"/>
-      <path d="M-50 -34 Q0 -52 50 -34 Q46 8 0 44 Q-46 8 -50 -34Z" fill="#e8772f"/>
-      <path d="M-50 -30 Q-30 -4 -2 6 Q-6 30 0 44 Q-40 14 -50 -30Z" fill="#fff1e0"/>
-      <path d="M50 -30 Q30 -4 2 6 Q6 30 0 44 Q40 14 50 -30Z" fill="#fff1e0"/>
-      <ellipse cx="-17" cy="-12" rx="5" ry="6.5" fill="#2a1a12"/><ellipse cx="17" cy="-12" rx="5" ry="6.5" fill="#2a1a12"/>
-      <circle cx="-15.5" cy="-14" r="1.6" fill="#fff"/><circle cx="18.5" cy="-14" r="1.6" fill="#fff"/>
-      <path d="M-7 34 Q0 29 7 34 Q4 42 0 43 Q-4 42 -7 34Z" fill="#2a1a12"/>`,
-    lantern: `
-      <circle cx="0" cy="6" r="44" fill="url(#${id}glow)"/>
-      <path d="M-14 -52 Q0 -66 14 -52" stroke="#2c2622" stroke-width="5" fill="none"/>
-      <rect x="-22" y="-50" width="44" height="10" rx="3" fill="#2c2622"/>
-      <path d="M-26 -40 H26 L22 30 H-22 Z" fill="#ffd27a"/>
-      <path d="M-26 -40 H26 L22 30 H-22 Z" fill="none" stroke="#2c2622" stroke-width="5"/>
-      <path d="M0 -40 V30 M-24 -5 H24" stroke="#2c2622" stroke-width="3.5"/>
-      <path d="M-8 6 Q0 -16 8 6 Q6 16 0 18 Q-6 16 -8 6Z" fill="#fff6d8"/>
-      <rect x="-28" y="30" width="56" height="10" rx="3" fill="#2c2622"/>`,
-    moon: `
-      <circle cx="0" cy="0" r="58" fill="#1f2a4d"/>
-      <circle cx="-30" cy="-34" r="2.4" fill="#fff6d8"/><circle cx="36" cy="-26" r="1.8" fill="#fff6d8"/><circle cx="30" cy="36" r="2" fill="#fff6d8"/><circle cx="-38" cy="28" r="1.5" fill="#fff6d8"/>
-      <path d="M12 -38 A40 40 0 1 0 12 38 A30 30 0 1 1 12 -38Z" fill="#ffe6a3"/>`,
-    forest: `
-      <path d="M-18 44 L-18 30" stroke="#5b3a22" stroke-width="7"/><path d="M-18 -56 L-48 -6 H-34 L-56 30 H20 L-2 -6 H12 Z" fill="#2f6b43"/>
-      <path d="M-18 -56 L-48 -6 H-34 L-56 30 H-18 Z" fill="#3b8052"/>
-      <path d="M24 44 L24 34" stroke="#5b3a22" stroke-width="6"/><path d="M24 -30 L2 6 H12 L-4 34 H52 L36 6 H46 Z" fill="#24573a"/>
-      <path d="M24 -30 L2 6 H12 L-4 34 H24 Z" fill="#2f6b43"/>`,
-  }[kind];
-  return `<svg viewBox="-100 -100 200 200" xmlns="http://www.w3.org/2000/svg">
+  const f = FACE[kind];
+  const root = h('div', { style: { position: 'absolute', inset: '0' } });
+  const base = svg('svg', { viewBox: '-100 -100 200 200', style: 'position:absolute;inset:0;width:100%;height:100%;display:block;overflow:visible' });
+  base.innerHTML = `
   <defs>
     <radialGradient id="${id}wood" cx="0.38" cy="0.32" r="0.8"><stop offset="0" stop-color="#e8bd84"/><stop offset="0.6" stop-color="#cf9a5c"/><stop offset="1" stop-color="#a8733f"/></radialGradient>
-    <radialGradient id="${id}glow" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#ffd27a" stop-opacity="0.75"/><stop offset="1" stop-color="#ffd27a" stop-opacity="0"/></radialGradient>
-    <radialGradient id="${id}face" cx="0.5" cy="0.45" r="0.55"><stop offset="0" stop-color="#f6e6cf"/><stop offset="1" stop-color="#e9d2b0"/></radialGradient>
+    <radialGradient id="${id}face" cx="0.5" cy="0.4" r="0.6"><stop offset="0" stop-color="#fff4e2"/><stop offset="1" stop-color="#f1d9b5"/></radialGradient>
   </defs>
   <circle cx="0" cy="0" r="96" fill="#7a4e28"/>
   <circle cx="0" cy="-3" r="94" fill="url(#${id}wood)"/>
   <circle cx="0" cy="-3" r="80" fill="none" stroke="rgba(120,72,30,0.35)" stroke-width="1.5"/>
   <circle cx="0" cy="-3" r="88" fill="none" stroke="rgba(255,240,210,0.25)" stroke-width="1"/>
-  <circle cx="0" cy="-3" r="74" fill="url(#${id}face)"/>
-  <circle cx="0" cy="-3" r="74" fill="none" stroke="rgba(90,50,20,0.25)" stroke-width="2"/>
-  <g transform="translate(0,-3) scale(0.92)">${glyph}</g>
-  <path d="M-70 -50 A86 86 0 0 1 40 -80" stroke="rgba(255,255,255,0.35)" stroke-width="3" fill="none" stroke-linecap="round"/>
-</svg>`;
+  <circle cx="0" cy="-3" r="74" fill="url(#${id}face)"/>`;
+  // the face: a printed character inset into the wood
+  const face = h('div', { style: { position: 'absolute', left: '13%', top: '11.5%', width: '74%', height: '74%', borderRadius: '50%', overflow: 'hidden' } },
+    h('img', { src: CH + f.src, style: { position: 'absolute', left: `${f.x}%`, top: `${f.y}%`, width: `${f.w}%`, display: 'block' } }));
+  const top = svg('svg', { viewBox: '-100 -100 200 200', style: 'position:absolute;inset:0;width:100%;height:100%;display:block;overflow:visible' });
+  top.innerHTML = `
+  <circle cx="0" cy="-3" r="74" fill="none" stroke="rgba(90,50,20,0.35)" stroke-width="2.5"/>
+  <circle cx="0" cy="-3" r="71" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="4"/>
+  <path d="M-70 -50 A86 86 0 0 1 40 -80" stroke="rgba(255,255,255,0.35)" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+  root.append(base, face, top);
+  return root;
 }
 
-/** Storybook illustration layers for the left page (viewBox 0 0 600 640). Returns {defs, layers:{sky, stars, moon, hills, trees, fox, lantern, fireflies}}. */
+/**
+ * Storybook illustration (the left page, 582×672 px): a sunrise forest path where Mo the sloth
+ * leads Pip, Wren and Kai. Returns {el, layers, sparkEls}; each layer can be faded in on its own.
+ */
 export function storyIllustration(id = 'si') {
-  const stars = [];
+  const W = 582, H = 672;
   const rnd = (s) => { const x = Math.sin(s * 127.1) * 43758.5453; return x - Math.floor(x); };
-  for (let i = 0; i < 46; i++) stars.push(`<circle class="star" data-i="${i}" cx="${(rnd(i) * 600).toFixed(1)}" cy="${(rnd(i + 99) * 330).toFixed(1)}" r="${(0.8 + rnd(i + 7) * 1.8).toFixed(2)}" fill="#fff6d8"/>`);
-  const flies = [];
-  for (let i = 0; i < 14; i++) flies.push(`<circle class="fly" data-i="${i}" cx="0" cy="0" r="${(2 + rnd(i + 31) * 2).toFixed(1)}" fill="#ffe28a"/>`);
-  return {
-    defs: `
-      <linearGradient id="${id}sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#141b3a"/><stop offset="0.55" stop-color="#2d3a72"/><stop offset="1" stop-color="#5a5f9a"/></linearGradient>
-      <radialGradient id="${id}moonglow" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#fff1c4" stop-opacity="0.55"/><stop offset="1" stop-color="#fff1c4" stop-opacity="0"/></radialGradient>
-      <radialGradient id="${id}lglow" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#ffd27a" stop-opacity="0.85"/><stop offset="0.4" stop-color="#ffb84a" stop-opacity="0.35"/><stop offset="1" stop-color="#ffb84a" stop-opacity="0"/></radialGradient>
-      <radialGradient id="${id}fglow" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#ffe28a" stop-opacity="0.9"/><stop offset="1" stop-color="#ffe28a" stop-opacity="0"/></radialGradient>`,
-    layers: {
-      sky: `<rect width="600" height="640" fill="url(#${id}sky)"/>`,
-      stars: stars.join(''),
-      moon: `<circle cx="430" cy="150" r="130" fill="url(#${id}moonglow)"/><circle cx="430" cy="150" r="62" fill="#fff1c4"/><circle cx="410" cy="136" r="10" fill="#f2dea6"/><circle cx="446" cy="170" r="7" fill="#f2dea6"/><circle cx="452" cy="126" r="5" fill="#f2dea6"/>`,
-      hills: `<path d="M0 470 Q150 400 300 440 T600 420 V640 H0Z" fill="#1e2a52"/><path d="M0 540 Q170 470 340 520 T600 500 V640 H0Z" fill="#172142"/>`,
-      trees: [[70, 470, 1.25], [140, 500, 0.9], [520, 460, 1.2], [470, 505, 0.85], [560, 520, 0.7]].map(([x, y, s]) =>
-        `<g transform="translate(${x},${y}) scale(${s})"><rect x="-5" y="-6" width="10" height="26" fill="#101833"/><path d="M0 -150 L-44 -70 H-26 L-56 -10 H56 L26 -70 H44 Z" fill="#0f1a36"/></g>`).join(''),
-      fox: `
-        <g transform="translate(270,520)">
-          <path d="M40 30 Q120 20 110 -40 Q104 -70 80 -60 Q96 -20 40 0Z" fill="#e8772f"/><path d="M110 -40 Q104 -70 80 -60 Q92 -48 96 -30Z" fill="#fff1e0"/>
-          <path d="M-40 34 Q-52 -30 -20 -70 L20 -70 Q52 -30 40 34Z" fill="#e8772f"/>
-          <path d="M-18 34 Q-24 -10 0 -34 Q24 -10 18 34Z" fill="#fff1e0"/>
-          <path d="M-34 -96 L-26 -134 L-8 -104Z" fill="#d9652a"/><path d="M34 -96 L26 -134 L8 -104Z" fill="#d9652a"/>
-          <path d="M-40 -100 Q0 -118 40 -100 Q36 -64 0 -44 Q-36 -64 -40 -100Z" fill="#e8772f"/>
-          <path d="M-40 -98 Q-20 -78 -2 -74 Q-2 -56 0 -44 Q-30 -60 -40 -98Z" fill="#fff1e0"/><path d="M40 -98 Q20 -78 2 -74 Q2 -56 0 -44 Q30 -60 40 -98Z" fill="#fff1e0"/>
-          <ellipse cx="-14" cy="-88" rx="4" ry="5" fill="#2a1a12"/><ellipse cx="14" cy="-88" rx="4" ry="5" fill="#2a1a12"/>
-          <path d="M-5 -52 Q0 -56 5 -52 Q3 -46 0 -45 Q-3 -46 -5 -52Z" fill="#2a1a12"/>
-          <path d="M-40 34 Q-44 44 -30 44 H-12 Q-4 44 -8 34Z M40 34 Q44 44 30 44 H12 Q4 44 8 34Z" fill="#c95e27"/>
-        </g>`,
-      lantern: `
-        <g transform="translate(214,470)">
-          <circle cx="0" cy="16" r="120" fill="url(#${id}lglow)" class="lglow"/>
-          <path d="M30 -60 Q10 -40 0 -26" stroke="#c95e27" stroke-width="8" stroke-linecap="round" fill="none"/>
-          <path d="M-8 -26 Q0 -34 8 -26" stroke="#2c2622" stroke-width="3" fill="none"/>
-          <rect x="-12" y="-26" width="24" height="6" rx="2" fill="#2c2622"/>
-          <path d="M-15 -20 H15 L13 20 H-13Z" fill="#ffd27a" stroke="#2c2622" stroke-width="3"/>
-          <path d="M0 -20 V20" stroke="#2c2622" stroke-width="2"/>
-          <rect x="-16" y="20" width="32" height="6" rx="2" fill="#2c2622"/>
-        </g>`,
-      fireflies: flies.join(''),
-    },
-  };
+  const el = h('div', { style: { position: 'absolute', left: '0', top: '0', width: `${W}px`, height: `${H}px`, overflow: 'hidden', borderRadius: '8px' } });
+  const layer = (name, child) => { const L = h('div', { class: `L-${name}`, style: { position: 'absolute', inset: '0' } }, child); el.append(L); return L; };
+  const art = (inner) => { const s = svg('svg', { viewBox: `0 0 ${W} ${H}`, width: W, height: H, style: 'position:absolute;inset:0;display:block' }); s.innerHTML = inner; return s; };
+  const img = (src, x, y, w, flip = false) => h('img', { src: CH + src, style: { position: 'absolute', left: `${x}px`, top: `${y}px`, width: `${w}px`, display: 'block', transform: flip ? 'scaleX(-1)' : 'none' } });
+
+  const layers = {};
+  layers.sky = layer('sky', art(`
+    <defs>
+      <linearGradient id="${id}sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7d6fc2"/><stop offset="0.42" stop-color="#d79bb5"/><stop offset="0.75" stop-color="#ffc9a0"/><stop offset="1" stop-color="#ffe2b8"/></linearGradient>
+    </defs>
+    <rect width="${W}" height="${H}" fill="url(#${id}sky)"/>
+    ${[[70, 92, 1], [210, 60, 0.8], [470, 110, 1.1]].map(([x, y, s]) => `<g transform="translate(${x},${y}) scale(${s})" fill="#fff1e6" opacity="0.55"><ellipse cx="0" cy="0" rx="46" ry="14"/><ellipse cx="22" cy="-8" rx="26" ry="14"/><ellipse cx="-18" cy="-6" rx="22" ry="11"/></g>`).join('')}`));
+  layers.sun = layer('sun', art(`
+    <defs><radialGradient id="${id}sun" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#fff3cf" stop-opacity="0.95"/><stop offset="0.35" stop-color="#ffd59a" stop-opacity="0.55"/><stop offset="1" stop-color="#ffb98a" stop-opacity="0"/></radialGradient></defs>
+    <circle class="sunglow" cx="372" cy="292" r="190" fill="url(#${id}sun)"/>
+    <circle cx="372" cy="292" r="54" fill="#fff0c8"/>`));
+  layers.hills = layer('hills', art(`
+    <path d="M0 330 Q90 270 190 300 T390 286 T582 300 V672 H0Z" fill="#b48cb8" opacity="0.85"/>
+    <path d="M0 372 Q120 320 250 352 T582 338 V672 H0Z" fill="#8fae8a"/>
+    <path d="M0 420 Q160 380 300 408 T582 400 V672 H0Z" fill="#6f9e68"/>`));
+  const tree = (x, y, s, c1, c2) => `<g transform="translate(${x},${y}) scale(${s})"><rect x="-6" y="-10" width="12" height="40" rx="3" fill="#6b4a33"/><circle cx="0" cy="-52" r="40" fill="${c1}"/><circle cx="-24" cy="-26" r="30" fill="${c1}"/><circle cx="24" cy="-28" r="30" fill="${c2}"/><circle cx="8" cy="-70" r="24" fill="${c2}"/></g>`;
+  layers.trees = layer('trees', art(`
+    ${tree(40, 420, 1.35, '#4f8a55', '#5f9c62')}${tree(118, 404, 0.85, '#5a945c', '#6aa66a')}${tree(520, 412, 1.25, '#4a8250', '#5a955e')}${tree(452, 396, 0.8, '#5a945c', '#6aa66a')}
+    ${tree(250, 352, 0.55, '#6f9f74', '#7cab7c')}${tree(318, 348, 0.5, '#6f9f74', '#7cab7c')}`));
+  layers.path = layer('path', art(`
+    <path d="M150 672 C210 590 330 560 300 500 C280 460 300 430 330 412 L346 412 C330 432 322 462 344 500 C380 568 330 612 420 672Z" fill="#f1d9a6"/>
+    <path d="M150 672 C210 590 330 560 300 500 C280 460 300 430 330 412" fill="none" stroke="#d9b97f" stroke-width="3"/>
+    <path d="M0 560 Q110 540 190 600 T300 672 H0Z" fill="#5c9157"/><path d="M582 548 Q470 560 430 620 T420 672 H582Z" fill="#5c9157"/>
+    ${Array.from({ length: 22 }, (_, i) => { const x = rnd(i) * W, y = 470 + rnd(i + 40) * 190; return `<path d="M${x.toFixed(1)} ${y.toFixed(1)} q3 -12 6 0 q3 -10 6 0" fill="none" stroke="#4b7f48" stroke-width="2.2" stroke-linecap="round"/>`; }).join('')}`));
+  // the three heroes walk up the path behind their guide
+  layers.heroes = layer('heroes', h('div', { style: { position: 'absolute', inset: '0' } },
+    img('samurai.png', 52, 368, 132),
+    img('wizard.png', 150, 392, 138),
+    img('scout.png', 22, 440, 168)));
+  layers.sloth = layer('sloth', img('sloth-lunge.png', 300, 400, 250));
+  const sparks = Array.from({ length: 16 }, (_, i) => `<circle class="spark" cx="0" cy="0" r="${(2 + rnd(i + 31) * 2.2).toFixed(1)}" fill="#fff1c4"/>`).join('');
+  layers.sparkles = layer('sparkles', art(sparks));
+  return { el, layers, sparkEls: [...el.querySelectorAll('.spark')], sunGlow: el.querySelector('.sunglow') };
 }

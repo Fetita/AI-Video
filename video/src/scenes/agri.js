@@ -5,7 +5,7 @@ import { makeHud, box, tag, recHud, brackets, FONT_MONO, FONT_UI } from '../lib/
 
 import { FRAME, ROWS, ROW_X0, ROW_DX, PITCH, SPEED, plantSprite, pumpkinSprite, soilTile, plantAt } from '../lib/field.js';
 const COUNT_Y = FRAME.y + FRAME.h * 0.64;
-const ROW_COLORS = ['#ffb35c', '#ff7b6b', '#b89bff', '#ff8fc8', '#ffd76b', '#7cc6ff'];
+const ROW_COLORS = ['#ffb35c', '#ff7b6b', '#5fe0c2', '#ff8fc8', '#ffd76b', '#c8e86b'];
 const fmt = (n) => n.toLocaleString('en-US');
 
 // ------------------------------------------------------------ tractor (line art, side view)
@@ -17,7 +17,7 @@ function drawTractor(g, t, ox, oy, S, camPulse, a) {
   g.strokeStyle = ink; g.lineWidth = 3;
   g.beginPath(); g.moveTo(300, -40); g.lineTo(430, -120); g.lineTo(520, -120); g.stroke();
   const fov = g.createLinearGradient(0, -110, 0, 95);
-  fov.addColorStop(0, `rgba(212,255,90,${0.35 + camPulse * 0.25})`); fov.addColorStop(1, 'rgba(212,255,90,0.04)');
+  fov.addColorStop(0, `rgba(130,52,254,${0.35 + camPulse * 0.25})`); fov.addColorStop(1, 'rgba(130,52,254,0.04)');
   g.fillStyle = fov; g.beginPath(); g.moveTo(520, -108); g.lineTo(420, 95); g.lineTo(650, 95); g.closePath(); g.fill();
   g.strokeStyle = rgba(C.accent, 0.55); g.lineWidth = 1.5; g.beginPath(); g.moveTo(520, -108); g.lineTo(420, 95); g.moveTo(520, -108); g.lineTo(650, 95); g.stroke();
   g.fillStyle = fill; g.strokeStyle = C.accent; g.lineWidth = 3; rrect(g, 500, -134, 42, 28, 6); g.fill(); g.stroke();
@@ -94,7 +94,7 @@ addScene({
     this.sGaps = stat('Gaps', 'var(--coral)');
     this.sOff = stat('Off-row', 'var(--coral)');
     this.hist = h('div', { style: { display: 'flex', alignItems: 'flex-end', gap: '4px', height: '56px', marginTop: '14px' } });
-    this.histBars = Array.from({ length: 14 }, (_, i) => { const b = h('i', { style: { display: 'block', flex: 1, background: i > 3 && i < 11 ? 'var(--accent)' : 'rgba(212,255,90,0.35)', borderRadius: '2px 2px 0 0' } }); this.hist.append(b); return b; });
+    this.histBars = Array.from({ length: 14 }, (_, i) => { const b = h('i', { style: { display: 'block', flex: 1, background: i > 3 && i < 11 ? 'var(--accent)' : 'rgba(130,52,254,0.35)', borderRadius: '2px 2px 0 0' } }); this.hist.append(b); return b; });
     this.audit.append(h('div', { style: { fontSize: '17px', fontWeight: 600, marginBottom: '6px' } }, 'Live field audit'), this.sPlants.el, this.sSpacing.el, this.sGaps.el, this.sOff.el,
       h('div', { class: 'kicker', style: { fontSize: '11px', marginTop: '12px' } }, 'Plant size distribution'), this.hist);
     R.append(this.audit);
@@ -235,7 +235,7 @@ addScene({
               // GPS pin as it's counted
               if (passed && py - COUNT_Y < 90 && t > cMap - 0.3) {
                 const ga = clamp(1 - (py - COUNT_Y) / 90) * ovA;
-                tag(g, x + 30, py - 30, `${(41.12 + p.id * 0.000013).toFixed(5)}, −98.4${(5600 + p.id % 97).toString()}`, { bg: '#0b0d10', fg: C.accent, a: ga, size: 10, stroke: rgba(C.accent, 0.4) });
+                tag(g, x + 30, py - 30, `${(41.12 + p.id * 0.000013).toFixed(5)}, −98.4${(5600 + p.id % 97).toString()}`, { bg: '#0b0d10', fg: C.accentText, a: ga, size: 10, stroke: rgba(C.accent, 0.4) });
               }
             }
           }
@@ -312,7 +312,7 @@ addScene({
         g.strokeStyle = C.accent; g.lineWidth = 2; g.beginPath(); g.arc(px, py, 12, 0, Math.PI * 2); g.stroke();
         g.beginPath(); g.moveTo(px + 12, py - 8); g.lineTo(px + 90, py - 70); g.lineTo(px + 150, py - 70); g.stroke();
         g.restore();
-        tag(g, px + 150, py - 70 + 13, 'PLANT #04812 · 41.12417, −98.45691 · Ø 14 cm', { a: ca, bg: '#0b0d10', fg: C.accent, stroke: rgba(C.accent, 0.6), size: 12, anchor: 'bl', hgt: 26 });
+        tag(g, px + 150, py - 70 + 13, 'PLANT #04812 · 41.12417, −98.45691 · Ø 14 cm', { a: ca, bg: '#0b0d10', fg: C.accentText, stroke: rgba(C.accent, 0.6), size: 12, anchor: 'bl', hgt: 26 });
       }
       tag(g, 260, 180, 'FIELD MAP · EVERY PLANT GEO-LOCATED', { a: mapA * prog(t, cMap + 0.6, 0.5), bg: null, fg: 'rgba(255,255,255,0.7)', size: 13, anchor: 'bl', pad: 0 });
     }

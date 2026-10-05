@@ -41,17 +41,17 @@ Scene cuts are snapped to the music's half-bar grid (100 BPM), so every change l
 ### 0:00.0 – 0:19.2 · Hook + brand introduction
 | Time | Visual | Transition / motion |
 |---|---|---|
-| 0:00.2 | Black. A lime signal line draws across the frame, then collapses into a text caret. | Line → caret |
+| 0:00.2 | Black. A violet signal line draws across the frame, then collapses into a text caret. | Line → caret |
 | 0:01.1 | **"A creative brief."** The caret types *"A sunlit loft with exposed brick, close to the river."* Key words light up and drop out as structured chips. | Text → data |
-| 0:02.8 | **"A child's toy."** Match cut: a wooden fox piece drops onto the frame; a recognition reticle locks on (`CHARACTER · FOX`). | Chips → round piece |
+| 0:02.8 | **"A child's toy."** Match cut: a wooden sloth piece drops onto the frame; a recognition reticle locks on (`CHARACTER · SLOTH`). | Chips → round piece |
 | 0:04.3 | **"A camera feed."** The reticle opens into a split viewfinder: ego-view hands with 21-point skeletons \| crop rows with detection boxes. | Ring → viewfinder |
 | 0:05.8 | **"A stack of evidence."** Three documents fan out; a scan beam passes; `✓ SOC 2 mapped` and `Gap found` pop. | Viewfinder → pages |
 | 0:07.1 | All four vignettes snap into a 2×2 grid, then collapse into one glowing line (music hit). | Many → one |
 | 0:08.1 | **"AI as a feature."** in wide display type. The line strikes through *a feature*. | Line → strike-through |
-| 0:09.8 | **"AI as the product."** Glyphs scramble-decode into *the product*; the strike drops into a lime underline. | Strike → underline |
+| 0:09.8 | **"AI as the product."** Glyphs scramble-decode into *the product*; the strike drops into a violet underline. | Strike → underline |
 | 0:11.6 | The underline's energy becomes the three "E" strokes; the hexagon draws around them and fills (music hit); the wordmark and **AI Studio** slide out. | Strokes → logo |
 | 0:15.3 | `REAL PRODUCTS · WORKFLOWS · MEASURABLE OUTCOMES` appear as each is spoken. | — |
-| 0:18.7 | The lockup lifts away; a lime line draws exactly where the next scene's brief card opens. | Line → card |
+| 0:18.7 | The lockup lifts away; a violet line draws exactly where the next scene's brief card opens. | Line → card |
 
 ### 0:19.2 – 0:39.6 · 01 Generative AI · Search · Recommendation
 Stepper: `PARSE → SEARCH → EVALUATE → RECOMMEND → REFINE`
@@ -59,21 +59,21 @@ Stepper: `PARSE → SEARCH → EVALUATE → RECOMMEND → REFINE`
 |---|---|
 | 0:19.2 | The brief card opens from the line; the brief types in the client's own words (fictional production team, fictional brief). |
 | 0:24.3 | **Parse:** seven phrases highlight; each flies out of the text into a *Structured requirements* panel (type, light, must-haves, capacity, travel, mood). |
-| 0:26.5 | **Search:** a 3D wall of ~300 location thumbnails; a scan beam sweeps it and 14 matches light up while the rest dim. |
+| 0:26.5 | **Search:** a 3D wall of ~300 location photos; a scan beam sweeps it and 14 matches light up while the rest dim. |
 | 0:28.0 | **Evaluate:** six candidates fly out of the wall; each is checked against every requirement (✓ / ~ / ✕) and tiered (`TIER 1`, `TIER 2`, `DISCARDED`). |
 | 0:30.6 | **Recommend:** the three Tier-1 cards grow into a personalised shortlist with a *why it fits* rationale per location. |
 | 0:34.1 | **Refine:** a chat panel slides in: *"Love the second one. Anything similar with a rooftop?"* → *"One similar space has a private rooftop. I've moved it to the top of your shortlist."* The shortlist re-ranks live and a new rooftop location enters at 01. |
-| 0:38.6 | The assistant's lime status dot flies to centre and carries into the next scene. |
+| 0:38.6 | The assistant's violet status dot flies to centre and carries into the next scene. |
 
 ### 0:39.6 – 0:58.8 · 02 Generative AI · Physical to digital
 Stepper: `PLACE → RECOGNIZE → REASON → GENERATE`
 | Time | Visual |
 |---|---|
-| 0:39.6 | The dot becomes a reticle; beneath it a wooden fox piece rests on a walnut board. Warm sparks rise from it ("…something personal"). |
-| 0:43.2 | Camera pulls back to the whole board; lantern, moon and forest pieces drop into their slots (wooden clacks). |
-| 0:47.0 | **Recognize:** a viewfinder frames the board; each piece is ringed and labelled (`CHARACTER · FOX`, `OBJECT · LANTERN`, …). |
-| 0:49.0 | **Reason:** a relation graph links the pieces: *finds*, *wants to reach*, *lights the way*, *rises over*. |
-| 0:50.9 | **Generate:** the board dissolves into an open storybook. The illustration resolves from blur, like a diffusion model, layer by layer (sky, stars, moon, hills, pines, fox, lantern glow, fireflies). *"Pip and the Lantern Moon"* streams in word by word behind a lime caret. |
+| 0:39.6 | The dot becomes a reticle; beneath it a wooden sloth piece (Mo, meditating) rests on a walnut board. Warm sparks rise from it ("…something personal"). |
+| 0:43.2 | Camera pulls back to the whole board; scout, wizard and samurai pieces drop into their slots (wooden clacks). |
+| 0:47.0 | **Recognize:** a viewfinder frames the board; each piece is ringed and labelled (`CHARACTER · SLOTH`, `CHARACTER · SCOUT`, `CHARACTER · WIZARD`, `CHARACTER · SAMURAI`). |
+| 0:49.0 | **Reason:** a relation graph links the pieces: *guides*, *befriends*, *races*, *travels with*. |
+| 0:50.9 | **Generate:** the board dissolves into an open storybook. The illustration resolves from blur, like a diffusion model, layer by layer (sunrise sky, sun, hills, trees, path, the three heroes, Mo the sloth leading the way, floating sparkles). *"The Slowest Guide in the Woods"* streams in word by word behind a violet caret: *Pip, Wren and Kai were racing to find the hidden temple. Then a sleepy sloth named Mo smiled, stretched, and showed them the way: one slow, happy step at a time.* |
 | 0:54.0 | **End to end:** the book shrinks into the last of four system nodes: `Board & pieces → Companion app (story settings) → Story engine (recognition · planning · generation · illustration · guardrails) → Illustrated story`, with data pulses flowing between them. |
 
 ### 0:58.8 – 1:18.0 · 03 Computer vision · Custom models · Robotics (intensity peak)
@@ -83,7 +83,7 @@ Stepper: `DETECT → TRACK → DATASET → TRAIN → BENCHMARK → ROBOTICS`
 | 0:58.8 | `vision.detect(frame)`, a single API call. On "…more than an API call" it is struck through and unfolds into the six-layer vision stack Eagerworks builds (Capture, Annotate, Dataset, Train, Evaluate, Deploy). |
 | 1:02.1 | The stack collapses into an egocentric workbench camera: two hands, per-hand boxes, 21 keypoints each, finger-coloured skeletons. |
 | 1:05.2 | Cut to a room view: three people, face boxes, then a privacy mosaic (`FACE · ANONYMIZED`). |
-| 1:06.8 | **Track:** 3D view of the head-camera frustum moving along its path; lime estimate vs. dashed ground truth; left/right wrist trails. |
+| 1:06.8 | **Track:** 3D view of the head-camera frustum moving along its path; violet estimate vs. dashed ground truth; left/right wrist trails. |
 | 1:08.2 | **Dataset:** hundreds of annotated frames tile the screen and zoom out; panel lists annotation types and train/validation/test splits. |
 | 1:10.2 | **Train & benchmark:** loss curves for three models descend; precision–recall curves draw; the custom model's operating point is `SELECTED`. |
 | 1:12.6 | **Robotics:** a human-demonstration trajectory (dashed, with a ghost hand skeleton) is replayed by a robot arm that picks and places a part. |
@@ -92,7 +92,7 @@ Stepper: `DETECT → TRACK → DATASET → TRAIN → BENCHMARK → ROBOTICS`
 Stepper: `DETECT → COUNT → MEASURE → MAP → TRACK`
 | Time | Visual |
 |---|---|
-| 1:18.0 | Line-art tractor crossing crop rows; its boom-mounted camera projects a lime field of view. "…turns a camera" → the camera pulses; data packets stream into a live telemetry card. |
+| 1:18.0 | Line-art tractor crossing crop rows; its boom-mounted camera projects a violet field of view. "…turns a camera" → the camera pulses; data packets stream into a live telemetry card. |
 | 1:23.3 | "On a tractor…" → push into the camera's footprint → top-down live feed. |
 | 1:24.1 | Every lettuce seedling gets a box and ID; fitted row lines; a count line; `GAP` and `OFF-ROW` flags with offsets; spacing ticks and diameter measurements; GPS tags as plants are counted; *Live field audit* panel updates. |
 | 1:26.7 | **Map:** the feed becomes a field map; every counted plant is a dot, issues in coral; one plant is called out with coordinates and size. |
@@ -173,9 +173,11 @@ Everything else on screen is diegetic interface content of fictional products.
 
 ## 5. Visual direction
 
-- **Palette:** monochrome graphite base taken from the white-on-black logo (`#07080A` → `#15181D`), warm white text, and **one signal colour, lime `#D4FF5A`**. Lime always means *what the AI sees, infers or produces*: parsed chips, detection boxes, reticles, the story caret, matched evidence, the selected model. Coral marks gaps and issues; amber marks partial matches; sky and violet are used only for secondary series (left hand, ground truth, row lines).
-- **Typography:** *Archivo* at 112–118 % width for display type, echoing the logo's wide wordmark · *Inter* for interface text · *JetBrains Mono* (uppercase, tracked) for labels, telemetry and steppers · *Fraunces* for the children's story.
+- **Palette:** monochrome graphite base taken from the white-on-black logo (`#07080A` → `#15181D`), warm white text, and the **brand signal pair, violet `#8234FE` → blue `#6686F6`**. Violet always means *what the AI sees, infers or produces*: parsed chips, detection boxes, reticles, the story caret, matched evidence, the selected model; the violet → blue gradient carries progress (stepper links) and the CTA. Small violet text on dark uses a lighter tint (`#B89CFF`) for legibility. Coral marks gaps and issues; amber marks partial matches; teal and rose are used only for secondary series (left hand, Model B, row lines).
+- **Typography:** *Archivo* at 112–118 % width for display type, echoing the logo's wide wordmark · *Manrope* as the secondary typeface, for interface and body text · *JetBrains Mono* (uppercase, tracked) for labels, telemetry and steppers · *Fraunces* for the children's story.
+- **Logo:** the supplied vector logo (`video/assets/logo/eagerworks-logo.svg`), shown at a restrained size (icon ≈ 90 px tall in a 1080p frame) so the lockup sits balanced with *AI Studio*.
 - **Look:** premium dark SaaS film. Matte panels with hairline borders, soft shadows, a faint engineering grid, a subtle vignette and fine film grain. Glow is reserved for AI signals. No neural-network clichés, no stock footage, and the only robot is the one the robotics story needs.
+- **Location photography:** the marketplace's locations are photoreal Cycles renders of fictional spaces, built procedurally in Blender (`scripts/render_locations.py`): physically based brick, timber, concrete and glass under a real sun-and-sky model.
 - **Real-world scenes as "sensor" renders:** workbench, room, field and conveyor are procedural 3D/2D renders with a cool, desaturated sensor grade, so detections and keypoints align exactly with the objects under them.
 - **Depth & camera:** 3D-tilted catalog wall, a rotating 3D tracking view, a camera that glides through the compliance interface, a tilted recap wall.
 
@@ -207,19 +209,19 @@ Everything else on screen is diegetic interface content of fictional products.
 
 The reference screenshots were used only to understand what each system does.
 **No reference image, UI, name, logo, dataset or footage appears in the film;**
-the Eagerworks logo is the only supplied asset used (vectorized from the PNG).
+the only supplied assets used are the Eagerworks logo and the story character sheets.
 
 | Reference | What it showed | Extracted concept | Fictional recreation in the film |
 |---|---|---|---|
-| Location-scouting admin + brief processor | Brief list with cost/usage; benchmark runs with *Found / Tier 1 / Tier 2 / Discarded* | Briefs parsed into structured requirements; candidates scored and tiered; quality is benchmarked | Fictional brief ("Spring campaign shoot"), fictional locations drawn as editorial illustrations (Foundry Loft, Canal Street Studio, Mill House No. 9, Pier 4 Rooftop…), tiering (`TIER 1 / TIER 2 / DISCARDED`), shortlist + conversational re-ranking. No cost or benchmark numbers shown. |
+| Location-scouting admin + brief processor | Brief list with cost/usage; benchmark runs with *Found / Tier 1 / Tier 2 / Discarded* | Briefs parsed into structured requirements; candidates scored and tiered; quality is benchmarked | Fictional brief ("Spring campaign shoot"), fictional locations rendered as photoreal 3D scenes (Foundry Loft, Canal Street Studio, Mill House No. 9, Pier 4 Rooftop…), tiering (`TIER 1 / TIER 2 / DISCARDED`), shortlist + conversational re-ranking. No cost or benchmark numbers shown. |
 | Compliance evidence review (two screens) | Evidence requests with attached files, multi-model AI analysis, AI score, summary, recommendations with impact level | Evidence → AI analysis → requirement mapping → gaps → prioritised recommendations | Fictional "Quarterly User Access Review" with invented groups and sign-off, requirement rows under SOC 2 / ISO 27001 (public framework names only, no control IDs or client naming), statuses, one gap, an `IMPACT · HIGH` recommendation, and a readiness dashboard framed as decision support. |
 | Agricultural vision (three screens) | Top-down crop rows with per-row lines and counts; longest-axis lettuce measurement with size bars; confidence-scored lettuce boxes in crates | Detect / count / measure / audit rows; per-item measurement; packing-line counting | Procedural soil and seedlings with row lines, count line, gaps, off-row flags, spacing and diameter measurements, a size histogram and a field map. The packing line carries **pumpkins** (not crated lettuce) on a generic conveyor with persistent IDs. No confidence scores shown; coordinates are fictional. |
 | Robotics / egocentric vision (four panels) | Ego view with wrist/hand keypoints, 3D camera + wrist visualisation, precision–recall comparison of detectors, face detection, trajectory vs ground truth | Custom datasets, hand/face detection, camera & wrist tracking, model benchmarking, robot data | Procedural workbench with stylised mannequin hands (21 keypoints), a room of anonymous figures with privacy mosaics, a 3D tracking view (estimate vs dashed ground truth, wrist trails), an annotated-frame dataset wall, generic loss/PR curves (*Baseline / Model B / Custom model*, no axis values or scores), and a robot arm replaying a demonstration. |
-| Eagerworks logo | White icon + wordmark | Brand | Traced to vector; the three "E" strokes become the film's recurring motif. |
+| Eagerworks logo | White icon + wordmark (vector) | Brand | Used as supplied; the three "E" strokes become the film's recurring motif. |
+| Character sheets | Four adventurers and four yoga sloths (vector) | Story characters | Cut into individual characters (`video/extract_characters.mjs`); the sloth, scout, wizard and samurai become the board pieces and the storybook cast. |
 
 **Project names never appear.** The children's story product has no reference image;
-its board, pieces (fox, lantern, moon, forest) and the story "Pip and the Lantern Moon"
-are original.
+its board and the story "The Slowest Guide in the Woods" are original, and the pieces use the supplied character artwork.
 
 ## 9. Accuracy rules applied
 
@@ -234,7 +236,10 @@ are original.
 |---|---|---|
 | Voiceover | Kokoro-82M (Apache-2.0, ONNX, CPU) | `audio/vo_script.json`, `audio/tts.py` |
 | Master timeline | VO durations + clause segmentation → scene cuts snapped to the beat grid | `audio/build_timeline.py` → `video/src/timeline.js` |
+| Location photos | Procedural scenes path-traced in Blender Cycles (`bpy`) | `scripts/render_locations.py` → `video/assets/places/` |
+| Characters | Supplied sheets cut into transparent PNGs | `video/extract_characters.mjs` → `video/assets/characters/` |
 | Visuals | Deterministic HTML/Canvas/SVG scenes, `seek(t)` per frame, headless Chromium via Playwright | `video/src/**`, `video/render.mjs` |
+| Recap wall | Frames of the film itself | `scripts/make_recap.sh` → `video/assets/recap/` |
 | Score / SFX / mix | numpy/scipy synthesis, sidechain, algorithmic reverb, loudness mastering | `audio/music.py`, `audio/sfx.py`, `audio/mix.py` |
 | Delivery | ffmpeg (H.264 High, AAC) | `scripts/finalize.sh` |
 

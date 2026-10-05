@@ -51,7 +51,7 @@ async function boot() {
   await document.fonts.ready;
   // Force-load every face we use so the first frame is never a fallback.
   await Promise.all([
-    '400 20px Inter', '500 20px Inter', '600 20px Inter', '700 20px Inter',
+    '400 20px Manrope', '500 20px Manrope', '600 20px Manrope', '700 20px Manrope',
     '500 20px Archivo', '600 20px Archivo', '700 20px Archivo',
     '400 20px "JetBrains Mono"', '500 20px "JetBrains Mono"', '600 20px "JetBrains Mono"',
     '400 20px Fraunces', 'italic 400 20px Fraunces', '600 20px Fraunces',

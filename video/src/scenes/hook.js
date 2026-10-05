@@ -7,6 +7,7 @@ import { drawEgo } from '../lib/ego.js';
 import { drawPose } from '../lib/hand.js';
 import { plantSprite, soilTile } from '../lib/field.js';
 import { makeLockup } from '../lib/logo.js';
+import { VIEWBOX, ICON_VIEWBOX } from '../lib/logo-data.js';
 
 const BRIEF = 'A sunlit loft with exposed brick, close to the river.';
 const CHIPS = ['Loft', 'Sunlit', 'Exposed brick', 'Near the river'];
@@ -36,27 +37,26 @@ addScene({
     this.v1.append(this.briefText, this.chipRow);
     R.append(this.v1);
 
-    // V2 — child's toy (story piece)
+    // V2 — child's toy (a story piece: the sloth)
     this.v2 = h('div', { class: 'abs', style: { left: '0', top: '0', width: '1920px', height: '1080px', transformOrigin: '960px 540px' } });
-    this.fox = h('div', { class: 'abs', style: { left: '810px', top: '390px', width: '300px', height: '300px', transformOrigin: '50% 50%' }, html: piece('fox', 'hookfox') });
-    this.fox.firstChild.style.cssText = 'width:100%;height:100%;display:block';
-    this.foxShadow = h('div', { class: 'abs', style: { left: '810px', top: '390px', width: '300px', height: '300px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,0,0,0.6) 40%, transparent 70%)' } });
-    this.v2.append(this.foxShadow, this.fox);
+    this.toy = h('div', { class: 'abs', style: { left: '810px', top: '390px', width: '300px', height: '300px', transformOrigin: '50% 50%' } }, piece('sloth', 'hooksloth'));
+    this.toyShadow = h('div', { class: 'abs', style: { left: '810px', top: '390px', width: '300px', height: '300px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,0,0,0.6) 40%, transparent 70%)' } });
+    this.v2.append(this.toyShadow, this.toy);
     R.append(this.v2);
 
     // V4 — stack of evidence
     this.v4 = h('div', { class: 'abs', style: { left: '0', top: '0', width: '1920px', height: '1080px', transformOrigin: '960px 540px' } });
     this.pages = [0, 1, 2].map((i) => {
-      const lines = Array.from({ length: 12 }, (_, k) => h('div', { style: { height: '10px', borderRadius: '3px', marginBottom: '14px', width: `${[90, 76, 84, 62, 88, 70, 80, 58, 86, 74, 66, 50][k]}%`, background: '#dcdee2', position: 'relative', overflow: 'hidden' } }, h('i', { style: { position: 'absolute', inset: '0', width: '0%', background: k === 7 ? 'rgba(255,107,87,0.75)' : 'rgba(170,215,40,0.85)', display: 'block' } })));
+      const lines = Array.from({ length: 12 }, (_, k) => h('div', { style: { height: '10px', borderRadius: '3px', marginBottom: '14px', width: `${[90, 76, 84, 62, 88, 70, 80, 58, 86, 74, 66, 50][k]}%`, background: '#dcdee2', position: 'relative', overflow: 'hidden' } }, h('i', { style: { position: 'absolute', inset: '0', width: '0%', background: k === 7 ? 'rgba(255,107,87,0.75)' : 'rgba(102,134,246,0.85)', display: 'block' } })));
       const pg = h('div', { class: 'abs', style: { left: '810px', top: '330px', width: '300px', height: '400px', borderRadius: '10px', background: '#f4f4f1', padding: '34px 30px', boxShadow: '0 30px 70px rgba(0,0,0,0.6)', transformOrigin: '50% 90%' } },
         h('div', { style: { height: '16px', width: '60%', background: '#1b1d21', borderRadius: '4px', marginBottom: '26px' } }), ...lines);
       this.v4.append(pg);
       return { pg, lines };
     });
-    this.scan = h('div', { class: 'abs', style: { left: '0', right: '0', top: '0', height: '90px', background: 'linear-gradient(180deg, rgba(212,255,90,0), rgba(170,215,40,0.35) 80%, rgba(150,200,20,0.95))', mixBlendMode: 'multiply' } });
+    this.scan = h('div', { class: 'abs', style: { left: '0', right: '0', top: '0', height: '90px', background: 'linear-gradient(180deg, rgba(130,52,254,0), rgba(102,134,246,0.35) 80%, rgba(102,134,246,0.95))', mixBlendMode: 'multiply' } });
     this.pages[1].pg.append(this.scan);
     this.gapChip = h('span', { class: 'badge bad', style: { position: 'absolute', left: '1130px', top: '560px', fontSize: '14px', height: '32px', padding: '0 14px', background: '#2a1411' } }, 'Gap found');
-    this.okChip = h('span', { class: 'badge ok', style: { position: 'absolute', left: '1130px', top: '470px', fontSize: '14px', height: '32px', padding: '0 14px', background: '#1d2410' } }, '✓ SOC 2 mapped');
+    this.okChip = h('span', { class: 'badge ok', style: { position: 'absolute', left: '1130px', top: '470px', fontSize: '14px', height: '32px', padding: '0 14px', background: '#1e1538' } }, '✓ SOC 2 mapped');
     this.v4.append(this.gapChip, this.okChip);
     R.append(this.v4);
 
@@ -71,7 +71,7 @@ addScene({
     R.append(this.typeWrap);
 
     // logo lockup + outcomes
-    this.lock = makeLockup({ height: 150 });
+    this.lock = makeLockup({ height: 88 });
     this.lockWrap = h('div', { class: 'abs', style: { left: '0', top: '0', transformOrigin: '50% 50%' } }, this.lock.el);
     this.lock.el.style.position = 'relative';
     R.append(this.lockWrap);
@@ -83,7 +83,7 @@ addScene({
     });
     R.append(this.outcomes);
     // handoff line into the search scene's brief card
-    this.handoff = h('div', { class: 'abs', style: { left: '460px', top: '483px', width: '1000px', height: '2px', background: 'var(--accent)', transformOrigin: '50% 50%', boxShadow: '0 0 16px rgba(212,255,90,0.6)' } });
+    this.handoff = h('div', { class: 'abs', style: { left: '460px', top: '483px', width: '1000px', height: '2px', background: 'var(--accent)', transformOrigin: '50% 50%', boxShadow: '0 0 16px rgba(130,52,254,0.6)' } });
     R.append(this.handoff);
   },
 
@@ -112,7 +112,7 @@ addScene({
     const lineOut = prog(t, 1.0, 0.25);
     if (lineP > 0 && lineOut < 1) {
       g.save(); g.globalAlpha = 1 - lineOut;
-      g.fillStyle = C.accent; g.shadowColor = 'rgba(212,255,90,0.7)'; g.shadowBlur = 16;
+      g.fillStyle = C.accent; g.shadowColor = 'rgba(130,52,254,0.7)'; g.shadowBlur = 16;
       const w = 900 * lineP * (1 - lineOut);
       g.fillRect(960 - w / 2, 499, w, 2);
       g.restore();
@@ -133,8 +133,8 @@ addScene({
     const v2a = env(t, c2 - 0.12, c3 - 0.1, 0.12, 0.15);
     { const S = slot(1, v2a); put(this.v2, { x: S.x, y: S.y, s: S.s, sy: S.sy, o: S.o }); }
     const drop = prog(t, c2 - 0.12, 0.45, E.outCubic);
-    put(this.fox, { y: (1 - drop) * -30, s: lerp(1.25, 1, drop), r: (1 - drop) * 20 });
-    put(this.foxShadow, { x: 14 + (1 - drop) * 30, y: 22 + (1 - drop) * 40, s: lerp(1.2, 1.02, drop), o: 0.6 * drop });
+    put(this.toy, { y: (1 - drop) * -30, s: lerp(1.25, 1, drop), r: (1 - drop) * 20 });
+    put(this.toyShadow, { x: 14 + (1 - drop) * 30, y: 22 + (1 - drop) * 40, s: lerp(1.2, 1.02, drop), o: 0.6 * drop });
     // canvas overlays follow the V2 slot
     const withSlot = (k, soloA, fn) => {
       const S = slot(k, soloA);
@@ -147,7 +147,7 @@ addScene({
     withSlot(1, v2a, () => {
       const q = prog(t, c2 + 0.1, 0.5, E.outCubic);
       reticle(g, 960, 540, 176, { p: q, spin: t * 0.8, lw: 3 });
-      tag(g, 960 - 150, 540 - 196, 'CHARACTER · FOX', { a: q, size: 16 });
+      tag(g, 960 - 150, 540 - 196, 'CHARACTER · SLOTH', { a: q, size: 16 });
     });
 
     // ---- V3 camera feeds (ego hands + crop rows)
@@ -202,7 +202,7 @@ addScene({
     if (collapse > 0 && t < cNot + 0.5) {
       const lp = prog(t, conv0 + 0.55, 0.4, E.inOutCubic);
       g.save();
-      g.fillStyle = C.accent; g.shadowColor = 'rgba(212,255,90,0.8)'; g.shadowBlur = 20;
+      g.fillStyle = C.accent; g.shadowColor = 'rgba(130,52,254,0.8)'; g.shadowBlur = 20;
       const w = lerp(1500, 900, lp) * (1 - prog(t, cNot - 0.1, 0.35));
       g.globalAlpha = collapse;
       g.fillRect(960 - w / 2, 529, w, 3);
@@ -225,7 +225,7 @@ addScene({
     const sink = prog(t, cProd + 0.25, 0.5, E.inOutCubic);
     this.under.style.transform = `translateY(${(sink * 70).toFixed(1)}px) scaleX(${strike.toFixed(3)})`;
     this.under.style.background = sink > 0.5 ? 'var(--accent)' : 'var(--text2)';
-    this.under.style.boxShadow = sink > 0.5 ? `0 0 ${(18 * sink).toFixed(1)}px rgba(212,255,90,0.6)` : 'none';
+    this.under.style.boxShadow = sink > 0.5 ? `0 0 ${(18 * sink).toFixed(1)}px rgba(130,52,254,0.6)` : 'none';
 
     // ---- logo lockup
     if (!this.lockW) { const r = this.lock.el.getBoundingClientRect(); if (r.width > 10) this.lockW = r.width; }
@@ -234,7 +234,7 @@ addScene({
     const la = prog(t, cName - 0.6, 0.3) * (1 - prog(t, D - 0.75, 0.45, E.inCubic));
     const push = lerp(1, 1.035, prog(t, cName, D - cName, E.linear));
     // icon builds centered, then slides left as the wordmark reveals
-    const iconW = this.lock.height * (752 / 850);
+    const iconW = this.lock.height * (ICON_VIEWBOX[2] / VIEWBOX[3]);
     const center = (lw / 2 - iconW / 2) * (1 - prog(t, cName + 0.35, 1.0, E.inOutCubic));
     put(this.lockWrap, { x: lx + center - (push - 1) * lw / 2, y: ly - (push - 1) * 75 - prog(t, D - 0.75, 0.5, E.inCubic) * 40, s: push, o: la });
     this.lock.set({
