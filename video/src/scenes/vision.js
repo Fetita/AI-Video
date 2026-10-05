@@ -315,7 +315,7 @@ addScene({
   setup(ctx) {
     const R = ctx.root;
     this.hud = makeHud(ctx, {
-      num: '03', title: 'Computer vision · Custom models · Robotics',
+      num: '03', title: 'Computer vision · Custom models · Robotics', badge: 'Client project',
       steps: [
         { label: 'Detect', at: ctx.cue('v2', 0) + 0.2 },
         { label: 'Track', at: ctx.cue('v2', 2) },

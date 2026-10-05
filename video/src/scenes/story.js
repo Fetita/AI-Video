@@ -60,7 +60,7 @@ addScene({
   setup(ctx) {
     const R = ctx.root;
     this.hud = makeHud(ctx, {
-      num: '02', title: 'Generative AI · Physical to digital',
+      num: '02', title: 'Generative AI · Physical to digital', badge: 'Client project',
       steps: [
         { label: 'Place', at: ctx.cue('t2', 0) },
         { label: 'Recognize', at: ctx.cue('t3', 0) },

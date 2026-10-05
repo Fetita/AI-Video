@@ -1,6 +1,6 @@
 # Eagerworks AI Studio: promotional film
 
-A 2:08 premium B2B film positioning **Eagerworks AI Studio** as the partner that turns
+A 2:23 premium B2B film positioning **Eagerworks AI Studio** as the partner that turns
 AI capabilities into real products, workflows and measurable outcomes.
 
 **Deliverable:** [`out/eagerworks-ai-studio.mp4`](out/eagerworks-ai-studio.mp4) (1920×1080, 30 fps, H.264 + AAC, −14 LUFS)

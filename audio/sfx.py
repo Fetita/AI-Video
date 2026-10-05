@@ -296,6 +296,20 @@ for i, tt in enumerate([cName + 3.2, cWf, cOut]):
     at(tt - 0.1, s_pop(700 + i * 110, 1000 + i * 110), -29)
 at(s + D - 0.55, s_whoosh(0.5, 1500, 5000, 7), -31)
 
+# ================================================================== INTRO
+s = SC['intro']['start']
+seg = lambda lid, k: L[lid]['segs'][min(k, len(L[lid]['segs']) - 1)][0]
+cI1, cI1b, cI2end, cI3 = seg('i1', 0), seg('i1', 1), L['i2']['end'], seg('i3', 0)
+D = SC['intro']['end'] - s
+at(cI1 - 0.2, s_whoosh(0.6, 400, 1800, 30), -31)
+for i in range(4):
+    at(cI1b + 0.2 + i * 0.32, s_pop(820 + i * 70, 1200 + i * 70), -31, -0.45 + i * 0.25)
+at(cI2end - 0.75, s_chime(), -30, 0.4)
+at(cI3 - 0.25, s_whoosh(0.5, 2200, 700, 31), -29)
+for i in range(5):
+    at(cI3 + 0.1 + i * 0.2, s_tick(1500 + i * 160, 0.014), -31, -0.4 + i * 0.2)
+at(s + D - 1.25, s_whoosh(0.5, 600, 2400, 32), -32)
+
 # ================================================================== SEARCH
 s = SC['search']['start']
 cP, cS, cE, cR, cF, cF2 = cue('s2', 0), cue('s2', 1), cue('s2', 2), cue('s2', 3), cue('s3', 0), cue('s3', 1)
