@@ -1,6 +1,6 @@
 # Eagerworks AI Studio: promotional film
 
-A 2:08 premium B2B film positioning **Eagerworks AI Studio** as the partner that turns
+A 2:47 premium B2B film positioning **Eagerworks AI Studio** as the partner that turns
 AI capabilities into real products, workflows and measurable outcomes.
 
 **Deliverable:** [`out/eagerworks-ai-studio.mp4`](out/eagerworks-ai-studio.mp4) (1920×1080, 30 fps, H.264 + AAC, −14 LUFS)
@@ -11,8 +11,8 @@ Everything in the film is generated from code in this repository. Visuals are de
 HTML/Canvas/SVG scenes rendered frame by frame in headless Chromium. The voiceover comes from a
 local open-weight TTS model, and the music and sound design are synthesized with numpy.
 The marketplace's location photos are photoreal renders of procedural Blender scenes. No stock media is used,
-and no client screenshots, names, logos or data appear. The only external assets are the supplied Eagerworks
-logo and the story character sheets.
+and no client screenshots, names, logos or data appear. The external assets are the supplied Eagerworks logo,
+the story character sheets, and two clips of Eagerworks' own packing-line vision product (`video/assets/inhouse/`).
 
 ## Structure
 
@@ -31,11 +31,12 @@ video/
   render.mjs            Playwright renderer (stills for review, or parallel video render)
   snap.mjs              screenshot helper for debug pages
   extract_characters.mjs  cuts the supplied character sheets into one PNG per character
-  assets/               fonts (Google Fonts, OFL), logo, characters, location photos, recap thumbnails
+  assets/               fonts (Google Fonts, OFL), logo, characters, location photos, recap thumbnails, in-house product clips
 scripts/
   render_locations.py   procedural Blender (Cycles) scenes → video/assets/places/*.jpg
   make_recap.sh         film frames → the finale's recap-wall thumbnails
   finalize.sh           delivery encode (grain, H.264 High, AAC, faststart)
+  extract_clips.sh      in-house clips → numbered frames in video/build/clips/ (needed before rendering)
   contact_sheet.py      stills → review sheet
 docs/creative-treatment.md
 out/eagerworks-ai-studio.mp4
@@ -51,11 +52,12 @@ Kokoro model files (`kokoro-v1.0.onnx`, `voices-v1.0.bin`) come from the
 # 1. voiceover + timeline (only when the script changes)
 cd audio && python3 tts.py && python3 build_timeline.py
 
-# 2. assets (only when they change): location photos (Blender `pip install bpy`), characters, recap wall
+# 2. assets (only when they change): location photos (Blender `pip install bpy`), characters;
+#    then unpack the product clips (always needed before rendering) and refresh the recap wall
 python3 ../scripts/render_locations.py      # slow: a few minutes per photo on CPU
-cd ../video && npm install && node extract_characters.mjs && ../scripts/make_recap.sh
+cd ../video && npm install && node extract_characters.mjs && ../scripts/extract_clips.sh && ../scripts/make_recap.sh
 
-# 3. picture (≈7 min on 4 cores); review stills with:  node render.mjs --stills 12.5,30 [--only search]
+# 3. picture (≈9 min on 4 cores); review stills with:  node render.mjs --stills 12.5,30 [--only search]
 node render.mjs --video --workers 4 --out build/frames.mkv
 
 # 4. sound

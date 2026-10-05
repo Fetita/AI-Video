@@ -34,7 +34,7 @@ const ctx0 = addScene({
   setup(ctx) {
     const R = ctx.root;
     this.hud = makeHud(ctx, {
-      num: '01', title: 'Generative AI · Search · Recommendation',
+      num: '01', title: 'Generative AI · Search · Recommendation', badge: 'Client project',
       steps: [
         { label: 'Parse', at: ctx.cue('s2', 0) },
         { label: 'Search', at: ctx.cue('s2', 1) },

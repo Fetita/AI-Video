@@ -54,7 +54,7 @@ addScene({
   setup(ctx) {
     const R = ctx.root;
     this.hud = makeHud(ctx, {
-      num: '04', title: 'Real-world AI · Detection · Tracking',
+      num: '04', title: 'Real-world AI · Detection · Tracking', badge: 'Client project',
       steps: [
         { label: 'Detect', at: ctx.cue('a2', 0) + 0.9 },
         { label: 'Count', at: ctx.cue('a2', 1) },

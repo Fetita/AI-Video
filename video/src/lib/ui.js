@@ -5,10 +5,12 @@ import { h, put, prog, E, clamp, lerp, env, rgba, C, hash, rrect } from '../engi
 /**
  * Chapter label (top-left) and pipeline stepper (bottom-center).
  * steps: [{label, at}] — `at` is the scene-relative time the step becomes active.
+ * badge: optional pill after the title (e.g. "Client project").
  */
-export function makeHud(ctx, { num, title, steps = [], stepY = 58 }) {
+export function makeHud(ctx, { num, title, badge = null, steps = [], stepY = 58 }) {
   const chapter = h('div', { class: 'hud-chapter' },
-    h('span', { class: 'num' }, num), h('span', { class: 'bar' }), h('span', { class: 'ttl' }, title));
+    h('span', { class: 'num' }, num), h('span', { class: 'bar' }), h('span', { class: 'ttl' }, title),
+    badge ? h('span', { class: 'tag' }, badge) : null);
   const stepper = h('div', { class: 'stepper', style: { bottom: `${stepY}px` } });
   const parts = steps.map((s, i) => {
     const link = i > 0 ? h('div', { class: 'link' }, h('i')) : null;

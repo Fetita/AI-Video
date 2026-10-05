@@ -1,6 +1,6 @@
 import { addGlobal, mount, seek, makeCanvas, W, H, FPS, TIMELINE, h } from './engine.js';
 
-const SCENES = ['hook', 'search', 'story', 'vision', 'agri', 'docs', 'finale'];
+const SCENES = ['hook', 'intro', 'search', 'story', 'vision', 'agri', 'docs', 'inhouse', 'finale'];
 
 // ---- global background: deep graphite with a soft top light and a faint engineering grid
 addGlobal({
@@ -60,7 +60,7 @@ async function boot() {
   window.__seek = (t) => seek(t);
   window.__duration = TIMELINE.duration;
   window.__fps = FPS;
-  seek(0);
+  await seek(0);
   window.__ready = true;
 }
 

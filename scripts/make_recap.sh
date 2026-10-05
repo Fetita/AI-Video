@@ -4,9 +4,9 @@
 set -euo pipefail
 cd "$(dirname "$0")/../video"
 TILES=(
-  parse:26.45 search:27.95 recommend:37.95 physical:50.05 generative:53.65
-  hands:64.85 faces:66.45 tracking3d:67.65 dataset:69.75 benchmark:72.45
-  robot:74.85 field:87.05 conveyor:94.65 documents:105.75 readiness:111.05
+  parse:40.85 search:42.35 recommend:52.35 physical:64.45 generative:68.05
+  hands:79.25 faces:80.85 tracking3d:82.05 dataset:84.15 benchmark:86.85
+  robot:89.25 field:101.45 conveyor:109.05 documents:120.15 readiness:125.45
 )
 times=$(printf '%s\n' "${TILES[@]}" | cut -d: -f2 | paste -sd, -)
 rm -rf build/recap

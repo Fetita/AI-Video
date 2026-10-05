@@ -25,7 +25,7 @@ addScene({
   setup(ctx) {
     const R = ctx.root;
     this.hud = makeHud(ctx, {
-      num: '05', title: 'Document intelligence · AI auditing',
+      num: '05', title: 'Document intelligence · AI auditing', badge: 'Client project',
       steps: [
         { label: 'Read', at: ctx.cue('d1', 1) },
         { label: 'Map', at: ctx.cue('d1', 2) },

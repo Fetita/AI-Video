@@ -174,7 +174,7 @@ function drawRobot(g, t, a, U, hand) {
     const s1 = P(v3(i * 0.5, 0, -2)), s2 = P(v3(i * 0.5, 0, 3)), s3 = P(v3(-2, 0, i * 0.5 + 0.5)), s4 = P(v3(2, 0, i * 0.5 + 0.5));
     g.strokeStyle = 'rgba(255,255,255,0.06)'; g.lineWidth = 1; g.beginPath(); g.moveTo(s1.x, s1.y); g.lineTo(s2.x, s2.y); g.moveTo(s3.x, s3.y); g.lineTo(s4.x, s4.y); g.stroke();
   }
-  // demonstration path (dashed) + robot trail (lime)
+  // demonstration path (dashed) + robot trail (violet)
   g.setLineDash([7, 8]); g.strokeStyle = 'rgba(124,198,255,0.8)'; g.lineWidth = 2; g.beginPath();
   for (let k = 0; k <= 80; k++) { const q = P(demoPath(k / 80)); k ? g.lineTo(q.x, q.y) : g.moveTo(q.x, q.y); } g.stroke(); g.setLineDash([]);
   if (U > 0) { g.strokeStyle = C.accent; g.lineWidth = 3.5; g.beginPath(); for (let k = 0; k <= 80 * U; k++) { const q = P(demoPath(k / 80)); k ? g.lineTo(q.x, q.y) : g.moveTo(q.x, q.y); } g.stroke(); }
@@ -315,7 +315,7 @@ addScene({
   setup(ctx) {
     const R = ctx.root;
     this.hud = makeHud(ctx, {
-      num: '03', title: 'Computer vision · Custom models · Robotics',
+      num: '03', title: 'Computer vision · Custom models · Robotics', badge: 'Client project',
       steps: [
         { label: 'Detect', at: ctx.cue('v2', 0) + 0.2 },
         { label: 'Track', at: ctx.cue('v2', 2) },
