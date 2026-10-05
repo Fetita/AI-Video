@@ -6,7 +6,7 @@ import { makeHud } from '../lib/ui.js';
 const FILES = [
   ['PDF', '#ff6b57', 'Quarterly access review.pdf', '2.4 MB'],
   ['DOC', '#7cc6ff', 'Offboarding checklist.docx', '310 KB'],
-  ['PNG', '#a78dff', 'MFA configuration.png', '1.1 MB'],
+  ['PNG', '#ff8fc8', 'MFA configuration.png', '1.1 MB'],
   ['XLS', '#9fe07a', 'Training completion.xlsx', '96 KB'],
   ['PDF', '#ff6b57', 'Operations report.pdf', '1.8 MB'],
 ];
@@ -25,7 +25,7 @@ addScene({
   setup(ctx) {
     const R = ctx.root;
     this.hud = makeHud(ctx, {
-      num: '05', title: 'Document intelligence · AI auditing',
+      num: '05', title: 'Document intelligence · AI auditing', badge: 'Client project',
       steps: [
         { label: 'Read', at: ctx.cue('d1', 1) },
         { label: 'Map', at: ctx.cue('d1', 2) },
@@ -60,7 +60,7 @@ addScene({
 
     // ---------- document viewer (fictional access review)
     this.doc = h('div', { class: 'abs', style: { left: '600px', top: '120px', width: '620px', height: '830px', borderRadius: '12px', background: '#f5f5f2', color: '#1b1d21', padding: '46px 52px', boxShadow: '0 50px 100px -20px rgba(0,0,0,0.75)', overflow: 'hidden' } });
-    const hl = (text, kind) => { const s = h('span', { class: `hl-${kind}`, style: { backgroundImage: `linear-gradient(${kind === 'bad' ? 'rgba(255,107,87,0.28)' : 'rgba(170,215,40,0.38)'}, ${kind === 'bad' ? 'rgba(255,107,87,0.28)' : 'rgba(170,215,40,0.38)'})`, backgroundRepeat: 'no-repeat', backgroundSize: '0% 100%', borderRadius: '3px', padding: '1px 2px' } }, text); return s; };
+    const hl = (text, kind) => { const s = h('span', { class: `hl-${kind}`, style: { backgroundImage: `linear-gradient(${kind === 'bad' ? 'rgba(255,107,87,0.28)' : 'rgba(102,134,246,0.38)'}, ${kind === 'bad' ? 'rgba(255,107,87,0.28)' : 'rgba(102,134,246,0.38)'})`, backgroundRepeat: 'no-repeat', backgroundSize: '0% 100%', borderRadius: '3px', padding: '1px 2px' } }, text); return s; };
     this.hls = [hl('All employee accounts', 'ok'), hl('revoked within 48 hours', 'ok'), hl('enforced for administrators', 'mid'), hl('Contractor accounts were out of scope', 'bad')];
     const p = (...kids) => h('p', { style: { fontSize: '17px', lineHeight: '1.62', color: '#34373d', margin: '0 0 16px' } }, ...kids);
     const sec = (n, t) => h('div', { style: { fontSize: '13px', fontFamily: 'var(--font-mono)', letterSpacing: '0.12em', color: '#7a7e86', margin: '22px 0 8px' } }, `${n}  ${t.toUpperCase()}`);
@@ -76,7 +76,7 @@ addScene({
       h('div', { style: { margin: '6px 0 10px' } }, tr(['User group', 'Accounts', 'Reviewed', 'Approver'], true), tr(['Engineering', '42', '✓', 'Eng. manager']), tr(['Finance', '12', '✓', 'Finance lead']), tr(['Operations', '27', '✓', 'Ops manager'])),
       sec('03', 'Exclusions'), p(this.hls[3], ' for this review cycle.'),
       h('div', { style: { marginTop: '26px', display: 'flex', alignItems: 'center', gap: '12px', fontSize: '14px', color: '#7a7e86' } }, h('span', { style: { fontFamily: 'var(--font-story)', fontStyle: 'italic', fontSize: '24px', color: '#2a2d33' } }, 'J. Rivera'), '— IT lead, sign-off'));
-    this.scan = h('div', { class: 'abs', style: { left: '0', right: '0', top: '0', height: '120px', background: 'linear-gradient(180deg, rgba(212,255,90,0), rgba(170,215,40,0.22) 70%, rgba(150,200,20,0.9) 100%)', mixBlendMode: 'multiply' } });
+    this.scan = h('div', { class: 'abs', style: { left: '0', right: '0', top: '0', height: '120px', background: 'linear-gradient(180deg, rgba(130,52,254,0), rgba(102,134,246,0.22) 70%, rgba(102,134,246,0.9) 100%)', mixBlendMode: 'multiply' } });
     this.doc.append(this.scan);
     this.view.append(this.doc);
 
@@ -101,8 +101,8 @@ addScene({
     this.view.append(this.map);
 
     // ---------- recommendation
-    this.rec = h('div', { class: 'panel', style: { left: '1270px', top: '800px', width: '580px', padding: '20px 24px', borderColor: 'rgba(212,255,90,0.35)' } },
-      h('div', { style: { display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' } }, h('span', { class: 'badge bad' }, 'Impact · High'), h('span', { class: 'kicker', style: { color: 'var(--accent)' } }, 'Recommendation')),
+    this.rec = h('div', { class: 'panel', style: { left: '1270px', top: '800px', width: '580px', padding: '20px 24px', borderColor: 'rgba(130,52,254,0.35)' } },
+      h('div', { style: { display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' } }, h('span', { class: 'badge bad' }, 'Impact · High'), h('span', { class: 'kicker', style: { color: 'var(--accent-text)' } }, 'Recommendation')),
       h('div', { style: { fontSize: '18px', lineHeight: 1.5, marginBottom: '16px' } }, 'Add contractor accounts to the next quarterly review and attach the signed approval log.'),
       h('div', { style: { display: 'flex', gap: '10px' } }, h('span', { class: 'chip ai' }, 'Assign owner'), h('span', { class: 'chip' }, 'Draft evidence request')));
     this.view.append(this.rec);
@@ -119,7 +119,7 @@ addScene({
       h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '18px' } }, h('span', { class: 'display', style: { fontSize: '30px', fontWeight: 600 } }, name), h('span', { class: 'kicker' }, sub)),
       h('div', { style: { display: 'flex', height: '14px', gap: '4px', borderRadius: '7px', overflow: 'hidden', marginBottom: '14px' } },
         h('i', { style: { display: 'block', flex: seg[0], background: 'var(--accent)' } }), h('i', { style: { display: 'block', flex: seg[1], background: 'var(--amber)' } }), h('i', { style: { display: 'block', flex: seg[2], background: 'var(--coral)' } })),
-      h('div', { style: { display: 'flex', gap: '22px', fontSize: '15px', color: 'var(--text2)' } }, h('span', {}, h('b', { style: { color: 'var(--accent)', fontWeight: 600 } }, counts[0]), ' supported'), h('span', {}, h('b', { style: { color: 'var(--amber)', fontWeight: 600 } }, counts[1]), ' partial'), h('span', {}, h('b', { style: { color: 'var(--coral)', fontWeight: 600 } }, counts[2]), ' gaps')));
+      h('div', { style: { display: 'flex', gap: '22px', fontSize: '15px', color: 'var(--text2)' } }, h('span', {}, h('b', { style: { color: 'var(--accent-text)', fontWeight: 600 } }, counts[0]), ' supported'), h('span', {}, h('b', { style: { color: 'var(--amber)', fontWeight: 600 } }, counts[1]), ' partial'), h('span', {}, h('b', { style: { color: 'var(--coral)', fontWeight: 600 } }, counts[2]), ' gaps')));
     this.dashTitle = h('div', { class: 'abs', style: { left: '200px', top: '205px', display: 'flex', alignItems: 'baseline', gap: '18px' } }, h('span', { style: { fontSize: '40px', fontWeight: 600, letterSpacing: '-0.015em' } }, 'Audit readiness'), h('span', { class: 'kicker', style: { color: 'var(--text2)' } }, 'Decision support for your team'));
     this.dashCards = [fw('SOC 2', 'Type II', [46, 5, 2], ['46', '5', '2']), fw('ISO 27001', 'Annex A', [71, 8, 3], ['71', '8', '3'])];
     const act = (t2, who, cls) => h('div', { style: { display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 0', borderBottom: '1px solid var(--line)', fontSize: '15.5px' } }, h('span', { class: `badge ${cls}`, style: { width: '84px', justifyContent: 'center' } }, cls === 'bad' ? 'Gap' : 'Partial'), h('span', { style: { flex: 1 } }, t2), h('span', { class: 'kicker', style: { fontSize: '11px' } }, who));

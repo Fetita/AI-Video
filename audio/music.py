@@ -241,6 +241,21 @@ w_bass(t0 + 27 * BEAT, 'G6sus', 5, pattern='8', grit=0.3, gain=0.7)
 w_arp(t0 + 23 * BEAT, 'Cmaj9', 4, rate=0.25, bright=0.6, gain=0.35)
 w_arp(t0 + 27 * BEAT, 'G6sus', 5, rate=0.25, bright=0.65, gain=0.38)
 
+# INTRO (who we are → client work) ---------------------------------------
+t0, nb = section_beats('intro')
+prog = [('Am9', 8), ('Fmaj9', 8), ('G6sus', nb - 16)]
+b = 0
+for i, (ch, n_) in enumerate(prog):
+    w_pad(t0 + b * BEAT, ch, n_, bright=0.4 + 0.1 * i, gain=0.8)
+    w_bass(t0 + b * BEAT, ch, n_, pattern='hold' if i < 2 else '4', grit=0.15, gain=0.45)
+    w_arp(t0 + b * BEAT, ch, n_, rate=0.5, bright=0.5, gain=0.3)
+    b += n_
+w_drums(t0, 8, 'tick', gain=0.8)
+w_drums(t0 + 8 * BEAT, 8, 'soft', gain=0.65)
+w_drums(t0 + 16 * BEAT, nb - 16, 'half', gain=0.7)
+w_bells(cue('i2') + (L['i2']['end'] - cue('i2')) - 0.75, [(84, 0), (88, 0.5)], gain=0.3)  # "…runs on AI"
+place(S['fx'], riser(1.6, 31), t0 + nb * BEAT - 1.6, 0.4)
+
 # SEARCH ------------------------------------------------------------
 t0, nb = section_beats('search')
 prog = [('Am9', 8), ('Fmaj9', 8), ('Cmaj9', 8), ('G6sus', nb - 24)]
@@ -324,6 +339,20 @@ for ch, n_ in prog:
     b += n_
 w_drums(t0, nb, 'half', gain=0.85)
 
+# INHOUSE (our own product: packing-line vision) ---------------------------
+t0, nb = section_beats('inhouse')
+place(S['fx'], impact(0.5, 33), t0, 0.5)
+prog = [('Am9', 8), ('Fmaj9', 8), ('Cmaj9', 8), ('Am9', 8), ('G6sus', nb - 32)]
+b = 0
+for i, (ch, n_) in enumerate(prog):
+    w_pad(t0 + b * BEAT, ch, n_, bright=0.5 + 0.05 * i, gain=0.7)
+    w_bass(t0 + b * BEAT, ch, n_, pattern='hold' if i == 0 else '8', grit=0.45, gain=0.8)
+    w_arp(t0 + b * BEAT, ch, n_, rate=0.5 if i == 0 else 0.25, bright=0.75, gain=0.38)
+    b += n_
+w_drums(t0, 8, 'tick', gain=0.85)
+w_drums(t0 + 8 * BEAT, nb - 10, 'mech', gain=0.85)
+fill(t0 + nb * BEAT, 0.7)
+
 # FINALE -------------------------------------------------------------
 t0, nb = section_beats('finale')
 hitF = 11 * BEAT
@@ -373,7 +402,7 @@ S['bass'] = filt(S['bass'], 'hp', 32, 0.7)
 LEVELS = {'drums': 0.62, 'bass': 0.3, 'pad': 0.85, 'arp': 0.52, 'bell': 0.28, 'fx': 0.38, 'stab': 1.0}
 mix = sum(S[k] * LEVELS[k] for k in S)
 # section dynamics: let the story breathe, peak at vision/agri
-SEC_GAIN = {'hook': 1.0, 'search': 0.84, 'story': 0.72, 'vision': 1.0, 'agri': 0.94, 'docs': 0.84, 'finale': 1.0}
+SEC_GAIN = {'hook': 1.0, 'intro': 0.78, 'search': 0.84, 'story': 0.72, 'vision': 1.0, 'agri': 0.94, 'docs': 0.84, 'inhouse': 0.88, 'finale': 1.0}
 gcurve = np.ones(N)
 for sc in TL['scenes']:
     a, b2 = int(sc['start'] * SR), int(sc['end'] * SR) if sc['id'] != 'finale' else N

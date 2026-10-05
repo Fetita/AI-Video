@@ -296,6 +296,20 @@ for i, tt in enumerate([cName + 3.2, cWf, cOut]):
     at(tt - 0.1, s_pop(700 + i * 110, 1000 + i * 110), -29)
 at(s + D - 0.55, s_whoosh(0.5, 1500, 5000, 7), -31)
 
+# ================================================================== INTRO
+s = SC['intro']['start']
+seg = lambda lid, k: L[lid]['segs'][min(k, len(L[lid]['segs']) - 1)][0]
+cI1, cI1b, cI2end, cI3 = seg('i1', 0), seg('i1', 1), L['i2']['end'], seg('i3', 0)
+D = SC['intro']['end'] - s
+at(cI1 - 0.2, s_whoosh(0.6, 400, 1800, 30), -31)
+for i in range(4):
+    at(cI1b + 0.2 + i * 0.32, s_pop(820 + i * 70, 1200 + i * 70), -31, -0.45 + i * 0.25)
+at(cI2end - 0.75, s_chime(), -30, 0.4)
+at(cI3 - 0.25, s_whoosh(0.5, 2200, 700, 31), -29)
+for i in range(5):
+    at(cI3 + 0.1 + i * 0.2, s_tick(1500 + i * 160, 0.014), -31, -0.4 + i * 0.2)
+at(s + D - 1.25, s_whoosh(0.5, 600, 2400, 32), -32)
+
 # ================================================================== SEARCH
 s = SC['search']['start']
 cP, cS, cE, cR, cF, cF2 = cue('s2', 0), cue('s2', 1), cue('s2', 2), cue('s2', 3), cue('s3', 0), cue('s3', 1)
@@ -435,6 +449,23 @@ at(cRecD - 0.1, s_chime(), -27, 0.5)
 at(cKnow + 0.0, s_whoosh(0.7, 500, 2200, 23), -27)
 for i in range(4):
     at(cKnow + 0.15 + i * 0.12, s_pop(750 + i * 80, 1050 + i * 80), -32, -0.4 + i * 0.3)
+
+# ================================================================== INHOUSE
+s = SC['inhouse']['start']
+cO1, cShow, cLineO = cue('o1'), cue('o2'), cue('o4')
+feat = [cue('o3', 0), cue('o3', 1), cue('o3', 2), cLineO]
+D = SC['inhouse']['end'] - s
+at(cO1 - 0.3, s_whoosh(0.7, 400, 2000, 33), -29)
+at(cO1 + 0.3, s_rise(0.7, 500, 1000), -34)
+at(cShow - 0.75, s_whoosh(0.55, 2200, 700, 34), -29)
+at(cShow - 0.45, s_suck(0.4, 35), -30)
+at(cShow - 0.1, s_rec(), -31)
+at(cShow, s_belt(cLineO - cShow + 7.5), -38)
+for i, tt in enumerate(feat):
+    at(tt - 0.1, s_lock() if i < 3 else s_pop(1000, 1500), -27, 0.5)
+at(cLineO - 0.4, s_whoosh(0.6, 700, 2600, 36), -27, -0.3)
+at(cLineO + 3.3, s_pop(900, 1350), -30, 0.5)
+at(s + D - 0.9, s_whoosh(0.6, 1800, 500, 37), -29)
 
 # ================================================================== FINALE
 s = SC['finale']['start']

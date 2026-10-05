@@ -2,7 +2,7 @@
 // every tile collapses into the logo's E strokes → lockup → tagline → CTA.
 import { addScene, h, put, prog, E, clamp, lerp, env, makeCanvas, rgba, C, W, H } from '../engine.js';
 import { makeLockup } from '../lib/logo.js';
-import { STROKES, VIEWBOX } from '../lib/logo-data.js';
+import { STROKES, VIEWBOX, ICON_VIEWBOX } from '../lib/logo-data.js';
 import { words, revealWords } from '../lib/ui.js';
 
 const TILES = [
@@ -27,7 +27,7 @@ addScene({
         h('img', { src: `assets/recap/${img}.jpg`, style: { width: '100%', height: '100%', objectFit: 'cover', display: 'block' } }),
         h('div', { style: { position: 'absolute', left: '0', right: '0', bottom: '0', height: '60px', background: 'linear-gradient(180deg, transparent, rgba(0,0,0,0.75))' } }),
         h('div', { class: 'kicker', style: { position: 'absolute', left: '14px', bottom: '12px', color: '#f3f3ef', fontSize: '11.5px', letterSpacing: '0.16em' } }, label));
-      const hl = h('div', { style: { position: 'absolute', inset: '0', borderRadius: '12px', boxShadow: 'inset 0 0 0 2px rgba(212,255,90,0.9)', opacity: 0 } });
+      const hl = h('div', { style: { position: 'absolute', inset: '0', borderRadius: '12px', boxShadow: 'inset 0 0 0 2px rgba(130,52,254,0.9)', opacity: 0 } });
       el.append(hl);
       this.inner.append(el);
       const c = i % COLS, r = Math.floor(i / COLS);
@@ -50,7 +50,7 @@ addScene({
     const cv = makeCanvas(R);
     this.g = cv.ctx;
     // lockup
-    this.lock = makeLockup({ height: 170 });
+    this.lock = makeLockup({ height: 92 });
     this.lock.el.style.position = 'relative';
     this.lockWrap = h('div', { class: 'abs', style: { left: '0', top: '0' } }, this.lock.el);
     R.append(this.lockWrap);
@@ -58,7 +58,7 @@ addScene({
     this.tagSpans = words(this.tagline, 'From AI ideas to real-world products.');
     R.append(this.tagline);
     this.cta = h('div', { class: 'abs', style: { left: '0', width: '1920px', top: '760px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '18px' } });
-    this.ctaBtn = h('div', { style: { display: 'flex', alignItems: 'center', gap: '16px', height: '66px', padding: '0 34px', borderRadius: '999px', background: 'var(--accent)', color: '#0a0c0e', fontSize: '25px', fontWeight: 600, letterSpacing: '-0.005em', boxShadow: '0 0 40px rgba(212,255,90,0.35)' } }, 'Let’s build what’s next', h('span', { style: { fontSize: '26px' } }, '→'));
+    this.ctaBtn = h('div', { style: { display: 'flex', alignItems: 'center', gap: '16px', height: '66px', padding: '0 34px', borderRadius: '999px', background: 'var(--accent-grad)', color: '#ffffff', fontSize: '25px', fontWeight: 600, letterSpacing: '-0.005em', boxShadow: '0 0 40px rgba(130,52,254,0.35)' } }, 'Let’s build what’s next', h('span', { style: { fontSize: '26px' } }, '→'));
     this.url = h('div', { class: 'kicker', style: { color: 'var(--text2)', fontSize: '15px', letterSpacing: '0.22em' } }, 'eagerworks.com');
     this.cta.append(this.ctaBtn, this.url);
     R.append(this.cta);
@@ -78,7 +78,7 @@ addScene({
     this.inner.style.transform = `rotateX(${tilt.toFixed(2)}deg) rotateY(${(-tilt * 0.6).toFixed(2)}deg) scale(${lerp(1.06, 0.98, prog(t, 0, cName, E.linear)).toFixed(4)})`;
     // icon position (centered build) → stroke targets on screen
     const lh = this.lock.height, sc = lh / VIEWBOX[3];
-    const iconW = lh * (752 / 850);
+    const iconW = lh * (ICON_VIEWBOX[2] / VIEWBOX[3]);
     if (!this.lockW) { const r = this.lock.el.getBoundingClientRect(); if (r.width > 10) this.lockW = r.width; }
     const lw = this.lockW || 1500;
     const lx = (1920 - lw) / 2, ly = 520 - lh / 2 - 60;
@@ -101,7 +101,7 @@ addScene({
       tl.el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, ${((1 - inP) * -300).toFixed(1)}px) rotate(${rot.toFixed(2)}deg) scale(${sx.toFixed(4)}, ${sy.toFixed(4)})`;
       tl.el.style.opacity = (inP * (1 - clamp((cp - 0.75) / 0.25))).toFixed(3);
       tl.el.style.filter = cp > 0.4 ? `brightness(${(1 + cp * 2).toFixed(2)}) saturate(0)` : 'none';
-      tl.el.style.borderColor = cp > 0.3 ? 'rgba(212,255,90,0.9)' : 'rgba(255,255,255,0.14)';
+      tl.el.style.borderColor = cp > 0.3 ? 'rgba(130,52,254,0.9)' : 'rgba(255,255,255,0.14)';
     });
     const dimA = env(t, cOne - 0.3, cName - 0.9, 0.4, 0.45);
     this.dim.style.opacity = dimA.toFixed(3);
@@ -110,7 +110,7 @@ addScene({
     this.dbsWords.forEach((w, i) => {
       const q = prog(t, wordAt[i] - 0.05, 0.35, E.outCubic);
       w.style.color = q > 0.5 ? '#ffffff' : 'var(--text3)';
-      w.style.textShadow = q > 0.5 ? '0 0 30px rgba(212,255,90,0.35)' : 'none';
+      w.style.textShadow = q > 0.5 ? '0 0 30px rgba(130,52,254,0.35)' : 'none';
     });
     put(this.dbs, { o: prog(t, cOne + 0.3, 0.4) * (1 - prog(t, cName - 1.45, 0.3)) });
 
@@ -136,7 +136,7 @@ addScene({
     const sw = prog(t, cTag + 1.6, 0.6, E.inOutCubic);
     if (sw > 0 && t < D - 0.4) {
       g.save(); g.globalAlpha = 1 - prog(t, D - 0.8, 0.5);
-      g.fillStyle = C.accent; g.shadowColor = 'rgba(212,255,90,0.7)'; g.shadowBlur = 14;
+      g.fillStyle = C.accent; g.shadowColor = 'rgba(130,52,254,0.7)'; g.shadowBlur = 14;
       g.fillRect(960 - 60 * sw, 722, 120 * sw, 3);
       g.restore();
     }

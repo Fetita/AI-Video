@@ -1,6 +1,8 @@
 // Animatable Eagerworks lockup: constructed icon (for the build) + traced artwork (for the final state).
 import { h, svg, clamp, lerp, E, prog } from '../engine.js';
-import { VIEWBOX, ICON_PATH, LETTER_PATHS, LETTER_BBOXES, HEX, STROKES } from './logo-data.js';
+import { VIEWBOX, ICON_PATH, LETTER_PATHS, HEX, STROKES, BASELINE } from './logo-data.js';
+
+const U = VIEWBOX[3] / 850; // the build was tuned on an 850-unit-tall icon; scale stroke widths and offsets to the artwork's units
 
 export function hexPath({ cx, cy, R, corner }) {
   const V = Array.from({ length: 6 }, (_, i) => { const a = ((-90 + i * 60) * Math.PI) / 180; return [cx + R * Math.cos(a), cy + R * Math.sin(a)]; });
@@ -25,11 +27,11 @@ export function makeLockup({ height = 140, studio = true, bg = '#07080a' } = {})
   const s = svg('svg', { viewBox: VIEWBOX.join(' '), width: width.toFixed(1), height: height.toFixed(1), style: 'overflow:visible;display:block' });
   const hp = hexPath(HEX);
   const hexFill = svg('path', { d: hp, fill: '#ffffff', 'fill-opacity': 0 });
-  const hexOutline = svg('path', { d: hp, fill: 'none', stroke: '#ffffff', 'stroke-width': 26, 'stroke-linejoin': 'round' });
+  const hexOutline = svg('path', { d: hp, fill: 'none', stroke: '#ffffff', 'stroke-width': 26 * U, 'stroke-linejoin': 'round' });
   const outlineLen = 6 * (HEX.R - 2 * (HEX.corner / Math.tan(Math.PI / 3))) + 6 * (HEX.corner * Math.PI / 3);
   hexOutline.setAttribute('stroke-dasharray', `${outlineLen.toFixed(1)}`);
   const strokes = STROKES.map((st) => {
-    const l = svg('line', { x1: st.x1, y1: st.y1, x2: st.x2, y2: st.y2, stroke: '#d4ff5a', 'stroke-width': st.w + 8, 'stroke-linecap': 'butt' });
+    const l = svg('line', { x1: st.x1, y1: st.y1, x2: st.x2, y2: st.y2, stroke: '#8234fe', 'stroke-width': st.w * 0.85 + 8 * U, 'stroke-linecap': 'butt' });
     const len = Math.hypot(st.x2 - st.x1, st.y2 - st.y1);
     l.setAttribute('stroke-dasharray', `${len.toFixed(1)}`);
     return { l, len };
@@ -43,8 +45,8 @@ export function makeLockup({ height = 140, studio = true, bg = '#07080a' } = {})
   let divider = null, studioEl = null;
   if (studio) {
     // align "AI Studio" to the wordmark: cap height ≈ wordmark ascender, shared baseline
-    const baseline = (674 - vy) * scale;
-    const fs = height * 0.52;
+    const baseline = (BASELINE - vy) * scale;
+    const fs = height * 0.6;
     divider = h('div', { style: { width: '2px', height: `${(height * 0.5).toFixed(1)}px`, background: 'rgba(255,255,255,0.28)', marginLeft: `${(height * 0.32).toFixed(1)}px`, marginTop: `${(baseline - height * 0.5).toFixed(1)}px` } });
     studioEl = h('div', { class: 'display', style: { fontSize: `${fs.toFixed(1)}px`, fontWeight: 500, fontStretch: '112%', letterSpacing: '-0.01em', color: '#ffffff', lineHeight: '1', marginLeft: `${(height * 0.3).toFixed(1)}px`, marginTop: `${(baseline - fs * 0.9).toFixed(1)}px` } }, 'AI Studio');
     root.append(divider, studioEl);
@@ -57,7 +59,7 @@ export function makeLockup({ height = 140, studio = true, bg = '#07080a' } = {})
         const q = E.outCubic(clamp(ps * 1.6 - i * 0.3));
         st.l.setAttribute('stroke-dashoffset', ((1 - q) * st.len).toFixed(1));
         st.l.setAttribute('opacity', (q > 0 ? 1 - clamp((pf - 0.55) / 0.3) : 0).toFixed(3));
-        st.l.setAttribute('stroke', pf > 0.25 ? bg : '#d4ff5a');
+        st.l.setAttribute('stroke', pf > 0.25 ? bg : '#8234fe');
       });
       hexOutline.setAttribute('stroke-dashoffset', ((1 - E.inOutCubic(po)) * outlineLen).toFixed(1));
       hexOutline.setAttribute('opacity', (po > 0 ? 1 - clamp((pf - 0.6) / 0.3) : 0).toFixed(3));
@@ -66,7 +68,7 @@ export function makeLockup({ height = 140, studio = true, bg = '#07080a' } = {})
       letters.forEach((l, i) => {
         const q = E.outCubic(clamp(pl * 2.2 - i * 0.12));
         l.setAttribute('opacity', q.toFixed(3));
-        l.setAttribute('transform', `translate(${((1 - q) * -60).toFixed(1)} 0)`);
+        l.setAttribute('transform', `translate(${((1 - q) * -60 * U).toFixed(2)} 0)`);
       });
       if (divider) {
         const q = E.outCubic(clamp(pst * 2));
@@ -75,7 +77,7 @@ export function makeLockup({ height = 140, studio = true, bg = '#07080a' } = {})
         studioEl.style.opacity = q2.toFixed(3);
         studioEl.style.transform = `translateX(${((1 - q2) * -24).toFixed(1)}px)`;
       }
-      s.style.filter = glow > 0.01 ? `drop-shadow(0 0 ${(24 * glow).toFixed(1)}px rgba(212,255,90,${(0.35 * glow).toFixed(3)}))` : 'none';
+      s.style.filter = glow > 0.01 ? `drop-shadow(0 0 ${(24 * glow).toFixed(1)}px rgba(130,52,254,${(0.35 * glow).toFixed(3)}))` : 'none';
     },
   };
 }

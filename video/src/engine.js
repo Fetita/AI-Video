@@ -193,7 +193,7 @@ export function rgba(hex, a = 1) {
 }
 export const C = {
   bg: '#07080a', panel: '#0f1115', text: '#f3f3ef', text2: '#a8acb3', text3: '#6c7179',
-  accent: '#d4ff5a', coral: '#ff6b57', amber: '#ffc45c', sky: '#7cc6ff', violet: '#a78dff', paper: '#f5efe3',
+  accent: '#8234fe', accent2: '#6686f6', accentText: '#b89cff', coral: '#ff6b57', amber: '#ffc45c', sky: '#3ed6b8', violet: '#ff8fc8', paper: '#f5efe3',
 };
 
 // ---------------------------------------------------------------- scene runtime
@@ -240,15 +240,20 @@ export function mount(stage) {
   for (const g of globals) g.setup?.(stage);
 }
 
+/** Render time t. A scene's render may return a promise (e.g. a video frame decoding);
+ *  seek then resolves once every such frame is ready, so the renderer never captures a stale frame. */
 export function seek(t) {
+  const pending = [];
   for (const s of scenes) {
     const active = t >= s.ctx.start - s.pre && t < s.ctx.end + s.post;
     if (active) {
       if (s.ctx.root.style.display !== 'block') s.ctx.root.style.display = 'block';
-      s.def.render(t - s.ctx.start, s.ctx, t);
+      const r = s.def.render(t - s.ctx.start, s.ctx, t);
+      if (r && typeof r.then === 'function') pending.push(r);
     } else if (s.ctx.root.style.display !== 'none') {
       s.ctx.root.style.display = 'none';
     }
   }
   for (const g of globals) g.render?.(t);
+  return pending.length ? Promise.all(pending) : undefined;
 }

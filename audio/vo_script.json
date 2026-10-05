@@ -44,6 +44,29 @@
       "speed": 1.0
     },
     {
+      "id": "intro",
+      "tail": 1.2,
+      "min": 14.0,
+      "speed": 1.04,
+      "lines": [
+        {
+          "id": "i1",
+          "at": 0.5,
+          "text": "We're a team of designers and engineers who build digital products, from the first idea to launch."
+        },
+        {
+          "id": "i2",
+          "gap": 0.6,
+          "text": "Today, more and more of what we ship runs on AI."
+        },
+        {
+          "id": "i3",
+          "gap": 0.7,
+          "text": "Here are a few of the projects we've built for our clients."
+        }
+      ]
+    },
+    {
       "id": "search",
       "tail": 1.8,
       "min": 21.0,
@@ -74,7 +97,7 @@
         {
           "id": "t1",
           "at": 0.5,
-          "text": "AI can also turn something physical into something personal."
+          "text": "For another client, AI turns something physical into something personal."
         },
         {
           "id": "t2",
@@ -158,6 +181,34 @@
         }
       ],
       "speed": 1.07
+    },
+    {
+      "id": "inhouse",
+      "tail": 1.4,
+      "min": 24.0,
+      "speed": 1.05,
+      "lines": [
+        {
+          "id": "o1",
+          "at": 0.6,
+          "text": "Alongside our client work, we're building products of our own."
+        },
+        {
+          "id": "o2",
+          "gap": 0.9,
+          "text": "Like a vision system for packing lines that runs on a single overhead camera."
+        },
+        {
+          "id": "o3",
+          "gap": 0.5,
+          "text": "It detects every apple in every crate, gives each one its own ID, and keeps a running count."
+        },
+        {
+          "id": "o4",
+          "gap": 0.9,
+          "text": "It can also count fruit as it crosses a line on the conveyor, so the team can follow throughput live, crate by crate."
+        }
+      ]
     },
     {
       "id": "finale",

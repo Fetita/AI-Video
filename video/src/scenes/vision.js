@@ -110,7 +110,7 @@ function drawTracking(g, t, p, a) {
   const rt = norm(cross(fw, v3(0, 1, 0))), up = cross(rt, fw);
   const corner = (sx, sy) => P(add(add(add(c0, mul(fw, 0.55)), mul(rt, sx * 0.36)), mul(up, sy * 0.22)));
   const cc = P(c0), k1 = corner(-1, 1), k2 = corner(1, 1), k3 = corner(1, -1), k4 = corner(-1, -1);
-  g.fillStyle = 'rgba(212,255,90,0.12)'; g.strokeStyle = C.accent; g.lineWidth = 2;
+  g.fillStyle = 'rgba(130,52,254,0.12)'; g.strokeStyle = C.accent; g.lineWidth = 2;
   g.beginPath(); g.moveTo(k1.x, k1.y); g.lineTo(k2.x, k2.y); g.lineTo(k3.x, k3.y); g.lineTo(k4.x, k4.y); g.closePath(); g.fill(); g.stroke();
   [k1, k2, k3, k4].forEach((k) => { g.beginPath(); g.moveTo(cc.x, cc.y); g.lineTo(k.x, k.y); g.stroke(); });
   // wrists: positions relative to the head camera, with 3 s trails
@@ -174,7 +174,7 @@ function drawRobot(g, t, a, U, hand) {
     const s1 = P(v3(i * 0.5, 0, -2)), s2 = P(v3(i * 0.5, 0, 3)), s3 = P(v3(-2, 0, i * 0.5 + 0.5)), s4 = P(v3(2, 0, i * 0.5 + 0.5));
     g.strokeStyle = 'rgba(255,255,255,0.06)'; g.lineWidth = 1; g.beginPath(); g.moveTo(s1.x, s1.y); g.lineTo(s2.x, s2.y); g.moveTo(s3.x, s3.y); g.lineTo(s4.x, s4.y); g.stroke();
   }
-  // demonstration path (dashed) + robot trail (lime)
+  // demonstration path (dashed) + robot trail (violet)
   g.setLineDash([7, 8]); g.strokeStyle = 'rgba(124,198,255,0.8)'; g.lineWidth = 2; g.beginPath();
   for (let k = 0; k <= 80; k++) { const q = P(demoPath(k / 80)); k ? g.lineTo(q.x, q.y) : g.moveTo(q.x, q.y); } g.stroke(); g.setLineDash([]);
   if (U > 0) { g.strokeStyle = C.accent; g.lineWidth = 3.5; g.beginPath(); for (let k = 0; k <= 80 * U; k++) { const q = P(demoPath(k / 80)); k ? g.lineTo(q.x, q.y) : g.moveTo(q.x, q.y); } g.stroke(); }
@@ -238,7 +238,7 @@ function drawCharts(g, t, a, p) {
       const q = clamp(p * 1.25 - mi * 0.12);
       if (q <= 0) return;
       g.strokeStyle = m.col; g.lineWidth = mi === 2 ? 3.5 : 2.2;
-      if (mi === 2) { g.shadowColor = 'rgba(212,255,90,0.5)'; g.shadowBlur = 12; }
+      if (mi === 2) { g.shadowColor = 'rgba(130,52,254,0.5)'; g.shadowBlur = 12; }
       g.beginPath();
       const N = 140;
       for (let k = 0; k <= N * q; k++) {
@@ -315,7 +315,7 @@ addScene({
   setup(ctx) {
     const R = ctx.root;
     this.hud = makeHud(ctx, {
-      num: '03', title: 'Computer vision · Custom models · Robotics',
+      num: '03', title: 'Computer vision · Custom models · Robotics', badge: 'Client project',
       steps: [
         { label: 'Detect', at: ctx.cue('v2', 0) + 0.2 },
         { label: 'Track', at: ctx.cue('v2', 2) },
@@ -339,7 +339,7 @@ addScene({
     R.append(this.api);
     this.stack = STACK.map(([k, v], i) => {
       const el = h('div', { class: 'panel', style: { left: '560px', top: '0', width: '800px', height: '74px', display: 'flex', alignItems: 'center', padding: '0 30px', gap: '20px', borderRadius: '14px' } },
-        h('span', { class: 'mono', style: { color: 'var(--accent)', fontSize: '14px', width: '30px' } }, `0${i + 1}`),
+        h('span', { class: 'mono', style: { color: 'var(--accent-text)', fontSize: '14px', width: '30px' } }, `0${i + 1}`),
         h('span', { class: 'display', style: { fontSize: '30px', fontWeight: 600, flex: 1, letterSpacing: '-0.01em' } }, k),
         h('span', { class: 'kicker', style: { color: 'var(--text2)' } }, v));
       R.append(el);
