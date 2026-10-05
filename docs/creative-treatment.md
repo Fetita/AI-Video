@@ -1,6 +1,6 @@
 # Eagerworks AI Studio — "From AI ideas to real-world products"
 
-Creative treatment for the 2:23 promotional film (1920×1080, 30 fps, stereo 48 kHz).
+Creative treatment for the 2:47 promotional film (1920×1080, 30 fps, stereo 48 kHz).
 Final deliverable: `out/eagerworks-ai-studio.mp4`.
 
 ---
@@ -26,6 +26,7 @@ experiences, custom vision models, tracking, and document intelligence.
 | Promise | The logo builds itself. "…real products, workflows and measurable outcomes." | Introduces Eagerworks AI Studio. |
 | Introduction | "Designers & engineers." → "Products that run on AI." → *Client work* index of the five projects. | Says who we are, and frames every case that follows as work for a client. |
 | Proof ×5 | Search → Story → Vision/Robotics → Field & packing line → Documents | Each section is a client project and an AI *pipeline*, shown on a stepper; the chapter label carries a `CLIENT PROJECT` tag. |
+| Own product | "Built in-house." → real footage of the packing-line vision system Eagerworks is building: per-apple IDs and a running count, then line-crossing counting. | Shows the team also builds its own AI products, beyond client work. |
 | Synthesis | The whole film becomes one wall, then collapses into the logo's three "E" strokes. | "Different problems. One team." |
 | Close | "From AI ideas to real-world products." + CTA "Let's build what's next." | Positioning + action. |
 
@@ -122,16 +123,29 @@ Stepper: `READ → MAP → FLAG → RECOMMEND` (camera glides through one contin
 | 2:01.5 | **Recommend:** `IMPACT · HIGH` card: *"Add contractor accounts to the next quarterly review and attach the signed approval log."* |
 | 2:03.4 | The interface recedes into an *Audit readiness* dashboard, labelled **decision support for your team**. |
 
-### 2:07.2 – 2:22.8 · Finale: the studio
+### 2:07.2 – 2:31.2 · 06 Our own products · Packing-line vision (real footage)
+Stepper: `DETECT → TRACK → COUNT → LINE COUNT`
 | Time | Visual |
 |---|---|
-| 2:07.2 | The film's own frames assemble into a tilted 5×3 wall; a highlight pulses across all 15 capabilities. |
-| 2:09.1 | **"One team."** · `Design · Build · Ship` light up as spoken. |
-| 2:12.0 | Every tile flies onto one of the logo's three E strokes and becomes a line (reverse swell). |
-| 2:12.8 | The icon builds, fills on the music's final hit; wordmark + **AI Studio**. |
-| 2:15.6 | **"From AI ideas to real-world products."** |
-| 2:19.1 | CTA pill **"Let's build what's next →"** · `eagerworks.com`. |
-| 2:22.2 | Fade to black on the resolving chord. |
+| 2:07.8 | Title card: kicker `OUR OWN PRODUCTS`, **"Built in-house."**, and a lime rule draws beneath it. The chapter label carries an `OUR PRODUCT` tag. |
+| 2:11.4 | The card lifts away and a live monitor opens from its centre line (`Packing line · Overhead camera`, `MODE · OBJECT COUNTER`, `● LIVE`). It plays the **object counter** footage: crates of apples on a roller conveyor, every apple boxed with its own ID (`APPLE · 71`) and a running total. |
+| 2:11.9 | A *What it does* column builds on the right. **Detect**, **Track** and **Count** light up as each is spoken. |
+| 2:22.7 | A lime wipe switches the monitor to the **line counter** footage (`MODE · LINE COUNT`): apples are counted as they cross a vertical count line. **Line count** lights up, and an `One overhead camera` chip lands under the list. |
+| 2:30.3 | The monitor and column recede; the finale wall assembles. |
+
+The footage is Eagerworks' own product: two 10-second clips in `video/assets/inhouse/`, unpacked to frames by `scripts/extract_clips.sh`
+and shown frame-accurately (`video/src/lib/clip.js`). Clip 1 plays at about 0.9× so that it spans the narration exactly; clip 2 plays at 1×.
+
+### 2:31.2 – 2:46.8 · Finale: the studio
+| Time | Visual |
+|---|---|
+| 2:31.2 | The film's own frames assemble into a tilted 5×3 wall; a highlight pulses across all 15 capabilities. |
+| 2:33.1 | **"One team."** · `Design · Build · Ship` light up as spoken. |
+| 2:36.0 | Every tile flies onto one of the logo's three E strokes and becomes a line (reverse swell). |
+| 2:36.8 | The icon builds, fills on the music's final hit; wordmark + **AI Studio**. |
+| 2:39.6 | **"From AI ideas to real-world products."** |
+| 2:43.1 | CTA pill **"Let's build what's next →"** · `eagerworks.com`. |
+| 2:46.2 | Fade to black on the resolving chord. |
 
 ---
 
@@ -171,10 +185,15 @@ Pronunciation spellings are used where the TTS needed them ("sock two", "ISO twe
 > **[1:52]** And when the work lives in documents, AI reads the evidence, maps it to frameworks like SOC 2 and ISO 27001, flags the gaps, and recommends what to fix.
 > **[2:03]** So teams know where they stand, before the auditor does.
 >
-> **[2:07]** Different problems. One team that designs, builds and ships the whole system.
-> **[2:13]** Eagerworks AI Studio.
-> **[2:15]** From AI ideas to real-world products.
-> **[2:19]** Let's build what's next.
+> **[2:07]** Alongside our client work, we're building products of our own.
+> **[2:11]** Like a vision system for packing lines that runs on a single overhead camera.
+> **[2:16]** It detects every apple in every crate, gives each one its own ID, and keeps a running count.
+> **[2:23]** It can also count fruit as it crosses a line on the conveyor, so the team can follow throughput live, crate by crate.
+>
+> **[2:31]** Different problems. One team that designs, builds and ships the whole system.
+> **[2:37]** Eagerworks AI Studio.
+> **[2:39]** From AI ideas to real-world products.
+> **[2:43]** Let's build what's next.
 
 ---
 
@@ -185,9 +204,10 @@ Pronunciation spellings are used where the TTS needed them ("sock two", "ISO twe
 - Chapter labels (each followed by a `CLIENT PROJECT` tag): `01 Generative AI · Search · Recommendation` · `02 Generative AI · Physical to digital` · `03 Computer vision · Custom models · Robotics` · `04 Real-world AI · Detection · Tracking` · `05 Document intelligence · AI auditing`
 - Pipeline steppers (one per chapter; see §2)
 - Supporting labels (small): `The vision stack we build`, `One team · the whole system`, `Data pipelines for robotics`, `Field map · every plant geo-located`, `Decision support for your team`
+- Own product: kicker `OUR OWN PRODUCTS` · *Built in-house.* · chapter `06 Computer vision · Counting · Tracking` + `OUR PRODUCT` tag · monitor header `Packing line · Overhead camera` · `MODE · OBJECT COUNTER` / `MODE · LINE COUNT` · *What it does*: `Detect — Every apple, in every crate.` · `Track — Its own ID, from entry to exit.` · `Count — A running total, live.` · `Line count — Counted once, as it crosses the line.` · chip `One overhead camera`
 - Finale: *One team.* · `Design · Build · Ship` · *From AI ideas to real-world products.* · CTA *Let's build what's next →* · `eagerworks.com`
 
-Everything else on screen is diegetic interface content of fictional products.
+Everything else on screen is diegetic interface content of fictional products, except the chapter-06 footage, whose overlays (`OBJECT COUNTER`, `CONVEYOR BELT MONITORING`, IDs and counts) come from Eagerworks' own product.
 
 ---
 
@@ -226,8 +246,8 @@ Everything else on screen is diegetic interface content of fictional products.
 ## 8. How the reference images were used (and anonymized)
 
 The reference screenshots were used only to understand what each system does.
-**No reference image, UI, name, logo, dataset or footage appears in the film;**
-the Eagerworks logo is the only supplied asset used (vectorized from the PNG).
+**No reference image, UI, name, logo, dataset or footage from client work appears in the film.**
+The only supplied assets used are the Eagerworks logo (vectorized from the PNG) and the two clips of Eagerworks' own packing-line product (chapter 06).
 
 | Reference | What it showed | Extracted concept | Fictional recreation in the film |
 |---|---|---|---|

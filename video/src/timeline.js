@@ -3,7 +3,7 @@ export default {
  "fps": 30,
  "bpm": 100.0,
  "beat": 0.6,
- "duration": 142.8,
+ "duration": 166.8,
  "scenes": [
   {
    "id": "hook",
@@ -79,9 +79,20 @@ export default {
    ]
   },
   {
-   "id": "finale",
+   "id": "inhouse",
    "start": 127.2,
-   "end": 142.8,
+   "end": 151.2,
+   "lines": [
+    "o1",
+    "o2",
+    "o3",
+    "o4"
+   ]
+  },
+  {
+   "id": "finale",
+   "start": 151.2,
+   "end": 166.8,
    "lines": [
     "f1",
     "f2",
@@ -527,23 +538,99 @@ export default {
    ],
    "text": "So teams know where they stand, before the auditor does."
   },
-  "f1": {
-   "id": "f1",
-   "scene": "finale",
+  "o1": {
+   "id": "o1",
+   "scene": "inhouse",
    "start": 127.8,
-   "end": 132.099,
+   "end": 130.957,
    "segs": [
     [
      127.83,
-     128.71
+     129.16
     ],
     [
-     129.09,
-     130.32
+     129.44,
+     130.88
+    ]
+   ],
+   "text": "Alongside our client work, we're building products of our own."
+  },
+  "o2": {
+   "id": "o2",
+   "scene": "inhouse",
+   "start": 131.857,
+   "end": 136.294,
+   "segs": [
+    [
+     131.887,
+     133.877
     ],
     [
-     130.49,
-     132.02
+     134.227,
+     136.217
+    ]
+   ],
+   "text": "Like a vision system for packing lines that runs on a single overhead camera."
+  },
+  "o3": {
+   "id": "o3",
+   "scene": "inhouse",
+   "start": 136.794,
+   "end": 142.117,
+   "segs": [
+    [
+     136.824,
+     138.774
+    ],
+    [
+     139.144,
+     140.644
+    ],
+    [
+     140.904,
+     142.054
+    ]
+   ],
+   "text": "It detects every apple in every crate, gives each one its own ID, and keeps a running count."
+  },
+  "o4": {
+   "id": "o4",
+   "scene": "inhouse",
+   "start": 143.017,
+   "end": 149.428,
+   "segs": [
+    [
+     143.047,
+     145.987
+    ],
+    [
+     146.357,
+     148.237
+    ],
+    [
+     148.547,
+     149.357
+    ]
+   ],
+   "text": "It can also count fruit as it crosses a line on the conveyor, so the team can follow throughput live, crate by crate."
+  },
+  "f1": {
+   "id": "f1",
+   "scene": "finale",
+   "start": 151.8,
+   "end": 156.099,
+   "segs": [
+    [
+     151.83,
+     152.71
+    ],
+    [
+     153.09,
+     154.32
+    ],
+    [
+     154.49,
+     156.02
     ]
    ],
    "text": "Different problems. One team that designs, builds and ships the whole system."
@@ -551,12 +638,12 @@ export default {
   "f2": {
    "id": "f2",
    "scene": "finale",
-   "start": 133.399,
-   "end": 135.019,
+   "start": 157.399,
+   "end": 159.019,
    "segs": [
     [
-     133.429,
-     134.899
+     157.429,
+     158.899
     ]
    ],
    "text": "Eagerworks AI Studio."
@@ -564,12 +651,12 @@ export default {
   "f3": {
    "id": "f3",
    "scene": "finale",
-   "start": 135.619,
-   "end": 138.148,
+   "start": 159.619,
+   "end": 162.148,
    "segs": [
     [
-     135.649,
-     138.079
+     159.649,
+     162.079
     ]
    ],
    "text": "From AI ideas to real-world products."
@@ -577,12 +664,12 @@ export default {
   "f4": {
    "id": "f4",
    "scene": "finale",
-   "start": 139.148,
-   "end": 140.516,
+   "start": 163.148,
+   "end": 164.516,
    "segs": [
     [
-     139.178,
-     140.418
+     163.178,
+     164.418
     ]
    ],
    "text": "Let's build what's next."

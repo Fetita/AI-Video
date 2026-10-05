@@ -1,6 +1,6 @@
 # Eagerworks AI Studio: promotional film
 
-A 2:23 premium B2B film positioning **Eagerworks AI Studio** as the partner that turns
+A 2:47 premium B2B film positioning **Eagerworks AI Studio** as the partner that turns
 AI capabilities into real products, workflows and measurable outcomes.
 
 **Deliverable:** [`out/eagerworks-ai-studio.mp4`](out/eagerworks-ai-studio.mp4) (1920×1080, 30 fps, H.264 + AAC, −14 LUFS)
@@ -10,8 +10,8 @@ AI capabilities into real products, workflows and measurable outcomes.
 Everything in the film is generated from code in this repository. Visuals are deterministic
 HTML/Canvas/SVG scenes rendered frame by frame in headless Chromium. The voiceover comes from a
 local open-weight TTS model, and the music and sound design are synthesized with numpy.
-No stock media is used, and no client screenshots, names, logos or data appear. The Eagerworks logo
-(vectorized from the supplied PNG) is the only external asset.
+No stock media is used, and no client screenshots, names, logos or data appear. The external assets are the Eagerworks logo
+(vectorized from the supplied PNG) and two clips of Eagerworks' own packing-line vision product (`video/assets/inhouse/`).
 
 ## Structure
 
@@ -29,9 +29,10 @@ video/
   index.html, src/      the film: engine.js (seek(t) runtime), scenes/*.js, lib/*.js
   render.mjs            Playwright renderer (stills for review, or parallel video render)
   snap.mjs              screenshot helper for debug pages
-  assets/               fonts (Google Fonts, OFL), vectorized logo, recap thumbnails
+  assets/               fonts (Google Fonts, OFL), vectorized logo, recap thumbnails, in-house product clips
 scripts/
   finalize.sh           delivery encode (grain, H.264 High, AAC, faststart)
+  extract_clips.sh      in-house clips → numbered frames in video/build/clips/ (needed before rendering)
   contact_sheet.py      stills → review sheet
 docs/creative-treatment.md
 out/eagerworks-ai-studio.mp4
@@ -47,7 +48,7 @@ Kokoro model files (`kokoro-v1.0.onnx`, `voices-v1.0.bin`) come from the
 # 1. voiceover + timeline (only when the script changes)
 cd audio && python3 tts.py && python3 build_timeline.py
 
-# 2. picture (≈7 min on 4 cores); review stills with:  node render.mjs --stills 12.5,30 [--only search]
+# 2. picture (≈9 min on 4 cores; unpack the product clips first with  ../scripts/extract_clips.sh); review stills with:  node render.mjs --stills 12.5,30 [--only search]
 cd ../video && npm install && node render.mjs --video --workers 4 --out build/frames.mkv
 
 # 3. sound
