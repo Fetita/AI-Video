@@ -53,11 +53,6 @@ addScene({
     });
     this.ev.append(list);
     this.view.append(this.ev);
-    this.handPage = h('div', { class: 'abs', style: { left: '760px', top: '280px', width: '400px', height: '520px', borderRadius: '10px', background: '#f4f3ef', boxShadow: '0 40px 80px rgba(0,0,0,0.6)', padding: '34px', transformOrigin: '0 0', zIndex: 20 } },
-      h('div', { style: { fontFamily: 'var(--font-mono)', fontSize: '11px', letterSpacing: '0.16em', color: '#6b6f76', marginBottom: '12px' } }, 'DAILY OPERATIONS REPORT'),
-      h('div', { style: { fontSize: '22px', fontWeight: 650, color: '#15171a', marginBottom: '22px' } }, 'Packing line · shift summary'),
-      ...Array.from({ length: 11 }, (_, i) => h('div', { style: { height: '9px', borderRadius: '3px', background: i % 4 === 0 ? '#c9ccd1' : '#e2e4e7', width: `${[92, 80, 86, 60, 90, 76, 84, 58, 88, 70, 64][i]}%`, marginBottom: '14px' } })));
-
     // ---------- document viewer (fictional access review)
     this.doc = h('div', { class: 'abs', style: { left: '600px', top: '120px', width: '620px', height: '830px', borderRadius: '12px', background: '#f5f5f2', color: '#1b1d21', padding: '46px 52px', boxShadow: '0 50px 100px -20px rgba(0,0,0,0.75)', overflow: 'hidden' } });
     const hl = (text, kind) => { const s = h('span', { class: `hl-${kind}`, style: { backgroundImage: `linear-gradient(${kind === 'bad' ? 'rgba(255,107,87,0.28)' : 'rgba(102,134,246,0.38)'}, ${kind === 'bad' ? 'rgba(255,107,87,0.28)' : 'rgba(102,134,246,0.38)'})`, backgroundRepeat: 'no-repeat', backgroundSize: '0% 100%', borderRadius: '3px', padding: '1px 2px' } }, text); return s; };
@@ -111,7 +106,6 @@ addScene({
     this.links = svg('svg', { width: 1920, height: 1080, style: 'position:absolute;left:0;top:0;overflow:visible' });
     this.linkEls = REQS.map((r) => { const p2 = svg('path', { fill: 'none', 'stroke-width': 2, stroke: r.cls === 'bad' ? C.coral : r.cls === 'mid' ? C.amber : C.accent }); this.links.append(p2); return p2; });
     R.append(this.links);
-    R.append(this.handPage);
 
     // ---------- readiness dashboard
     this.dash = h('div', { class: 'layer', style: { zIndex: 8 } });
@@ -165,14 +159,6 @@ addScene({
       f.bar.style.width = `${(prog(t, 0.3 + i * 0.18, 0.9, E.inOutSine) * 100).toFixed(1)}%`;
     });
     put(this.ev, { o: prog(t, -0.1, 0.5) });
-    // the operations report from the previous scene lands as the last evidence file
-    {
-      const q = prog(t, 0.0, 0.85, E.inOutCubic);
-      const icon = this.fileRows[4].row.firstChild.getBoundingClientRect();
-      const x0 = 760, y0 = 280 + 0, x1 = icon.left, y1 = icon.top;
-      const sc = lerp(1, icon.width / 400, q);
-      put(this.handPage, { x: lerp(0, x1 - x0, q) + lerp(0, 0, q), y: lerp(0, y1 - y0, q), s: sc, r: lerp(-3, 0, q), o: t < 0.85 ? 1 - prog(t, 0.65, 0.2) : 0 });
-    }
     // reading: scan beam + highlights
     const scanP = prog(t, cRead - 0.1, 1.7, E.inOutSine);
     put(this.scan, { y: lerp(-120, 830, scanP), o: scanP > 0 && scanP < 1 ? 1 : 0 });

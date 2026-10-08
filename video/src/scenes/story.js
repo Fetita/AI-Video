@@ -1,4 +1,4 @@
-// 02 — Generative AI · Physical to digital
+// 04 — Generative AI · Physical to digital
 // Pieces on a board → recognition → reasoning → an illustrated story → end-to-end system.
 import { addScene, h, svg, put, prog, E, clamp, lerp, env, makeCanvas, rng, rgba, C, keys, makeNoise, rrect } from '../engine.js';
 import { makeHud, words, revealWords, tag, reticle, brackets, placeCaret, FONT_MONO } from '../lib/ui.js';
@@ -61,7 +61,7 @@ addScene({
   setup(ctx) {
     const R = ctx.root;
     this.hud = makeHud(ctx, {
-      num: '02', title: 'Generative AI · Physical to digital', badge: 'Client project',
+      num: '04', title: 'Generative AI · Physical to digital', badge: 'Client project',
       steps: [
         { label: 'Place', at: ctx.cue('t2', 0) },
         { label: 'Recognize', at: ctx.cue('t3', 0) },

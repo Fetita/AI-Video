@@ -25,7 +25,7 @@ experiences, custom vision models, tracking, and document intelligence.
 | Thesis | "AI as ~~a feature~~ → AI as **the product**." | Restates the brief's idea as a typographic transformation. |
 | Promise | The logo builds itself. "…real products, workflows and measurable outcomes." | Introduces Eagerworks AI Studio. |
 | Introduction | "Designers & engineers." → "Products that run on AI." → *Client work* index of the five projects. | Says who we are, and frames every case that follows as work for a client. |
-| Proof ×5 | Search → Story → Vision/Robotics → Field & packing line → Documents | Each section is a client project and an AI *pipeline*, shown on a stepper; the chapter label carries a `CLIENT PROJECT` tag. |
+| Proof ×5 | Vision/Robotics → Field & packing line → Search → Story → Documents (the computer-vision cases lead) | Each section is a client project and an AI *pipeline*, shown on a stepper; the chapter label carries a `CLIENT PROJECT` tag. |
 | Own product | "Built in-house." → real footage of the packing-line vision system Eagerworks is building: per-apple IDs and a running count, then line-crossing counting. | Shows the team also builds its own AI products, beyond client work. |
 | Synthesis | The whole film becomes one wall, then collapses into the logo's three "E" strokes. | "Different problems. One team." |
 | Close | "From AI ideas to real-world products." + CTA "Let's build what's next." | Positioning + action. |
@@ -63,60 +63,60 @@ Scene cuts are snapped to the music's half-bar grid (100 BPM), so every change l
 | 0:19.7 | **"Designers & engineers."** rises out of the line. *"We build digital products, from the first idea to launch."* types in beneath it. |
 | 0:21.3 | Discipline pills pop in one by one: `Product strategy · UX / UI design · Software engineering · Cloud & data`. |
 | 0:26.3 | On "…runs on AI" the headline swaps to **"Products that run on AI."** and a glowing `Applied AI` pill joins the row (bell). |
-| 0:29.0 | Everything lifts away. Kicker `CLIENT WORK`, title **"Built for our clients."**, then an index of the five projects that follow (`01 Location search & recommendation` … `05 Evidence review for audits`), with the violet line as row 01's underline. |
-| 0:32.4 | Rows 02–05 fade and row 01 lights up. The line is left alone in exactly the place where the next scene's brief card opens. |
+| 0:29.0 | Everything lifts away. Kicker `CLIENT WORK`, title **"Built for our clients."**, then an index of the five projects that follow (`01 Vision data for robotics`, `02 Field & packing-line analytics`, `03 Location search & recommendation`, `04 Physical-to-digital storytelling`, `05 Evidence review for audits`), with the violet line as row 01's underline. |
+| 0:32.4 | Rows 02–05 fade and row 01 lights up. The line is left alone in exactly the place where the next scene's API call card opens. |
 
-### 0:33.6 – 0:54.0 · 01 Generative AI · Search · Recommendation
-Stepper: `PARSE → SEARCH → EVALUATE → RECOMMEND → REFINE`
-| Time | Visual |
-|---|---|
-| 0:33.6 | The brief card opens from the line; the brief types in the client's own words (fictional production team, fictional brief). |
-| 0:38.7 | **Parse:** seven phrases highlight; each flies out of the text into a *Structured requirements* panel (type, light, must-haves, capacity, travel, mood). |
-| 0:40.9 | **Search:** a 3D wall of ~300 location photos; a scan beam sweeps it and 14 matches light up while the rest dim. |
-| 0:42.4 | **Evaluate:** six candidates fly out of the wall; each is checked against every requirement (✓ / ~ / ✕) and tiered (`TIER 1`, `TIER 2`, `DISCARDED`). |
-| 0:45.0 | **Recommend:** the three Tier-1 cards grow into a personalised shortlist with a *why it fits* rationale per location. |
-| 0:48.5 | **Refine:** a chat panel slides in: *"Love the second one. Anything similar with a rooftop?"* → *"One similar space has a private rooftop. I've moved it to the top of your shortlist."* The shortlist re-ranks live and a new rooftop location enters at 01. |
-| 0:53.0 | The assistant's violet status dot flies to centre and carries into the next scene. |
-
-### 0:54.0 – 1:13.2 · 02 Generative AI · Physical to digital
-Stepper: `PLACE → RECOGNIZE → REASON → GENERATE`
-| Time | Visual |
-|---|---|
-| 0:54.0 | The dot becomes a reticle; beneath it a wooden sloth piece (Mo, meditating) rests on a walnut board. Warm sparks rise from it ("…something personal"). |
-| 0:57.6 | Camera pulls back to the whole board; scout, wizard and samurai pieces drop into their slots (wooden clacks). |
-| 1:01.4 | **Recognize:** a viewfinder frames the board; each piece is ringed and labelled (`CHARACTER · SLOTH`, `CHARACTER · SCOUT`, `CHARACTER · WIZARD`, `CHARACTER · SAMURAI`). |
-| 1:03.4 | **Reason:** a relation graph links the pieces: *guides*, *befriends*, *races*, *travels with*. |
-| 1:05.3 | **Generate:** the board dissolves into an open storybook. The illustration resolves from blur, like a diffusion model, layer by layer (sunrise sky, sun, hills, trees, path, the three heroes, Mo the sloth leading the way, floating sparkles). *"The Slowest Guide in the Woods"* streams in word by word behind a violet caret: *Pip, Wren and Kai were racing to find the hidden temple. Then a sleepy sloth named Mo smiled, stretched, and showed them the way: one slow, happy step at a time.* |
-| 1:08.4 | **End to end:** the book shrinks into the last of four system nodes: `Board & pieces → Companion app (story settings) → Story engine (recognition · planning · generation · illustration · guardrails) → Illustrated story`, with data pulses flowing between them. |
-
-### 1:13.2 – 1:32.4 · 03 Computer vision · Custom models · Robotics (intensity peak)
+### 0:33.6 – 0:52.8 · 01 Computer vision · Custom models · Robotics (intensity peak)
 Stepper: `DETECT → TRACK → DATASET → TRAIN → BENCHMARK → ROBOTICS`
 | Time | Visual |
 |---|---|
-| 1:13.2 | `vision.detect(frame)`, a single API call. On "…more than an API call" it is struck through and unfolds into the six-layer vision stack Eagerworks builds (Capture, Annotate, Dataset, Train, Evaluate, Deploy). |
-| 1:16.5 | The stack collapses into an egocentric workbench camera: two hands, per-hand boxes, 21 keypoints each, finger-coloured skeletons. |
-| 1:19.6 | Cut to a room view: three people, face boxes, then a privacy mosaic (`FACE · ANONYMIZED`). |
-| 1:21.2 | **Track:** 3D view of the head-camera frustum moving along its path; violet estimate vs. dashed ground truth; left/right wrist trails. |
-| 1:22.6 | **Dataset:** hundreds of annotated frames tile the screen and zoom out; panel lists annotation types and train/validation/test splits. |
-| 1:24.6 | **Train & benchmark:** loss curves for three models descend; precision–recall curves draw; the custom model's operating point is `SELECTED`. |
-| 1:27.0 | **Robotics:** a human-demonstration trajectory (dashed, with a ghost hand skeleton) is replayed by a robot arm that picks and places a part. |
+| 0:33.6 | The intro's violet line contracts and the API card opens from it: `vision.detect(frame)`, a single API call. On "…more than an API call" it is struck through and unfolds into the six-layer vision stack Eagerworks builds (Capture, Annotate, Dataset, Train, Evaluate, Deploy). |
+| 0:36.9 | The stack collapses into an egocentric workbench camera: two hands, per-hand boxes, 21 keypoints each, finger-coloured skeletons. |
+| 0:40.0 | Cut to a room view: three people, face boxes, then a privacy mosaic (`FACE · ANONYMIZED`). |
+| 0:41.6 | **Track:** 3D view of the head-camera frustum moving along its path; violet estimate vs. dashed ground truth; left/right wrist trails. |
+| 0:43.0 | **Dataset:** hundreds of annotated frames tile the screen and zoom out; panel lists annotation types and train/validation/test splits. |
+| 0:45.0 | **Train & benchmark:** loss curves for three models descend; precision–recall curves draw; the custom model's operating point is `SELECTED`. |
+| 0:47.4 | **Robotics:** a human-demonstration trajectory (dashed, with a ghost hand skeleton) is replayed by a robot arm that picks and places a part. |
 
-### 1:32.4 – 1:51.6 · 04 Real-world AI · Detection · Tracking
+### 0:52.8 – 1:12.0 · 02 Real-world AI · Detection · Tracking
 Stepper: `DETECT → COUNT → MEASURE → MAP → TRACK`
 | Time | Visual |
 |---|---|
-| 1:32.4 | Line-art tractor crossing crop rows; its boom-mounted camera projects a violet field of view. "…turns a camera" → the camera pulses; data packets stream into a live telemetry card. |
-| 1:37.7 | "On a tractor…" → push into the camera's footprint → top-down live feed. |
-| 1:38.5 | Every lettuce seedling gets a box and ID; fitted row lines; a count line; `GAP` and `OFF-ROW` flags with offsets; spacing ticks and diameter measurements; GPS tags as plants are counted; *Live field audit* panel updates. |
-| 1:41.1 | **Map:** the feed becomes a field map; every counted plant is a dot, issues in coral; one plant is called out with coordinates and size. |
-| 1:44.4 | **Track:** a packing-line conveyor of pumpkins. Each gets an `ID` on entry, a motion trail, a size measurement and a `✓ COUNTED` tag at the count line. |
-| 1:50.7 | A white shift-summary report page rises from the line data. |
+| 0:52.8 | Line-art tractor crossing crop rows; its boom-mounted camera projects a violet field of view. "…turns a camera" → the camera pulses; data packets stream into a live telemetry card. |
+| 0:58.1 | "On a tractor…" → push into the camera's footprint → top-down live feed. |
+| 0:58.9 | Every lettuce seedling gets a box and ID; fitted row lines; a count line; `GAP` and `OFF-ROW` flags with offsets; spacing ticks and diameter measurements; GPS tags as plants are counted; *Live field audit* panel updates. |
+| 1:01.5 | **Map:** the feed becomes a field map; every counted plant is a dot, issues in coral; one plant is called out with coordinates and size. |
+| 1:04.8 | **Track:** a packing-line conveyor of pumpkins. Each gets an `ID` on entry, a motion trail, a size measurement and a `✓ COUNTED` tag at the count line. |
+| 1:11.4 | The packing line clears and a violet line draws exactly where the next scene's brief card opens. |
+
+### 1:12.0 – 1:32.4 · 03 Generative AI · Search · Recommendation
+Stepper: `PARSE → SEARCH → EVALUATE → RECOMMEND → REFINE`
+| Time | Visual |
+|---|---|
+| 1:12.0 | The brief card opens from the line drawn at the end of the packing line; the brief types in the client's own words (fictional production team, fictional brief). |
+| 1:17.1 | **Parse:** seven phrases highlight; each flies out of the text into a *Structured requirements* panel (type, light, must-haves, capacity, travel, mood). |
+| 1:19.3 | **Search:** a 3D wall of ~300 location photos; a scan beam sweeps it and 14 matches light up while the rest dim. |
+| 1:20.8 | **Evaluate:** six candidates fly out of the wall; each is checked against every requirement (✓ / ~ / ✕) and tiered (`TIER 1`, `TIER 2`, `DISCARDED`). |
+| 1:23.4 | **Recommend:** the three Tier-1 cards grow into a personalised shortlist with a *why it fits* rationale per location. |
+| 1:26.9 | **Refine:** a chat panel slides in: *"Love the second one. Anything similar with a rooftop?"* → *"One similar space has a private rooftop. I've moved it to the top of your shortlist."* The shortlist re-ranks live and a new rooftop location enters at 01. |
+| 1:31.4 | The assistant's violet status dot flies to centre and carries into the next scene. |
+
+### 1:32.4 – 1:51.6 · 04 Generative AI · Physical to digital
+Stepper: `PLACE → RECOGNIZE → REASON → GENERATE`
+| Time | Visual |
+|---|---|
+| 1:32.4 | The dot becomes a reticle; beneath it a wooden sloth piece (Mo, meditating) rests on a walnut board. Warm sparks rise from it ("…something personal"). |
+| 1:36.0 | Camera pulls back to the whole board; scout, wizard and samurai pieces drop into their slots (wooden clacks). |
+| 1:39.8 | **Recognize:** a viewfinder frames the board; each piece is ringed and labelled (`CHARACTER · SLOTH`, `CHARACTER · SCOUT`, `CHARACTER · WIZARD`, `CHARACTER · SAMURAI`). |
+| 1:41.8 | **Reason:** a relation graph links the pieces: *guides*, *befriends*, *races*, *travels with*. |
+| 1:43.7 | **Generate:** the board dissolves into an open storybook. The illustration resolves from blur, like a diffusion model, layer by layer (sunrise sky, sun, hills, trees, path, the three heroes, Mo the sloth leading the way, floating sparkles). *"The Slowest Guide in the Woods"* streams in word by word behind a violet caret: *Pip, Wren and Kai were racing to find the hidden temple. Then a sleepy sloth named Mo smiled, stretched, and showed them the way: one slow, happy step at a time.* |
+| 1:46.8 | **End to end:** the book shrinks into the last of four system nodes: `Board & pieces → Companion app (story settings) → Story engine (recognition · planning · generation · illustration · guardrails) → Illustrated story`, with data pulses flowing between them. |
 
 ### 1:51.6 – 2:07.2 · 05 Document intelligence · AI auditing
 Stepper: `READ → MAP → FLAG → RECOMMEND` (camera glides through one continuous interface)
 | Time | Visual |
 |---|---|
-| 1:51.6 | The report page lands as a file in an *Evidence request* panel; five files upload. |
+| 1:51.6 | An *Evidence request* panel opens and five evidence files upload. |
 | 1:53.3 | **Read:** a fictional *Quarterly User Access Review* opens; a scan beam passes and evidence sentences highlight. |
 | 1:55.9 | **Map:** curves connect highlighted evidence to *Framework mapping* rows (SOC 2 · ISO 27001): Supported, Supported, Partial, Gap, Supported. |
 | 2:00.3 | **Flag:** the gap row pulses: *"Contractor accounts were excluded from the Q3 access review."* |
@@ -165,22 +165,22 @@ Pronunciation spellings are used where the TTS needed them ("sock two", "ISO twe
 > **[0:25]** Today, more and more of what we ship runs on AI.
 > **[0:29]** Here are a few of the projects we've built for our clients.
 >
-> **[0:34]** A production team describes the location they need, in their own words.
-> **[0:38]** AI parses every requirement, searches the catalog, evaluates each location against the brief, and returns a personalized shortlist.
-> **[0:48]** Then the conversation keeps going, and every reply makes the results sharper.
+> **[0:34]** Some problems need more than an API call.
+> **[0:37]** For robotics, we build the vision stack itself: hand and face detection, camera and wrist tracking, and custom datasets.
+> **[0:45]** Then we train and benchmark every model, until the data is ready to teach a robot.
 >
-> **[0:54]** For another client, AI turns something physical into something personal.
-> **[0:58]** A child places a few pieces on a board.
-> **[1:01]** The system recognizes each one, reasons about how they connect, and writes a story that's entirely theirs.
-> **[1:09]** We build it end to end, from the app to the story engine.
+> **[0:53]** Computer vision turns a camera into a live source of operational data.
+> **[0:58]** On a tractor, it detects, counts and measures every plant, and maps exactly where each one is.
+> **[1:04]** On the packing line, every pumpkin gets its own ID the moment it appears, and keeps it until it's counted.
 >
-> **[1:13]** Some problems need more than an API call.
-> **[1:16]** For robotics, we build the vision stack itself: hand and face detection, camera and wrist tracking, and custom datasets.
-> **[1:24]** Then we train and benchmark every model, until the data is ready to teach a robot.
+> **[1:12]** A production team describes the location they need, in their own words.
+> **[1:17]** AI parses every requirement, searches the catalog, evaluates each location against the brief, and returns a personalized shortlist.
+> **[1:26]** Then the conversation keeps going, and every reply makes the results sharper.
 >
-> **[1:32]** Computer vision turns a camera into a live source of operational data.
-> **[1:37]** On a tractor, it detects, counts and measures every plant, and maps exactly where each one is.
-> **[1:44]** On the packing line, every pumpkin gets its own ID the moment it appears, and keeps it until it's counted.
+> **[1:32]** For another client, AI turns something physical into something personal.
+> **[1:37]** A child places a few pieces on a board.
+> **[1:40]** The system recognizes each one, reasons about how they connect, and writes a story that's entirely theirs.
+> **[1:47]** We build it end to end, from the app to the story engine.
 >
 > **[1:52]** And when the work lives in documents, AI reads the evidence, maps it to frameworks like SOC 2 and ISO 27001, flags the gaps, and recommends what to fix.
 > **[2:03]** So teams know where they stand, before the auditor does.
@@ -200,8 +200,8 @@ Pronunciation spellings are used where the TTS needed them ("sock two", "ISO twe
 ## 4. On-screen text (complete list)
 
 - Hook: *AI as ~~a feature~~ → AI as the product.* · lockup *eagerworks | AI Studio* · `REAL PRODUCTS · WORKFLOWS · MEASURABLE OUTCOMES`
-- Introduction: kicker `WHO WE ARE` · *Designers & engineers.* → *Products that run on AI.* · *We build digital products, from the first idea to launch.* · pills `Product strategy · UX / UI design · Software engineering · Cloud & data · Applied AI` · kicker `CLIENT WORK` · *Built for our clients.* · project index `01 Location search & recommendation` · `02 Physical-to-digital storytelling` · `03 Vision data for robotics` · `04 Field & packing-line analytics` · `05 Evidence review for audits`
-- Chapter labels (each followed by a `CLIENT PROJECT` tag): `01 Generative AI · Search · Recommendation` · `02 Generative AI · Physical to digital` · `03 Computer vision · Custom models · Robotics` · `04 Real-world AI · Detection · Tracking` · `05 Document intelligence · AI auditing`
+- Introduction: kicker `WHO WE ARE` · *Designers & engineers.* → *Products that run on AI.* · *We build digital products, from the first idea to launch.* · pills `Product strategy · UX / UI design · Software engineering · Cloud & data · Applied AI` · kicker `CLIENT WORK` · *Built for our clients.* · project index `01 Vision data for robotics` · `02 Field & packing-line analytics` · `03 Location search & recommendation` · `04 Physical-to-digital storytelling` · `05 Evidence review for audits`
+- Chapter labels (each followed by a `CLIENT PROJECT` tag): `01 Computer vision · Custom models · Robotics` · `02 Real-world AI · Detection · Tracking` · `03 Generative AI · Search · Recommendation` · `04 Generative AI · Physical to digital` · `05 Document intelligence · AI auditing`
 - Pipeline steppers (one per chapter; see §2)
 - Supporting labels (small): `The vision stack we build`, `One team · the whole system`, `Data pipelines for robotics`, `Field map · every plant geo-located`, `Decision support for your team`
 - Own product: kicker `OUR OWN PRODUCTS` · *Built in-house.* · chapter `06 Computer vision · Counting · Tracking` + `OUR PRODUCT` tag · monitor header `Packing line · Overhead camera` · `MODE · OBJECT COUNTER` / `MODE · LINE COUNT` · *What it does*: `Detect — Every apple, in every crate.` · `Track — Its own ID, from entry to exit.` · `Count — A running total, live.` · `Line count — Counted once, as it crosses the line.` · chip `One overhead camera`
@@ -228,20 +228,20 @@ Everything else on screen is diegetic interface content of fictional products, e
 3. Recognition ring → camera viewfinder (object becomes camera data).
 4. Four vignettes → 2×2 grid → one line (many capabilities, one studio).
 5. Line → strike-through → underline → the logo's E strokes.
-6. Hook line → the intro's divider → row 01's underline in the client-work index → the brief card opening from that exact line.
-7. Brief phrases → flying requirement chips (language becomes structured data).
-8. Requirements → 3D catalog wall → candidate cards emerge from their tiles (search result becomes a dataset of candidates).
-9. Chat status dot → recognition ring on the story board.
-10. Story → end-to-end system row (the book shrinks into its node).
-11. API call → vision stack → the stack collapses into the camera feed.
-12. Camera's FOV footprint → top-down field feed; plant detections → map coordinates.
-13. Conveyor data → report page → an evidence file (operations data becomes a document).
+6. Hook line → the intro's divider → row 01's underline in the client-work index → the line contracts and the API call card opens from it.
+7. API call → vision stack → the stack collapses into the camera feed.
+8. Camera's FOV footprint → top-down field feed; plant detections → map coordinates.
+9. Packing-line data → a violet line → the brief card opening from that exact line.
+10. Brief phrases → flying requirement chips (language becomes structured data).
+11. Requirements → 3D catalog wall → candidate cards emerge from their tiles (search result becomes a dataset of candidates).
+12. Chat status dot → recognition ring on the story board.
+13. Story → end-to-end system row (the book shrinks into its node).
 14. Evidence sentences → framework requirements (documents become structured requirements).
 15. Dashboard → recap wall → tiles collapse into the E strokes → logo.
 
 ## 7. Music & sound design
 
-- **Score (original, synthesized):** 100 BPM, A minor / C major, vi–IV–I–V colour chords (Am9 · Fmaj9 · Cmaj9 · G6sus). The arc: a sparse hook with low impacts on each vignette cut; a riser into the convergence hit; a bigger hit as the logo fills; a light groove for search; a softer section for the story (FM bells, shaker, no kick at first); the **peak at robotics** (four-on-the-floor, 16th hats, driving bass, stabs, tom fills); mechanical rim percussion for the field; a steadier documents groove; the finale drops out, rises and **resolves on the logo** (Cmaj9, bells), then settles under the CTA.
+- **Score (original, synthesized):** 100 BPM, A minor / C major, vi–IV–I–V colour chords (Am9 · Fmaj9 · Cmaj9 · G6sus). The arc: a sparse hook with low impacts on each vignette cut; a riser into the convergence hit; a bigger hit as the logo fills; the intro's riser lands straight on the **peak at robotics**, the first case (four-on-the-floor, 16th hats, driving bass, stabs, tom fills); mechanical rim percussion for the field; a light groove for search; a softer section for the story (FM bells, shaker, no kick at first); a steadier documents groove; the finale drops out, rises and **resolves on the logo** (Cmaj9, bells), then settles under the CTA.
 - **Sound design (synthesized, cued frame-accurately from the same timeline):** key clicks for typing; soft pops for chips and badges; two-tone lock-ons for every recognition/detection; wooden clacks for the board pieces; band-pass scanner sweeps for catalog and documents; paper swishes; a digital glitch under the decode; a servo whine and gripper clicks for the robot; tractor rumble; a conveyor hum with a bright count tick each time a pumpkin crosses the line; alert tones for gaps.
 - **Mix:** VO chain (high-pass, de-box, presence, air, 2.2:1 compression, short room) at −16 LUFS; music ducked ≈8.5 dB under speech with slow release so it breathes between lines; master −14 LUFS integrated, true peak ≤ −1 dBTP after AAC encoding (web/social ready).
 

@@ -1,4 +1,4 @@
-// 04 — Real-world AI · Detection · Tracking
+// 02 — Real-world AI · Detection · Tracking
 // Tractor camera → live crop feed (detect · count · measure · map) → packing line (ID · track · count).
 import { addScene, h, put, prog, E, clamp, lerp, env, makeCanvas, rng, rgba, C, hash, rrect, keys } from '../engine.js';
 import { makeHud, box, tag, recHud, brackets, FONT_MONO, FONT_UI } from '../lib/ui.js';
@@ -54,7 +54,7 @@ addScene({
   setup(ctx) {
     const R = ctx.root;
     this.hud = makeHud(ctx, {
-      num: '04', title: 'Real-world AI · Detection · Tracking', badge: 'Client project',
+      num: '02', title: 'Real-world AI · Detection · Tracking', badge: 'Client project',
       steps: [
         { label: 'Detect', at: ctx.cue('a2', 0) + 0.9 },
         { label: 'Count', at: ctx.cue('a2', 1) },
@@ -106,12 +106,9 @@ addScene({
     this.pSize = pstat('Avg diameter');
     this.pack.append(h('div', { style: { fontSize: '16px', fontWeight: 600, width: '130px', lineHeight: 1.3 } }, 'Packing line', h('br'), h('span', { class: 'kicker', style: { fontSize: '10.5px', color: 'var(--coral)' } }, '● Live')), this.pCount.el, this.pView.el, this.pSize.el);
     R.append(this.pack);
-    // report page (hands off to the documents scene)
-    this.page = h('div', { class: 'abs', style: { left: '760px', top: '280px', width: '400px', height: '520px', borderRadius: '10px', background: '#f4f3ef', boxShadow: '0 40px 80px rgba(0,0,0,0.6)', padding: '34px', transformOrigin: '50% 50%' } },
-      h('div', { style: { fontFamily: 'var(--font-mono)', fontSize: '11px', letterSpacing: '0.16em', color: '#6b6f76', marginBottom: '12px' } }, 'DAILY OPERATIONS REPORT'),
-      h('div', { style: { fontSize: '22px', fontWeight: 650, color: '#15171a', marginBottom: '22px' } }, 'Packing line · shift summary'),
-      ...Array.from({ length: 11 }, (_, i) => h('div', { style: { height: '9px', borderRadius: '3px', background: i % 4 === 0 ? '#c9ccd1' : '#e2e4e7', width: `${[92, 80, 86, 60, 90, 76, 84, 58, 88, 70, 64][i]}%`, marginBottom: '14px' } })));
-    R.append(this.page);
+    // hand-off line into the search scene's brief card (same position as the hook/intro line)
+    this.handoff = h('div', { class: 'abs', style: { left: '460px', top: '483px', width: '1000px', height: '2px', background: 'var(--accent)', transformOrigin: '50% 50%', boxShadow: '0 0 16px rgba(130,52,254,0.6)' } });
+    R.append(this.handoff);
   },
 
   render(t, ctx) {
@@ -388,8 +385,8 @@ addScene({
     this.pCount.v.textContent = fmt(packCount);
     this.pView.v.textContent = String(inView);
     this.pSize.v.textContent = `${(26.8 + Math.sin(t) * 0.4).toFixed(1)} cm`;
-    // handoff: the shift summary report
-    const pg = prog(t, D - 0.9, 0.8, E.outCubic);
-    put(this.page, { y: (1 - pg) * 80, s: lerp(0.85, 1, pg), r: lerp(-6, -3, pg), o: pg * (t < D ? 1 : 0) });
+    // hand-off: a violet line draws where the next scene's brief card opens
+    const hp = prog(t, D - 0.55, 0.5, E.inOutCubic);
+    put(this.handoff, { sx: hp, o: hp > 0 ? 1 : 0 });
   },
 });

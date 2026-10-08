@@ -423,14 +423,12 @@ for k in range(40):
         at(enter, s_tick(2400, 0.012), -32, -0.8)
     if cross > cID - 0.2 and cross < s + D:
         at(cross, s_count(), -25, 0.25)
-at(s + D - 0.9, s_paper(0.4, 35), -24)
+at(s + D - 0.55, s_whoosh(0.5, 1500, 5000, 35), -31)  # hand-off line into the search brief card
 
 # ================================================================== DOCS
 s = SC['docs']['start']
 cRead, cMapD, cFlag, cRecD, cKnow = cue('d1', 1), cue('d1', 2), cue('d1', 3), cue('d1', 4), cue('d2', 0)
 D = SC['docs']['end'] - s
-at(s + 0.0, s_paper(0.5, 36), -24)
-at(s + 0.8, s_thump(), -30)
 for i in range(5):
     at(s + 0.1 + i * 0.18, s_pop(900 + i * 50, 1200 + i * 50), -33)
 at(s + 0.3, s_rise(1.6, 400, 800), -38)

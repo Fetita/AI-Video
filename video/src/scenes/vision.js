@@ -1,4 +1,4 @@
-// 03 — Computer vision · Custom models · Robotics
+// 01 — Computer vision · Custom models · Robotics
 // API call → full vision stack → hands → faces → camera & wrist tracking → dataset → train/benchmark → robot.
 import { addScene, h, put, prog, E, clamp, lerp, env, makeCanvas, rng, rgba, C, keys, rrect, makeNoise } from '../engine.js';
 import { makeHud, box, tag, recHud, brackets, FONT_MONO, FONT_UI } from '../lib/ui.js';
@@ -315,7 +315,7 @@ addScene({
   setup(ctx) {
     const R = ctx.root;
     this.hud = makeHud(ctx, {
-      num: '03', title: 'Computer vision · Custom models · Robotics', badge: 'Client project',
+      num: '01', title: 'Computer vision · Custom models · Robotics', badge: 'Client project',
       steps: [
         { label: 'Detect', at: ctx.cue('v2', 0) + 0.2 },
         { label: 'Track', at: ctx.cue('v2', 2) },
@@ -337,6 +337,9 @@ addScene({
     this.apiPill.append(this.strike);
     this.api.append(this.apiPill);
     R.append(this.api);
+    // incoming hand-off: the intro's violet line (same position) contracts and opens the API call card
+    this.handIn = h('div', { class: 'abs', style: { left: '460px', top: '483px', width: '1000px', height: '2px', background: 'var(--accent)', transformOrigin: '50% 50%', boxShadow: '0 0 16px rgba(130,52,254,0.6)' } });
+    R.insertBefore(this.handIn, this.api); // behind the card, so the card covers it as it opens
     this.stack = STACK.map(([k, v], i) => {
       const el = h('div', { class: 'panel', style: { left: '560px', top: '0', width: '800px', height: '74px', display: 'flex', alignItems: 'center', padding: '0 30px', gap: '20px', borderRadius: '14px' } },
         h('span', { class: 'mono', style: { color: 'var(--accent-text)', fontSize: '14px', width: '30px' } }, `0${i + 1}`),
@@ -370,7 +373,13 @@ addScene({
     const apiIn = prog(t, 0.05, 0.5, E.outCubic);
     const stackIn = prog(t, cStack - 0.05, 0.9, E.outCubic);
     const stackOut = prog(t, cVS - 0.35, 0.55, E.inOutCubic);
-    put(this.api, { y: lerp(470, 150, stackIn) - stackOut * 40, o: apiIn * (1 - stackOut) });
+    // the card opens out of the hand-off line (its vertical centre sits on the line at y = 483)
+    if (!this.pillH) { const r = this.apiPill.getBoundingClientRect(); if (r.height > 10) { this.pillH = r.height; this.pillW = r.width; } }
+    const pillH = this.pillH || 96, pillW = this.pillW || 560;
+    put(this.api, { y: lerp(483 - pillH / 2, 150, stackIn) - stackOut * 40, o: (apiIn > 0 ? 1 : 0) * (1 - stackOut) });
+    this.apiPill.style.clipPath = `inset(${((1 - apiIn) * 50).toFixed(2)}% 0 ${((1 - apiIn) * 50).toFixed(2)}% 0 round 18px)`;
+    const shrink = prog(t, -0.3, 0.45, E.inOutCubic);
+    put(this.handIn, { sx: lerp(1, pillW / 1000, shrink), o: (1 - prog(t, 0.2, 0.3)) * (t < 0.6 ? 1 : 0) });
     this.strike.style.transform = `scaleX(${prog(t, cStack + 0.35, 0.45, E.inOutCubic).toFixed(3)})`;
     this.apiPill.style.opacity = (1 - 0.45 * prog(t, cStack + 0.4, 0.5)).toFixed(3);
     this.stack.forEach((el, i) => {

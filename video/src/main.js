@@ -1,6 +1,6 @@
 import { addGlobal, mount, seek, makeCanvas, W, H, FPS, TIMELINE, h } from './engine.js';
 
-const SCENES = ['hook', 'intro', 'search', 'story', 'vision', 'agri', 'docs', 'inhouse', 'finale'];
+const SCENES = ['hook', 'intro', 'vision', 'agri', 'search', 'story', 'docs', 'inhouse', 'finale'];
 
 // ---- global background: deep graphite with a soft top light and a faint engineering grid
 addGlobal({

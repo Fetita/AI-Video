@@ -1,18 +1,18 @@
 // Introduction — who Eagerworks is, then a "client work" index of the five projects that follow.
 // The hook's hand-off line becomes the divider under the headline, then the underline of row 01,
-// and finally hands off (same position) to the search scene's brief card.
+// and finally hands off (same position) to the vision scene's API call card.
 import { addScene, h, put, prog, E, clamp, lerp, env } from '../engine.js';
 import { words, revealWords } from '../lib/ui.js';
 
 const DISCIPLINES = ['Product strategy', 'UX / UI design', 'Software engineering', 'Cloud & data'];
 const PROJECTS = [
+  ['Vision data for robotics', 'Computer vision'],
+  ['Field & packing-line analytics', 'Computer vision'],
   ['Location search & recommendation', 'Generative AI'],
   ['Physical-to-digital storytelling', 'Generative AI'],
-  ['Vision data for robotics', 'Computer vision'],
-  ['Field & packing-line analytics', 'Real-world AI'],
   ['Evidence review for audits', 'Document AI'],
 ];
-const LINE = { x: 460, y: 483, w: 1000 }; // shared with hook.js (hand-off) and search.js (brief card)
+const LINE = { x: 460, y: 483, w: 1000 }; // shared with hook.js (hand-off) and vision.js (API call card)
 const ROW_H = 70;
 
 addScene({
@@ -101,7 +101,8 @@ addScene({
 
     // ---- the shared line: full violet at hand-in, quiet hairline-ish while the text plays, violet again at hand-off
     const quiet = env(t, 0.6, D - 1.0, 0.6, 0.6);
-    this.line.style.opacity = lerp(1, 0.45, quiet).toFixed(3);
+    // past the cut the next scene owns the line (vision.js draws it and opens the API card from it)
+    this.line.style.opacity = t >= D ? '0' : lerp(1, 0.45, quiet).toFixed(3);
     this.line.style.boxShadow = `0 0 ${lerp(16, 0, quiet).toFixed(1)}px rgba(130,52,254,0.6)`;
   },
 });
