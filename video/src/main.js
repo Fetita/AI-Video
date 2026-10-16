@@ -1,6 +1,8 @@
 import { addGlobal, mount, seek, makeCanvas, W, H, FPS, TIMELINE, h } from './engine.js';
+import { makeCaptions } from './lib/captions.js';
 
-const SCENES = ['hook', 'intro', 'vision', 'agri', 'search', 'story', 'docs', 'inhouse', 'promise', 'finale'];
+// Scene order comes from the timeline, so an alternate cut (?cut=…) can drop or reorder scenes.
+const SCENES = TIMELINE.scenes.map((s) => s.id);
 
 // ---- global background: deep graphite with a soft top light and a faint engineering grid
 addGlobal({
@@ -30,6 +32,14 @@ addGlobal({
     this.grid.style.backgroundPosition = `${(t * 6) % 48}px ${(t * 3) % 48}px`;
   },
 });
+
+// ---- burned-in captions (only for cuts that ask for them)
+if (TIMELINE.captions) {
+  addGlobal({
+    setup(stage) { this.update = makeCaptions(stage); },
+    render(t) { this.update(t); },
+  });
+}
 
 // ---- vignette on top of everything (film grain is added in the delivery encode)
 addGlobal({

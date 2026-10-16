@@ -4,6 +4,7 @@ A 3:06 premium B2B film positioning **Eagerworks AI Studio** as the partner that
 AI capabilities into real products, workflows and measurable outcomes.
 
 **Deliverable:** [`out/eagerworks-ai-studio.mp4`](out/eagerworks-ai-studio.mp4) (1920×1080, 30 fps, H.264 + AAC, −14 LUFS)
+**LinkedIn cut:** [`out/eagerworks-ai-studio-linkedin.mp4`](out/eagerworks-ai-studio-linkedin.mp4) (1:29, burned-in captions, for new audiences)
 **Creative treatment** (narrative, storyboard, timings, VO script, on-screen text, visual & sound direction, reference mapping):
 [`docs/creative-treatment.md`](docs/creative-treatment.md)
 
@@ -69,3 +70,20 @@ cd .. && scripts/finalize.sh
 
 Editing a scene is safe: every animation is keyed to VO clause timestamps from `video/src/timeline.js`,
 so changing the narration and re-running steps 1–5 keeps picture, music and effects in sync.
+
+### Alternate cuts (LinkedIn)
+
+A cut is a second narration script, `audio/vo_script.<cut>.json`, listing the scenes it keeps (in order) and their lines.
+It can also burn in captions (`"captions": true`, with `"caption": false` on lines whose words are already on screen)
+and renumber the chapters it keeps (`"chapters"`). Every step takes `CUT=<cut>` and writes `*-<cut>` files next to the
+full film's, so the two never overwrite each other:
+
+```bash
+cd audio && export CUT=linkedin
+python3 tts.py && python3 build_timeline.py          # → build/vo-linkedin/, video/src/timeline-linkedin.js
+python3 music.py && python3 sfx.py && python3 mix.py # → build/mix-linkedin.wav
+cd ../video && node render.mjs --video --workers 4 --query cut=linkedin --out build/frames-linkedin.mkv
+cd .. && scripts/finalize.sh video/build/frames-linkedin.mkv audio/build/mix-linkedin.wav out/eagerworks-ai-studio-linkedin.mp4
+```
+
+Review stills for a cut with `node render.mjs --stills 12.5 --query cut=linkedin`.

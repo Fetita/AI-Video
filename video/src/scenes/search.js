@@ -1,6 +1,6 @@
 // 03 — Generative AI · Search · Recommendation
 // Brief → parse → search → evaluate → recommend → refine (conversation).
-import { addScene, h, svg, put, prog, E, clamp, lerp, env, makeCanvas, rng, rgba, C, hash, rrect } from '../engine.js';
+import { TIMELINE, addScene, h, svg, put, prog, E, clamp, lerp, env, makeCanvas, rng, rgba, C, hash, rrect } from '../engine.js';
 import { makeHud, words, revealWords, pop, placeCaret } from '../lib/ui.js';
 import { photo, preloadCatalog, thumb } from '../lib/places.js';
 
@@ -392,9 +392,12 @@ const ctx0 = addScene({
     put(this.bHint, { o: prog(t, cF2 + 0.9, 0.4) });
 
     // ---------- outro: the assistant's signal dot carries the idea into the next scene
+    // (the story's reticle; when another scene follows, as in the LinkedIn cut, it blooms out at the cut instead)
     const dP = prog(t, D - 0.95, 0.9, E.inOutCubic);
     const dx = lerp(1300 + 32, 960, dP), dy = lerp(262 + 26, 540, dP);
-    put(this.dot, { x: dx, y: dy, s: lerp(0.4, 1.0, dP), o: t > D - 0.95 ? clamp((t - (D - 0.95)) / 0.2) : 0 });
+    const scenes = TIMELINE.scenes.map((s) => s.id);
+    const bloom = scenes[scenes.indexOf('search') + 1] === 'story' ? 0 : prog(t, D - 0.15, 0.4, E.outCubic);
+    put(this.dot, { x: dx, y: dy, s: lerp(0.4, 1.0, dP) * lerp(1, 4, bloom), o: (t > D - 0.95 ? clamp((t - (D - 0.95)) / 0.2) : 0) * (1 - bloom) });
   },
 });
 export default ctx0;

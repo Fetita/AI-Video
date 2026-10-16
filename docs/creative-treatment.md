@@ -303,3 +303,23 @@ its board and the story "The Slowest Guide in the Woods" are original, and the p
 | Delivery | ffmpeg (H.264 High, AAC) | `scripts/finalize.sh` |
 
 See `README.md` for commands to re-render after edits.
+
+## 11. LinkedIn cut (1:29)
+
+`out/eagerworks-ai-studio-linkedin.mp4`, built from `audio/vo_script.linkedin.json`. Purpose: reach people who don't know Eagerworks yet, in a feed where most viewers watch muted and decide in the first seconds.
+
+| Time | Section | Why it stays |
+|---|---|---|
+| 0:00.0 – 0:19.2 | Hook + brand reveal (unchanged) | Fast vignette cuts from the first second; says what Eagerworks AI Studio is. |
+| 0:19.2 – 0:37.2 | 01 Computer vision · Robotics | The film's most kinetic case, and "Some problems need more than an API call" works as a cold open. |
+| 0:37.2 – 0:56.4 | 02 Generative AI · Search · Recommendation | The relatable one: a chat assistant that turns a brief into a shortlist. |
+| 0:56.4 – 1:13.2 | How we work | The differentiator: not just another AI studio; Listen · Adapt · Stay. |
+| 1:13.2 – 1:28.8 | Finale + CTA | The recap wall still shows every capability (field, packing line, story, documents) in a few seconds. |
+
+Removed: the introduction (the hook already says who we are), the field & packing-line, story and documents cases, and the in-house product chapter. Their capabilities still flash by on the finale wall.
+
+Changes for the feed:
+- **Burned-in captions** (large, high-contrast, bottom-centre, phrase by phrase), skipped where the same words are already on screen as typography (the thesis, "Not just another AI studio.", the logo, tagline and CTA).
+- **Tighter pacing:** shorter pauses in the search and How-we-work narration, shorter scene holds. Same voice, same lines.
+- **Hand-offs re-made for the new neighbours:** robotics now ends on the violet line the search brief opens from; the search assistant's dot blooms out instead of carrying into the story scene.
+- **Chapters renumbered** 01–02.

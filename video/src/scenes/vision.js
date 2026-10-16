@@ -1,6 +1,6 @@
 // 01 — Computer vision · Custom models · Robotics
 // API call → full vision stack → hands → faces → camera & wrist tracking → dataset → train/benchmark → robot.
-import { addScene, h, put, prog, E, clamp, lerp, env, makeCanvas, rng, rgba, C, keys, rrect, makeNoise } from '../engine.js';
+import { addScene, h, put, prog, E, clamp, lerp, env, makeCanvas, rng, rgba, C, keys, rrect, makeNoise, TIMELINE } from '../engine.js';
 import { makeHud, box, tag, recHud, brackets, FONT_MONO, FONT_UI } from '../lib/ui.js';
 import { handPoints, basis, drawHand, drawPose, bbox, FINGER_COLORS } from '../lib/hand.js';
 import { v3, add, sub, mul, norm, camera, lerp3, cross } from '../lib/three.js';
@@ -340,6 +340,13 @@ addScene({
     // incoming hand-off: the intro's violet line (same position) contracts and opens the API call card
     this.handIn = h('div', { class: 'abs', style: { left: '460px', top: '483px', width: '1000px', height: '2px', background: 'var(--accent)', transformOrigin: '50% 50%', boxShadow: '0 0 16px rgba(130,52,254,0.6)' } });
     R.insertBefore(this.handIn, this.api); // behind the card, so the card covers it as it opens
+    // outgoing hand-off, only when the search scene follows directly (the LinkedIn cut): a violet line draws
+    // where the search brief card opens, as the packing-line scene does in the full film
+    const order = TIMELINE.scenes.map((s) => s.id);
+    if (order[order.indexOf('vision') + 1] === 'search') {
+      this.handOut = h('div', { class: 'abs', style: { left: '460px', top: '483px', width: '1000px', height: '2px', background: 'var(--accent)', transformOrigin: '50% 50%', boxShadow: '0 0 16px rgba(130,52,254,0.6)' } });
+      R.append(this.handOut);
+    }
     this.stack = STACK.map(([k, v], i) => {
       const el = h('div', { class: 'panel', style: { left: '560px', top: '0', width: '800px', height: '74px', display: 'flex', alignItems: 'center', padding: '0 30px', gap: '20px', borderRadius: '14px' } },
         h('span', { class: 'mono', style: { color: 'var(--accent-text)', fontSize: '14px', width: '30px' } }, `0${i + 1}`),
@@ -469,5 +476,6 @@ addScene({
     const hand = { a: env(t, cRb - 0.1, cRb + 1.6, 0.3, 0.4), u: prog(t, cRb, 1.3, E.inOutSine) };
     drawRobot(g, t, rbA, prog(t, cRb + 1.1, 2.6, E.inOutSine), hand);
     if (rbA > 0.001) tag(g, 200, 200, 'DATA PIPELINES FOR ROBOTICS', { a: rbA, bg: null, fg: 'rgba(255,255,255,0.7)', size: 13, anchor: 'bl', pad: 0 });
+    if (this.handOut) { const hp = prog(t, D - 0.55, 0.5, E.inOutCubic); put(this.handOut, { sx: hp, o: hp > 0 ? 1 : 0 }); }
   },
 });

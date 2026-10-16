@@ -1,6 +1,8 @@
 // Deterministic motion engine: every frame is a pure function of time t.
 // The renderer calls window.__seek(t); nothing animates on its own.
-import TL from './timeline.js';
+// ?cut=linkedin loads timeline-linkedin.js (an alternate edit built by CUT=linkedin in audio/).
+const CUT = new URLSearchParams(location.search).get('cut');
+const TL = (await import(CUT ? `./timeline-${CUT}.js` : './timeline.js')).default;
 
 export const W = 1920;
 export const H = 1080;
