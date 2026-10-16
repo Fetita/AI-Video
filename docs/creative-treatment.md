@@ -128,7 +128,7 @@ Stepper: `DETECT → TRACK → COUNT → LINE COUNT`
 | Time | Visual |
 |---|---|
 | 2:07.8 | Title card: kicker `OUR OWN PRODUCTS`, **"Built in-house."**, and a violet rule draws beneath it. The chapter label carries an `OUR PRODUCT` tag. |
-| 2:11.4 | The card lifts away and a live monitor opens from its centre line (`Packing line · Overhead camera`, `MODE · OBJECT COUNTER`, `● LIVE`). It plays the **object counter** footage: crates of apples on a roller conveyor, every apple boxed with its own ID (`APPLE · 71`) and a running total. |
+| 2:11.4 | The card lifts away and a live monitor opens from its centre line (`Packing line · Overhead camera`, `MODE · OBJECT COUNTER`, `● LIVE`). It plays the **object counter** footage: crates of apples on a roller conveyor, every apple tagged with its own ID and size (`#52 · 98 mm`), plus a live dashboard: apples counted, last item, throughput, average size, ripeness and size grade. |
 | 2:11.9 | A *What it does* column builds on the right. **Detect**, **Track** and **Count** light up as each is spoken. |
 | 2:22.7 | A violet wipe switches the monitor to the **line counter** footage (`MODE · LINE COUNT`): apples are counted as they cross a vertical count line. **Line count** lights up, and an `One overhead camera` chip lands under the list. |
 | 2:30.3 | The monitor and column recede; the finale wall assembles. |
