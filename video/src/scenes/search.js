@@ -1,4 +1,4 @@
-// 01 — Generative AI · Search · Recommendation
+// 03 — Generative AI · Search · Recommendation
 // Brief → parse → search → evaluate → recommend → refine (conversation).
 import { addScene, h, svg, put, prog, E, clamp, lerp, env, makeCanvas, rng, rgba, C, hash, rrect } from '../engine.js';
 import { makeHud, words, revealWords, pop, placeCaret } from '../lib/ui.js';
@@ -34,7 +34,7 @@ const ctx0 = addScene({
   setup(ctx) {
     const R = ctx.root;
     this.hud = makeHud(ctx, {
-      num: '01', title: 'Generative AI · Search · Recommendation', badge: 'Client project',
+      num: '03', title: 'Generative AI · Search · Recommendation', badge: 'Client project',
       steps: [
         { label: 'Parse', at: ctx.cue('s2', 0) },
         { label: 'Search', at: ctx.cue('s2', 1) },

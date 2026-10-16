@@ -67,6 +67,52 @@
       ]
     },
     {
+      "id": "vision",
+      "tail": 2.0,
+      "min": 19.0,
+      "lines": [
+        {
+          "id": "v1",
+          "at": 0.4,
+          "text": "Some problems need more than an API call."
+        },
+        {
+          "id": "v2",
+          "gap": 0.5,
+          "text": "For robotics, we build the vision stack itself: hand and face detection, camera and wrist tracking, and custom datasets."
+        },
+        {
+          "id": "v3",
+          "gap": 0.7,
+          "text": "Then we train and benchmark every model, until the data is ready to teach a robot."
+        }
+      ],
+      "speed": 1.07
+    },
+    {
+      "id": "agri",
+      "tail": 1.6,
+      "min": 19.2,
+      "lines": [
+        {
+          "id": "a1",
+          "at": 0.5,
+          "text": "Computer vision turns a camera into a live source of operational data."
+        },
+        {
+          "id": "a2",
+          "gap": 0.55,
+          "text": "On a tractor, it detects, counts and measures every plant, and maps exactly where each one is."
+        },
+        {
+          "id": "a3",
+          "gap": 1.5,
+          "text": "On the packing line, every pumpkin gets its own ID the moment it appears, and keeps it until it's counted."
+        }
+      ],
+      "speed": 1.07
+    },
+    {
       "id": "search",
       "tail": 1.8,
       "min": 21.0,
@@ -116,52 +162,6 @@
         }
       ],
       "speed": 1.06
-    },
-    {
-      "id": "vision",
-      "tail": 2.0,
-      "min": 19.0,
-      "lines": [
-        {
-          "id": "v1",
-          "at": 0.4,
-          "text": "Some problems need more than an API call."
-        },
-        {
-          "id": "v2",
-          "gap": 0.5,
-          "text": "For robotics, we build the vision stack itself: hand and face detection, camera and wrist tracking, and custom datasets."
-        },
-        {
-          "id": "v3",
-          "gap": 0.7,
-          "text": "Then we train and benchmark every model, until the data is ready to teach a robot."
-        }
-      ],
-      "speed": 1.07
-    },
-    {
-      "id": "agri",
-      "tail": 1.6,
-      "min": 19.2,
-      "lines": [
-        {
-          "id": "a1",
-          "at": 0.5,
-          "text": "Computer vision turns a camera into a live source of operational data."
-        },
-        {
-          "id": "a2",
-          "gap": 0.55,
-          "text": "On a tractor, it detects, counts and measures every plant, and maps exactly where each one is."
-        },
-        {
-          "id": "a3",
-          "gap": 1.5,
-          "text": "On the packing line, every pumpkin gets its own ID the moment it appears, and keeps it until it's counted."
-        }
-      ],
-      "speed": 1.07
     },
     {
       "id": "docs",
