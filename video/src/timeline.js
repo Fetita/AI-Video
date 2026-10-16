@@ -3,7 +3,7 @@ export default {
  "fps": 30,
  "bpm": 100.0,
  "beat": 0.6,
- "duration": 166.8,
+ "duration": 186.0,
  "scenes": [
   {
    "id": "hook",
@@ -81,7 +81,7 @@ export default {
   {
    "id": "inhouse",
    "start": 127.2,
-   "end": 151.2,
+   "end": 152.4,
    "lines": [
     "o1",
     "o2",
@@ -90,9 +90,20 @@ export default {
    ]
   },
   {
+   "id": "promise",
+   "start": 152.4,
+   "end": 170.4,
+   "lines": [
+    "p1",
+    "p2",
+    "p3",
+    "p4"
+   ]
+  },
+  {
    "id": "finale",
-   "start": 151.2,
-   "end": 166.8,
+   "start": 170.4,
+   "end": 186.0,
    "lines": [
     "f1",
     "f2",
@@ -268,7 +279,7 @@ export default {
    "segs": [
     [
      38.76,
-     40.55
+     40.56
     ],
     [
      40.95,
@@ -597,40 +608,120 @@ export default {
    "id": "o4",
    "scene": "inhouse",
    "start": 143.017,
-   "end": 149.428,
+   "end": 150.91,
    "segs": [
     [
      143.047,
-     145.987
+     144.627
     ],
     [
-     146.357,
-     148.237
+     144.947,
+     146.917
     ],
     [
-     148.547,
-     149.357
+     147.277,
+     149.747
+    ],
+    [
+     150.027,
+     150.837
     ]
    ],
-   "text": "It can also count fruit as it crosses a line on the conveyor, so the team can follow throughput live, crate by crate."
+   "text": "As each apple crosses the line, it's sized and graded for ripeness, so the team can follow throughput and quality live, crate by crate."
+  },
+  "p1": {
+   "id": "p1",
+   "scene": "promise",
+   "start": 153.0,
+   "end": 155.15,
+   "segs": [
+    [
+     153.03,
+     155.03
+    ]
+   ],
+   "text": "We're not just another AI studio."
+  },
+  "p2": {
+   "id": "p2",
+   "scene": "promise",
+   "start": 156.05,
+   "end": 160.958,
+   "segs": [
+    [
+     156.08,
+     157.16
+    ],
+    [
+     157.59,
+     158.32
+    ],
+    [
+     158.41,
+     159.15
+    ],
+    [
+     159.27,
+     160.89
+    ]
+   ],
+   "text": "We start by listening: to your people, your users, and the problem behind the request."
+  },
+  "p3": {
+   "id": "p3",
+   "scene": "promise",
+   "start": 161.558,
+   "end": 164.993,
+   "segs": [
+    [
+     161.588,
+     163.078
+    ],
+    [
+     163.378,
+     164.918
+    ]
+   ],
+   "text": "We stay flexible and agile, adapting as your needs change."
+  },
+  "p4": {
+   "id": "p4",
+   "scene": "promise",
+   "start": 165.593,
+   "end": 168.964,
+   "segs": [
+    [
+     165.623,
+     166.543
+    ],
+    [
+     166.673,
+     167.603
+    ],
+    [
+     167.843,
+     168.893
+    ]
+   ],
+   "text": "And we stay with you, side by side, until it really works."
   },
   "f1": {
    "id": "f1",
    "scene": "finale",
-   "start": 151.8,
-   "end": 156.099,
+   "start": 171.0,
+   "end": 175.299,
    "segs": [
     [
-     151.83,
-     152.71
+     171.03,
+     171.91
     ],
     [
-     153.09,
-     154.32
+     172.29,
+     173.52
     ],
     [
-     154.49,
-     156.02
+     173.69,
+     175.22
     ]
    ],
    "text": "Different problems. One team that designs, builds and ships the whole system."
@@ -638,12 +729,12 @@ export default {
   "f2": {
    "id": "f2",
    "scene": "finale",
-   "start": 157.399,
-   "end": 159.019,
+   "start": 176.599,
+   "end": 178.219,
    "segs": [
     [
-     157.429,
-     158.899
+     176.629,
+     178.099
     ]
    ],
    "text": "Eagerworks AI Studio."
@@ -651,12 +742,12 @@ export default {
   "f3": {
    "id": "f3",
    "scene": "finale",
-   "start": 159.619,
-   "end": 162.148,
+   "start": 178.819,
+   "end": 181.348,
    "segs": [
     [
-     159.649,
-     162.079
+     178.849,
+     181.279
     ]
    ],
    "text": "From AI ideas to real-world products."
@@ -664,12 +755,12 @@ export default {
   "f4": {
    "id": "f4",
    "scene": "finale",
-   "start": 163.148,
-   "end": 164.516,
+   "start": 182.348,
+   "end": 183.716,
    "segs": [
     [
-     163.178,
-     164.418
+     182.378,
+     183.618
     ]
    ],
    "text": "Let's build what's next."

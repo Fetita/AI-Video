@@ -206,7 +206,38 @@
         {
           "id": "o4",
           "gap": 0.9,
-          "text": "It can also count fruit as it crosses a line on the conveyor, so the team can follow throughput live, crate by crate."
+          "text": "As each apple crosses the line, it's sized and graded for ripeness, so the team can follow throughput and quality live, crate by crate."
+        }
+      ]
+    },
+    {
+      "id": "promise",
+      "tail": 1.3,
+      "min": 15.0,
+      "speed": 1.0,
+      "lines": [
+        {
+          "id": "p1",
+          "at": 0.6,
+          "text": "We're not just another AI studio.",
+          "speed": 0.95
+        },
+        {
+          "id": "p2",
+          "gap": 0.9,
+          "text": "We start by listening: to your people, your users, and the problem behind the request.",
+          "tts": "We start by listening... to your people, your users, and the problem behind the request."
+        },
+        {
+          "id": "p3",
+          "gap": 0.6,
+          "text": "We stay flexible and agile, adapting as your needs change."
+        },
+        {
+          "id": "p4",
+          "gap": 0.6,
+          "text": "And we stay with you, side by side, until it really works.",
+          "speed": 0.97
         }
       ]
     },

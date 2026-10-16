@@ -1,6 +1,6 @@
 # Eagerworks AI Studio — "From AI ideas to real-world products"
 
-Creative treatment for the 2:47 promotional film (1920×1080, 30 fps, stereo 48 kHz).
+Creative treatment for the 3:06 promotional film (1920×1080, 30 fps, stereo 48 kHz).
 Final deliverable: `out/eagerworks-ai-studio.mp4`.
 
 ---
@@ -26,7 +26,8 @@ experiences, custom vision models, tracking, and document intelligence.
 | Promise | The logo builds itself. "…real products, workflows and measurable outcomes." | Introduces Eagerworks AI Studio. |
 | Introduction | "Designers & engineers." → "Products that run on AI." → *Client work* index of the five projects. | Says who we are, and frames every case that follows as work for a client. |
 | Proof ×5 | Search → Story → Vision/Robotics → Field & packing line → Documents | Each section is a client project and an AI *pipeline*, shown on a stepper; the chapter label carries a `CLIENT PROJECT` tag. |
-| Own product | "Built in-house." → real footage of the packing-line vision system Eagerworks is building: per-apple IDs and a running count, then line-crossing counting. | Shows the team also builds its own AI products, beyond client work. |
+| Own product | "Built in-house." → real footage of the packing-line vision system Eagerworks is building: per-apple IDs and sizes, a count line, and a live dashboard of count, throughput, ripeness and size grade. | Shows the team also builds its own AI products, beyond client work. |
+| How we work | "Not just ~~another AI studio~~." → *Listen · Adapt · Stay.* | The personal beat: we listen first, stay flexible and agile, and stay with the client until it works. |
 | Synthesis | The whole film becomes one wall, then collapses into the logo's three "E" strokes. | "Different problems. One team." |
 | Close | "From AI ideas to real-world products." + CTA "Let's build what's next." | Positioning + action. |
 
@@ -123,29 +124,40 @@ Stepper: `READ → MAP → FLAG → RECOMMEND` (camera glides through one contin
 | 2:01.5 | **Recommend:** `IMPACT · HIGH` card: *"Add contractor accounts to the next quarterly review and attach the signed approval log."* |
 | 2:03.4 | The interface recedes into an *Audit readiness* dashboard, labelled **decision support for your team**. |
 
-### 2:07.2 – 2:31.2 · 06 Our own products · Packing-line vision (real footage)
-Stepper: `DETECT → TRACK → COUNT → LINE COUNT`
+### 2:07.2 – 2:32.4 · 06 Our own products · Packing-line vision (real footage)
+Stepper: `DETECT → TRACK → COUNT → GRADE`
 | Time | Visual |
 |---|---|
 | 2:07.8 | Title card: kicker `OUR OWN PRODUCTS`, **"Built in-house."**, and a violet rule draws beneath it. The chapter label carries an `OUR PRODUCT` tag. |
-| 2:11.4 | The card lifts away and a live monitor opens from its centre line (`Packing line · Overhead camera`, `MODE · OBJECT COUNTER`, `● LIVE`). It plays the **object counter** footage: crates of apples on a roller conveyor, every apple tagged with its own ID and size (`#52 · 98 mm`), plus a live dashboard: apples counted, last item, throughput, average size, ripeness and size grade. |
+| 2:11.4 | The card lifts away and a live monitor opens from its centre line (`Packing line · Overhead camera`, `MODE · COUNT & GRADE`, `● LIVE`). It plays the product footage in smooth slow motion: crates of apples on a roller conveyor, every apple tagged with its own ID and size (`#52 · 98 mm`), plus a live dashboard: apples counted, last item, throughput, average size, ripeness and size grade. |
 | 2:11.9 | A *What it does* column builds on the right. **Detect**, **Track** and **Count** light up as each is spoken. |
-| 2:22.7 | A violet wipe switches the monitor to the **line counter** footage (`MODE · LINE COUNT`): apples are counted as they cross a vertical count line. **Line count** lights up, and an `One overhead camera` chip lands under the list. |
-| 2:30.3 | The monitor and column recede; the finale wall assembles. |
+| 2:23.0 | "As each apple crosses the line…": **Grade** lights up (size and ripeness), and a `One overhead camera` chip lands under the list. |
+| 2:31.5 | The monitor and column recede. |
 
-The footage is Eagerworks' own product: two 10-second clips in `video/assets/inhouse/`, unpacked to frames by `scripts/extract_clips.sh`
-and shown frame-accurately (`video/src/lib/clip.js`). Clip 1 plays at about 0.9× so that it spans the narration exactly; clip 2 plays at 1×.
+The footage is Eagerworks' own product: one 10-second, 60 fps clip in `video/assets/inhouse/`, unpacked to frames by `scripts/extract_clips.sh`
+and shown frame-accurately (`video/src/lib/clip.js`). It plays at about 0.5× (every source frame, so the slow motion stays smooth) to span the whole section.
 
-### 2:31.2 – 2:46.8 · Finale: the studio
+### 2:32.4 – 2:50.4 · 07 How we work (the personal beat)
 | Time | Visual |
 |---|---|
-| 2:31.2 | The film's own frames assemble into a tilted 5×3 wall; a highlight pulses across all 15 capabilities. |
-| 2:33.1 | **"One team."** · `Design · Build · Ship` light up as spoken. |
-| 2:36.0 | Every tile flies onto one of the logo's three E strokes and becomes a line (reverse swell). |
-| 2:36.8 | The icon builds, fills on the music's final hit; wordmark + **AI Studio**. |
-| 2:39.6 | **"From AI ideas to real-world products."** |
-| 2:43.1 | CTA pill **"Let's build what's next →"** · `eagerworks.com`. |
-| 2:46.2 | Fade to black on the resolving chord. |
+| 2:32.8 | A soft violet glow breathes behind the centre. Kicker `HOW WE WORK`; **"Not just another AI studio."** rises in, with *another AI studio* in grey. |
+| 2:34.2 | On the end of the line, a violet stroke strikes through *another AI studio.* |
+| 2:35.3 | The headline rises and shrinks to the top of the frame. |
+| 2:36.2 | **01 *Listen*** (serif italic) with a violet rule drawing beneath it; *"Your people, your users, and the problem behind the request."* reveals word by word with the narration. |
+| 2:41.3 | **02 *Adapt*** · *"Flexible and agile, as your needs change."* The previous pillar dims. |
+| 2:45.3 | **03 *Stay*** · *"Side by side, until it really works."* |
+| 2:49.2 | All three pillars light up together, then lift away into the finale. |
+
+### 2:50.4 – 3:06.0 · Finale: the studio
+| Time | Visual |
+|---|---|
+| 2:50.4 | The film's own frames assemble into a tilted 5×3 wall; a highlight pulses across all 15 capabilities. |
+| 2:52.3 | **"One team."** · `Design · Build · Ship` light up as spoken. |
+| 2:55.2 | Every tile flies onto one of the logo's three E strokes and becomes a line (reverse swell). |
+| 2:56.0 | The icon builds, fills on the music's final hit; wordmark + **AI Studio**. |
+| 2:58.8 | **"From AI ideas to real-world products."** |
+| 3:02.3 | CTA pill **"Let's build what's next →"** · `eagerworks.com`. |
+| 3:05.4 | Fade to black on the resolving chord. |
 
 ---
 
@@ -188,12 +200,17 @@ Pronunciation spellings are used where the TTS needed them ("sock two", "ISO twe
 > **[2:07]** Alongside our client work, we're building products of our own.
 > **[2:11]** Like a vision system for packing lines that runs on a single overhead camera.
 > **[2:16]** It detects every apple in every crate, gives each one its own ID, and keeps a running count.
-> **[2:23]** It can also count fruit as it crosses a line on the conveyor, so the team can follow throughput live, crate by crate.
+> **[2:23]** As each apple crosses the line, it's sized and graded for ripeness, so the team can follow throughput and quality live, crate by crate.
 >
-> **[2:31]** Different problems. One team that designs, builds and ships the whole system.
-> **[2:37]** Eagerworks AI Studio.
-> **[2:39]** From AI ideas to real-world products.
-> **[2:43]** Let's build what's next.
+> **[2:33]** We're not just another AI studio.
+> **[2:36]** We start by listening: to your people, your users, and the problem behind the request.
+> **[2:41]** We stay flexible and agile, adapting as your needs change.
+> **[2:45]** And we stay with you, side by side, until it really works.
+>
+> **[2:51]** Different problems. One team that designs, builds and ships the whole system.
+> **[2:56]** Eagerworks AI Studio.
+> **[2:58]** From AI ideas to real-world products.
+> **[3:02]** Let's build what's next.
 
 ---
 
@@ -204,10 +221,11 @@ Pronunciation spellings are used where the TTS needed them ("sock two", "ISO twe
 - Chapter labels (each followed by a `CLIENT PROJECT` tag): `01 Generative AI · Search · Recommendation` · `02 Generative AI · Physical to digital` · `03 Computer vision · Custom models · Robotics` · `04 Real-world AI · Detection · Tracking` · `05 Document intelligence · AI auditing`
 - Pipeline steppers (one per chapter; see §2)
 - Supporting labels (small): `The vision stack we build`, `One team · the whole system`, `Data pipelines for robotics`, `Field map · every plant geo-located`, `Decision support for your team`
-- Own product: kicker `OUR OWN PRODUCTS` · *Built in-house.* · chapter `06 Computer vision · Counting · Tracking` + `OUR PRODUCT` tag · monitor header `Packing line · Overhead camera` · `MODE · OBJECT COUNTER` / `MODE · LINE COUNT` · *What it does*: `Detect — Every apple, in every crate.` · `Track — Its own ID, from entry to exit.` · `Count — A running total, live.` · `Line count — Counted once, as it crosses the line.` · chip `One overhead camera`
+- Own product: kicker `OUR OWN PRODUCTS` · *Built in-house.* · chapter `06 Computer vision · Counting · Tracking` + `OUR PRODUCT` tag · monitor header `Packing line · Overhead camera` · `MODE · COUNT & GRADE` · *What it does*: `Detect — Every apple, in every crate.` · `Track — Its own ID, from entry to exit.` · `Count — A running total, live.` · `Grade — Size and ripeness, as it crosses the line.` · chip `One overhead camera`
+- How we work: kicker `HOW WE WORK` · *Not just ~~another AI studio.~~* · `01 Listen — Your people, your users, and the problem behind the request.` · `02 Adapt — Flexible and agile, as your needs change.` · `03 Stay — Side by side, until it really works.`
 - Finale: *One team.* · `Design · Build · Ship` · *From AI ideas to real-world products.* · CTA *Let's build what's next →* · `eagerworks.com`
 
-Everything else on screen is diegetic interface content of fictional products, except the chapter-06 footage, whose overlays (`OBJECT COUNTER`, `CONVEYOR BELT MONITORING`, IDs and counts) come from Eagerworks' own product.
+Everything else on screen is diegetic interface content of fictional products, except the chapter-06 footage, whose overlays (IDs, sizes, count line, and the count / throughput / ripeness / size-grade dashboard) come from Eagerworks' own product.
 
 ---
 
@@ -237,11 +255,12 @@ Everything else on screen is diegetic interface content of fictional products, e
 12. Camera's FOV footprint → top-down field feed; plant detections → map coordinates.
 13. Conveyor data → report page → an evidence file (operations data becomes a document).
 14. Evidence sentences → framework requirements (documents become structured requirements).
-15. Dashboard → recap wall → tiles collapse into the E strokes → logo.
+15. Product dashboard → the headline "Not just another AI studio." struck through (the hook's strike-through idea, turned on ourselves) → three pillars.
+16. Pillars → recap wall → tiles collapse into the E strokes → logo.
 
 ## 7. Music & sound design
 
-- **Score (original, synthesized):** 100 BPM, A minor / C major, vi–IV–I–V colour chords (Am9 · Fmaj9 · Cmaj9 · G6sus). The arc: a sparse hook with low impacts on each vignette cut; a riser into the convergence hit; a bigger hit as the logo fills; a light groove for search; a softer section for the story (FM bells, shaker, no kick at first); the **peak at robotics** (four-on-the-floor, 16th hats, driving bass, stabs, tom fills); mechanical rim percussion for the field; a steadier documents groove; the finale drops out, rises and **resolves on the logo** (Cmaj9, bells), then settles under the CTA.
+- **Score (original, synthesized):** 100 BPM, A minor / C major, vi–IV–I–V colour chords (Am9 · Fmaj9 · Cmaj9 · G6sus). The arc: a sparse hook with low impacts on each vignette cut; a riser into the convergence hit; a bigger hit as the logo fills; a light groove for search; a softer section for the story (FM bells, shaker, no kick at first); the **peak at robotics** (four-on-the-floor, 16th hats, driving bass, stabs, tom fills); mechanical rim percussion for the field; a steadier documents groove; the in-house product rides a mechanical groove that swells into a quiet, warmer *How we work* section (sustained pads, held bass, bell phrases on each pillar, soft brushes), then a riser into the finale; the finale drops out, rises and **resolves on the logo** (Cmaj9, bells), then settles under the CTA.
 - **Sound design (synthesized, cued frame-accurately from the same timeline):** key clicks for typing; soft pops for chips and badges; two-tone lock-ons for every recognition/detection; wooden clacks for the board pieces; band-pass scanner sweeps for catalog and documents; paper swishes; a digital glitch under the decode; a servo whine and gripper clicks for the robot; tractor rumble; a conveyor hum with a bright count tick each time a pumpkin crosses the line; alert tones for gaps.
 - **Mix:** VO chain (high-pass, de-box, presence, air, 2.2:1 compression, short room) at −16 LUFS; music ducked ≈8.5 dB under speech with slow release so it breathes between lines; master −14 LUFS integrated, true peak ≤ −1 dBTP after AAC encoding (web/social ready).
 
@@ -249,7 +268,7 @@ Everything else on screen is diegetic interface content of fictional products, e
 
 The reference screenshots were used only to understand what each system does.
 **No reference image, UI, name, logo, dataset or footage from client work appears in the film.**
-The only supplied assets used are the Eagerworks logo, the story character sheets and the two clips of Eagerworks' own packing-line product (chapter 06).
+The only supplied assets used are the Eagerworks logo, the story character sheets and the clip of Eagerworks' own packing-line product (chapter 06).
 
 | Reference | What it showed | Extracted concept | Fictional recreation in the film |
 |---|---|---|---|

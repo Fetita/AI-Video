@@ -351,7 +351,26 @@ for i, (ch, n_) in enumerate(prog):
     b += n_
 w_drums(t0, 8, 'tick', gain=0.85)
 w_drums(t0 + 8 * BEAT, nb - 10, 'mech', gain=0.85)
-fill(t0 + nb * BEAT, 0.7)
+place(S['fx'], reverse_swell(1.2, 10), t0 + nb * BEAT - 1.2, 0.6)
+
+# PROMISE (how we work: the personal beat) ---------------------------------
+t0, nb = section_beats('promise')
+prog = [('Fmaj9', 8), ('Cmaj9', 8), ('Am9', 8), ('G6sus', nb - 24)]
+b = 0
+for i, (ch, n_) in enumerate(prog):
+    w_pad(t0 + b * BEAT, ch, n_, bright=0.35 + 0.08 * i, gain=0.9)
+    w_bass(t0 + b * BEAT, ch, n_, pattern='hold', grit=0.05, gain=0.35 + 0.05 * i)
+    b += n_
+w_bells(cue('p1') + 0.1, [(76, 0), (79, 1), (84, 2)], gain=0.3)
+w_bells(cue('p2'), [(72, 0), (76, 1), (79, 1.5), (81, 2), (79, 3), (76, 3.5)], gain=0.28)
+w_bells(cue('p4'), [(76, 0), (79, 1), (84, 1.5), (83, 2.5), (84, 3)], gain=0.32)
+w_arp(t0 + 8 * BEAT, 'Cmaj9', 8, rate=0.5, bright=0.4, gain=0.22)
+w_arp(t0 + 16 * BEAT, 'Am9', 8, rate=0.5, bright=0.45, gain=0.26)
+w_arp(t0 + 24 * BEAT, 'G6sus', nb - 24, rate=0.25, bright=0.55, gain=0.3)
+w_drums(t0 + 8 * BEAT, 16, 'soft', gain=0.55)
+w_drums(t0 + 24 * BEAT, nb - 24, 'half', gain=0.65)
+place(S['fx'], riser(2.4, 35), t0 + nb * BEAT - 2.4, 0.6)
+place(S['fx'], reverse_swell(1.2, 12), t0 + nb * BEAT - 1.2, 0.8)
 
 # FINALE -------------------------------------------------------------
 t0, nb = section_beats('finale')
@@ -402,7 +421,7 @@ S['bass'] = filt(S['bass'], 'hp', 32, 0.7)
 LEVELS = {'drums': 0.62, 'bass': 0.3, 'pad': 0.85, 'arp': 0.52, 'bell': 0.28, 'fx': 0.38, 'stab': 1.0}
 mix = sum(S[k] * LEVELS[k] for k in S)
 # section dynamics: let the story breathe, peak at vision/agri
-SEC_GAIN = {'hook': 1.0, 'intro': 0.78, 'search': 0.84, 'story': 0.72, 'vision': 1.0, 'agri': 0.94, 'docs': 0.84, 'inhouse': 0.88, 'finale': 1.0}
+SEC_GAIN = {'hook': 1.0, 'intro': 0.78, 'search': 0.84, 'story': 0.72, 'vision': 1.0, 'agri': 0.94, 'docs': 0.84, 'inhouse': 0.88, 'promise': 0.8, 'finale': 1.0}
 gcurve = np.ones(N)
 for sc in TL['scenes']:
     a, b2 = int(sc['start'] * SR), int(sc['end'] * SR) if sc['id'] != 'finale' else N

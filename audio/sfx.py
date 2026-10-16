@@ -463,10 +463,18 @@ at(cShow - 0.1, s_rec(), -31)
 at(cShow, s_belt(cLineO - cShow + 7.5), -38)
 for i, tt in enumerate(feat):
     at(tt - 0.1, s_lock() if i < 3 else s_pop(1000, 1500), -27, 0.5)
-at(cLineO - 0.4, s_whoosh(0.6, 700, 2600, 36), -27, -0.3)
 at(cLineO + 3.3, s_pop(900, 1350), -30, 0.5)
 at(s + D - 0.9, s_whoosh(0.6, 1800, 500, 37), -29)
 
+# ================================================================== PROMISE
+s = SC['promise']['start']
+cP1, cP1e, cP2, cP3, cP4, cP4e = cue('p1'), L['p1']['end'], cue('p2'), cue('p3'), cue('p4'), L['p4']['end']
+at(cP1 - 0.35, s_rise(0.8, 300, 700), -34)
+at(cP1e - 0.95, s_whoosh(0.75, 900, 3000, 43), -29, 0.2)       # the strike-through
+at(cP2 - 0.75, s_whoosh(0.8, 1600, 500, 44), -31)              # headline rises
+for i, tt in enumerate([cP2 + 0.1, cP3 - 0.3, cP4 - 0.3]):
+    at(tt + 0.05, s_pop(660 * 2 ** (i * 3 / 12), 990 * 2 ** (i * 3 / 12), 0.12), -29, -0.5 + i * 0.5)
+at(cP4e + 0.2, s_sparkle(1.4, 45, 6), -36)
 # ================================================================== FINALE
 s = SC['finale']['start']
 cDiff, cOne, cBuild, cNameF, cTag, cCta = cue('f1', 0), cue('f1', 1), cue('f1', 2), cue('f2', 0), cue('f3', 0), cue('f4', 0)

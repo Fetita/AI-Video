@@ -1,6 +1,6 @@
 # Eagerworks AI Studio: promotional film
 
-A 2:47 premium B2B film positioning **Eagerworks AI Studio** as the partner that turns
+A 3:06 premium B2B film positioning **Eagerworks AI Studio** as the partner that turns
 AI capabilities into real products, workflows and measurable outcomes.
 
 **Deliverable:** [`out/eagerworks-ai-studio.mp4`](out/eagerworks-ai-studio.mp4) (1920×1080, 30 fps, H.264 + AAC, −14 LUFS)
@@ -12,7 +12,7 @@ HTML/Canvas/SVG scenes rendered frame by frame in headless Chromium. The voiceov
 local open-weight TTS model, and the music and sound design are synthesized with numpy.
 The marketplace's location photos are photoreal renders of procedural Blender scenes. No stock media is used,
 and no client screenshots, names, logos or data appear. The external assets are the supplied Eagerworks logo,
-the story character sheets, and two clips of Eagerworks' own packing-line vision product (`video/assets/inhouse/`).
+the story character sheets, and a clip of Eagerworks' own packing-line vision product (`video/assets/inhouse/`).
 
 ## Structure
 
