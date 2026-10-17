@@ -16,7 +16,8 @@ import soundfile as sf
 from scipy.signal import resample_poly
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-BUILD = os.path.join(HERE, "build", "vo")
+CUT = os.environ.get("CUT", "")  # alternate edit, e.g. CUT=linkedin → vo_script.linkedin.json
+BUILD = os.path.join(HERE, "build", f"vo-{CUT}" if CUT else "vo")
 MODEL_DIR = os.environ.get("KOKORO_DIR", "/home/user/models")
 SR_OUT = 48000
 
@@ -50,7 +51,7 @@ def speech_segments(x, sr, win=0.01, thresh_db=-38.0, min_gap=0.09, min_seg=0.06
 def main():
     from kokoro_onnx import Kokoro
 
-    script = json.load(open(os.path.join(HERE, "vo_script.json")))
+    script = json.load(open(os.path.join(HERE, f"vo_script.{CUT}.json" if CUT else "vo_script.json")))
     only = set(sys.argv[1:])
     os.makedirs(BUILD, exist_ok=True)
     kokoro = Kokoro(os.path.join(MODEL_DIR, "kokoro-v1.0.onnx"), os.path.join(MODEL_DIR, "voices-v1.0.bin"))

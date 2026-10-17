@@ -6,9 +6,9 @@ import { STROKES, VIEWBOX, ICON_VIEWBOX } from '../lib/logo-data.js';
 import { words, revealWords } from '../lib/ui.js';
 
 const TILES = [
-  ['parse', 'LLM parsing'], ['search', 'Search'], ['recommend', 'Recommendation'], ['physical', 'Physical → digital'], ['generative', 'Generative AI'],
   ['hands', 'Hand tracking'], ['faces', 'Face detection'], ['tracking3d', '3D tracking'], ['dataset', 'Custom datasets'], ['benchmark', 'Model benchmarking'],
-  ['robot', 'Robotics data'], ['field', 'Field analytics'], ['conveyor', 'Object tracking'], ['documents', 'Document intelligence'], ['readiness', 'Audit readiness'],
+  ['robot', 'Robotics data'], ['field', 'Field analytics'], ['conveyor', 'Object tracking'], ['parse', 'LLM parsing'], ['search', 'Search'],
+  ['recommend', 'Recommendation'], ['physical', 'Physical → digital'], ['generative', 'Generative AI'], ['documents', 'Document intelligence'], ['readiness', 'Audit readiness'],
 ];
 const COLS = 5, TW = 330, TH = 186, GAP = 16;
 const GW = COLS * TW + (COLS - 1) * GAP, GH = 3 * TH + 2 * GAP;

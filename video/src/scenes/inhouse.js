@@ -1,17 +1,18 @@
 // 06 — Our own products: the in-house packing-line vision system, shown with its real footage.
-// Title card → live monitor playing the object counter (per-apple IDs + running total),
-// then a wipe to the line-crossing counter, with a "what it does" column keyed to the VO.
+// Title card → live monitor playing the apple counter (per-apple IDs and sizes, a count line,
+// and a live dashboard of count, throughput, ripeness and size grade), with a "what it does"
+// column keyed to the VO.
 import { addScene, h, put, prog, E, clamp, lerp, env } from '../engine.js';
 import { makeHud } from '../lib/ui.js';
 import { makeClip } from '../lib/clip.js';
 
-const CLIP_FRAMES = 303; // 10.1 s at 30 fps (scripts/extract_clips.sh)
+const CLIP_FPS = 60, CLIP_FRAMES = 605; // 10.08 s at 60 fps (scripts/extract_clips.sh), played at about half speed
 const PANEL = { x: 110, y: 168, w: 1280, h: 730 }; // video body; the 52 px header sits above it
 const FEATURES = [
   ['Detect', 'Every apple, in every crate.'],
   ['Track', 'Its own ID, from entry to exit.'],
   ['Count', 'A running total, live.'],
-  ['Line count', 'Counted once, as it crosses the line.'],
+  ['Grade', 'Size and ripeness, as it crosses the line.'],
 ];
 
 addScene({
@@ -37,17 +38,14 @@ addScene({
 
     // ---- live monitor
     this.panel = h('div', { class: 'panel', style: { left: `${PANEL.x}px`, top: `${PANEL.y - 52}px`, width: `${PANEL.w}px`, transformOrigin: '50% 50%' } });
-    this.mode = h('span', { class: 'kicker' }, 'Mode · Object counter');
+    this.mode = h('span', { class: 'kicker' }, 'Mode · Count & grade');
     const head = h('div', { class: 'panel-head' },
       h('span', { class: 'dots' }, h('i'), h('i'), h('i')), h('span', { class: 'title' }, 'Packing line · Overhead camera'), h('span', { class: 'spacer' }),
       this.mode,
       h('span', { style: { display: 'flex', alignItems: 'center', gap: '8px', marginLeft: '18px' } },
         h('i', { style: { width: '8px', height: '8px', borderRadius: '50%', background: 'var(--coral)', display: 'block' } }), h('span', { class: 'kicker', style: { color: 'var(--text2)' } }, 'Live')));
     this.body = h('div', { style: { position: 'relative', width: `${PANEL.w}px`, height: `${PANEL.h}px`, overflow: 'hidden', background: '#000' } });
-    this.clipA = makeClip(this.body, { name: 'object-counter', frames: CLIP_FRAMES });
-    this.clipB = makeClip(this.body, { name: 'line-counter', frames: CLIP_FRAMES });
-    this.wipe = h('div', { class: 'abs', style: { top: '0', bottom: '0', width: '3px', marginLeft: '-1.5px', background: 'var(--accent)', boxShadow: '0 0 18px rgba(130,52,254,0.8)' } });
-    this.body.append(this.wipe);
+    this.clip = makeClip(this.body, { name: 'object-counter', frames: CLIP_FRAMES, fps: CLIP_FPS });
     this.panel.append(head, this.body);
     R.append(this.panel);
 
@@ -72,7 +70,7 @@ addScene({
   render(t, ctx) {
     const D = ctx.dur;
     this.hud(t);
-    const c1 = ctx.line('o1').segs[0][0], cShow = ctx.line('o2').segs[0][0], cLine = this.at[3];
+    const c1 = ctx.line('o1').segs[0][0], cShow = ctx.line('o2').segs[0][0], cGrade = this.at[3];
 
     // ---- title card: in with o1, lifts away as the monitor rises
     const cIn = prog(t, c1 - 0.3, 0.7, E.outCubic);
@@ -88,18 +86,10 @@ addScene({
     this.panel.style.clipPath = `inset(${((1 - pIn) * 50).toFixed(2)}% 0 ${((1 - pIn) * 50).toFixed(2)}% 0 round 18px)`;
     put(this.panel, { y: (1 - pIn) * 30 - pOut * 30, s: lerp(1, 0.95, pOut), o: (pIn > 0 ? 1 : 0) * (1 - pOut) });
 
-    // footage A plays across "…single overhead camera / detects… IDs… running count", then B wipes in
-    const aStart = cShow - 0.45, sw = cLine - 0.35;
-    const rateA = Math.min(1, (CLIP_FRAMES / 30 - 0.05) / (sw + 0.6 - aStart));
-    const wipe = prog(t, sw, 0.6, E.inOutCubic);
-    const pending = [];
-    if (pIn > 0 && wipe < 1) pending.push(this.clipA.show((t - aStart) * rateA));
-    if (wipe > 0) pending.push(this.clipB.show(t - sw));
-    this.clipA.el.style.opacity = wipe < 1 ? '1' : '0';
-    this.clipB.el.style.opacity = wipe > 0 ? '1' : '0';
-    this.clipB.el.style.clipPath = `inset(0 0 0 ${((1 - wipe) * 100).toFixed(2)}%)`;
-    put(this.wipe, { x: (1 - wipe) * PANEL.w, o: wipe > 0 && wipe < 1 ? 1 : 0 });
-    this.mode.textContent = wipe > 0.5 ? 'Mode · Line count' : 'Mode · Object counter';
+    // the footage spans the whole time the monitor is up (60 fps source → smooth slow motion)
+    const aStart = cShow - 0.45, aEnd = D - 0.25;
+    const rate = Math.min(1, (CLIP_FRAMES / CLIP_FPS - 0.05) / (aEnd - aStart));
+    const pending = pIn > 0 && t < aEnd ? this.clip.show((t - aStart) * rate) : undefined;
 
     // ---- what it does: each item lights up as it's spoken
     const colIn = prog(t, cShow - 0.1, 0.7, E.outCubic);
@@ -113,8 +103,8 @@ addScene({
       it.title.style.color = `rgba(243,243,239,${lerp(0.42, 1, act).toFixed(3)})`;
       it.desc.style.color = `rgba(168,172,179,${lerp(0.35, 1, act).toFixed(3)})`;
     });
-    put(this.colFoot, { y: (1 - prog(t, cLine + 3.4, 0.5, E.outCubic)) * 12, o: prog(t, cLine + 3.4, 0.5) });
+    put(this.colFoot, { y: (1 - prog(t, cGrade + 3.4, 0.5, E.outCubic)) * 12, o: prog(t, cGrade + 3.4, 0.5) });
 
-    return pending.length ? Promise.all(pending) : undefined;
+    return pending;
   },
 });
