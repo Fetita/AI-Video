@@ -1,6 +1,6 @@
 // 02 — Real-world AI · Detection · Tracking
 // Tractor camera → live crop feed (detect · count · measure · map) → packing line (ID · track · count).
-import { addScene, h, put, prog, E, clamp, lerp, env, makeCanvas, rng, rgba, C, hash, rrect, keys } from '../engine.js';
+import { addScene, h, put, prog, E, clamp, lerp, env, makeCanvas, rng, rgba, C, hash, rrect, keys, TIMELINE } from '../engine.js';
 import { makeHud, box, tag, recHud, brackets, FONT_MONO, FONT_UI } from '../lib/ui.js';
 
 import { FRAME, ROWS, ROW_X0, ROW_DX, PITCH, SPEED, plantSprite, pumpkinSprite, soilTile, plantAt } from '../lib/field.js';
@@ -109,6 +109,8 @@ addScene({
     // hand-off line into the search scene's brief card (same position as the hook/intro line)
     this.handoff = h('div', { class: 'abs', style: { left: '460px', top: '483px', width: '1000px', height: '2px', background: 'var(--accent)', transformOrigin: '50% 50%', boxShadow: '0 0 16px rgba(130,52,254,0.6)' } });
     R.append(this.handoff);
+    const scenes = TIMELINE.scenes.map((s) => s.id);
+    this.handsOff = scenes[scenes.indexOf('agri') + 1] === 'search'; // other cuts end without it
   },
 
   render(t, ctx) {
@@ -386,7 +388,7 @@ addScene({
     this.pView.v.textContent = String(inView);
     this.pSize.v.textContent = `${(26.8 + Math.sin(t) * 0.4).toFixed(1)} cm`;
     // hand-off: a violet line draws where the next scene's brief card opens
-    const hp = prog(t, D - 0.55, 0.5, E.inOutCubic);
+    const hp = this.handsOff ? prog(t, D - 0.55, 0.5, E.inOutCubic) : 0;
     put(this.handoff, { sx: hp, o: hp > 0 ? 1 : 0 });
   },
 });

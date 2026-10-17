@@ -323,3 +323,33 @@ Changes for the feed:
 - **Tighter pacing:** shorter pauses in the search and How-we-work narration, shorter scene holds. Same voice, same lines.
 - **Hand-offs re-made for the new neighbours:** robotics now ends on the violet line the search brief opens from; the search assistant's dot blooms out instead of carrying into the story scene.
 - **Chapters renumbered** 01–02.
+
+## 12. Themed LinkedIn cuts
+
+Same format as the LinkedIn cut (captions, tighter pauses, chapters renumbered), each keeping one family of work in full.
+Both open with the hook and close with *How we work* and the finale.
+
+**Computer vision** (`out/eagerworks-ai-studio-linkedin-cv.mp4`, 1:50, `audio/vo_script.linkedin-cv.json`)
+
+| Time | Section |
+|---|---|
+| 0:00.0 | Hook + brand reveal |
+| 0:19.2 | 01 Computer vision · Robotics |
+| 0:37.2 | 02 Real-world AI · Field & packing line |
+| 0:55.2 | 03 Our product · Packing-line apple counter (real footage) |
+| 1:18.0 | How we work |
+| 1:34.8 | Finale + CTA |
+
+The apple counter's last line is shorter here (*"Each apple is sized and graded for ripeness as it crosses the line, so the team sees quality live."*),
+and the field scene ends without the violet hand-off line, since the search brief doesn't follow.
+
+**Generative & document AI** (`out/eagerworks-ai-studio-linkedin-genai.mp4`, 1:44, `audio/vo_script.linkedin-genai.json`)
+
+| Time | Section |
+|---|---|
+| 0:00.0 | Hook + brand reveal (its hand-off line opens the search brief) |
+| 0:19.2 | 01 Generative AI · Search · Recommendation |
+| 0:38.4 | 02 Generative AI · Physical to digital (the search dot becomes the story's reticle, as in the full film) |
+| 0:56.4 | 03 Document intelligence · AI auditing |
+| 1:12.0 | How we work |
+| 1:28.8 | Finale + CTA |

@@ -4,7 +4,10 @@ A 3:06 premium B2B film positioning **Eagerworks AI Studio** as the partner that
 AI capabilities into real products, workflows and measurable outcomes.
 
 **Deliverable:** [`out/eagerworks-ai-studio.mp4`](out/eagerworks-ai-studio.mp4) (1920×1080, 30 fps, H.264 + AAC, −14 LUFS)
-**LinkedIn cut:** [`out/eagerworks-ai-studio-linkedin.mp4`](out/eagerworks-ai-studio-linkedin.mp4) (1:29, burned-in captions, for new audiences)
+**LinkedIn cuts** (burned-in captions, for new audiences):
+[`linkedin`](out/eagerworks-ai-studio-linkedin.mp4) (1:29, overview) ·
+[`linkedin-cv`](out/eagerworks-ai-studio-linkedin-cv.mp4) (1:50, every computer-vision case) ·
+[`linkedin-genai`](out/eagerworks-ai-studio-linkedin-genai.mp4) (1:44, generative and document AI)
 **Creative treatment** (narrative, storyboard, timings, VO script, on-screen text, visual & sound direction, reference mapping):
 [`docs/creative-treatment.md`](docs/creative-treatment.md)
 
@@ -86,4 +89,5 @@ cd ../video && node render.mjs --video --workers 4 --query cut=linkedin --out bu
 cd .. && scripts/finalize.sh video/build/frames-linkedin.mkv audio/build/mix-linkedin.wav out/eagerworks-ai-studio-linkedin.mp4
 ```
 
-Review stills for a cut with `node render.mjs --stills 12.5 --query cut=linkedin`.
+Review stills for a cut with `node render.mjs --stills 12.5 --query cut=linkedin`. The same steps build
+`linkedin-cv` and `linkedin-genai` (swap the cut name).

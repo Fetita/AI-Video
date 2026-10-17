@@ -1,0 +1,191 @@
+{
+  "voice": "af_heart",
+  "speed": 1.0,
+  "captions": true,
+  "comment": "LinkedIn edit, computer vision: hook → robotics → field & packing line → our apple counter → how we work → finale. Same fields as vo_script.linkedin.json. Build with CUT=linkedin-cv.",
+  "chapters": {
+    "vision": "01",
+    "agri": "02",
+    "inhouse": "03"
+  },
+  "scenes": [
+    {
+      "id": "hook",
+      "tail": 0.9,
+      "min": 15.0,
+      "lines": [
+        {
+          "id": "h1",
+          "at": 1.3,
+          "text": "A creative brief."
+        },
+        {
+          "id": "h2",
+          "gap": 0.45,
+          "text": "A child's toy."
+        },
+        {
+          "id": "h3",
+          "gap": 0.45,
+          "text": "A camera feed."
+        },
+        {
+          "id": "h4",
+          "gap": 0.45,
+          "text": "A stack of evidence."
+        },
+        {
+          "id": "h5",
+          "gap": 1.0,
+          "text": "Not AI as a feature. AI as the product.",
+          "tts": "Not AI as a feature... AI as the product.",
+          "caption": false
+        },
+        {
+          "id": "h6",
+          "gap": 1.0,
+          "text": "Eagerworks AI Studio turns AI capabilities into real products, workflows and measurable outcomes.",
+          "speed": 1.05
+        }
+      ],
+      "speed": 1.0
+    },
+    {
+      "id": "vision",
+      "tail": 2.0,
+      "min": 17.0,
+      "lines": [
+        {
+          "id": "v1",
+          "at": 0.4,
+          "text": "Some problems need more than an API call."
+        },
+        {
+          "id": "v2",
+          "gap": 0.5,
+          "text": "For robotics, we build the vision stack itself: hand and face detection, camera and wrist tracking, and custom datasets."
+        },
+        {
+          "id": "v3",
+          "gap": 0.7,
+          "text": "Then we train and benchmark every model, until the data is ready to teach a robot."
+        }
+      ],
+      "speed": 1.07
+    },
+    {
+      "id": "agri",
+      "tail": 1.1,
+      "min": 17.0,
+      "lines": [
+        {
+          "id": "a1",
+          "at": 0.5,
+          "text": "Computer vision turns a camera into a live source of operational data."
+        },
+        {
+          "id": "a2",
+          "gap": 0.55,
+          "text": "On a tractor, it detects, counts and measures every plant, and maps exactly where each one is."
+        },
+        {
+          "id": "a3",
+          "gap": 1.0,
+          "text": "On the packing line, every pumpkin gets its own ID the moment it appears, and keeps it until it's counted."
+        }
+      ],
+      "speed": 1.07
+    },
+    {
+      "id": "inhouse",
+      "tail": 1.4,
+      "min": 19.0,
+      "speed": 1.05,
+      "lines": [
+        {
+          "id": "o1",
+          "at": 0.6,
+          "text": "Alongside our client work, we're building products of our own."
+        },
+        {
+          "id": "o2",
+          "gap": 0.6,
+          "text": "Like a vision system for packing lines that runs on a single overhead camera."
+        },
+        {
+          "id": "o3",
+          "gap": 0.5,
+          "text": "It detects every apple in every crate, gives each one its own ID, and keeps a running count."
+        },
+        {
+          "id": "o4",
+          "gap": 0.6,
+          "text": "Each apple is sized and graded for ripeness as it crosses the line, so the team sees quality live."
+        }
+      ]
+    },
+    {
+      "id": "promise",
+      "tail": 1.3,
+      "min": 15.0,
+      "speed": 1.0,
+      "lines": [
+        {
+          "id": "p1",
+          "at": 0.6,
+          "text": "We're not just another AI studio.",
+          "speed": 0.95,
+          "caption": false
+        },
+        {
+          "id": "p2",
+          "gap": 0.6,
+          "text": "We start by listening: to your people, your users, and the problem behind the request.",
+          "tts": "We start by listening... to your people, your users, and the problem behind the request."
+        },
+        {
+          "id": "p3",
+          "gap": 0.45,
+          "text": "We stay flexible and agile, adapting as your needs change."
+        },
+        {
+          "id": "p4",
+          "gap": 0.45,
+          "text": "And we stay with you, side by side, until it really works.",
+          "speed": 0.97
+        }
+      ]
+    },
+    {
+      "id": "finale",
+      "tail": 2.9,
+      "min": 13.0,
+      "lines": [
+        {
+          "id": "f1",
+          "at": 0.6,
+          "text": "Different problems. One team that designs, builds and ships the whole system."
+        },
+        {
+          "id": "f2",
+          "gap": 1.3,
+          "text": "Eagerworks AI Studio.",
+          "caption": false
+        },
+        {
+          "id": "f3",
+          "gap": 0.6,
+          "text": "From AI ideas to real-world products.",
+          "caption": false
+        },
+        {
+          "id": "f4",
+          "gap": 1.0,
+          "text": "Let's build what's next.",
+          "caption": false
+        }
+      ],
+      "speed": 1.0
+    }
+  ]
+}
