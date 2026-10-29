@@ -1,9 +1,13 @@
 # Eagerworks AI Studio: promotional film
 
-A 2:47 premium B2B film positioning **Eagerworks AI Studio** as the partner that turns
+A 3:06 premium B2B film positioning **Eagerworks AI Studio** as the partner that turns
 AI capabilities into real products, workflows and measurable outcomes.
 
 **Deliverable:** [`out/eagerworks-ai-studio.mp4`](out/eagerworks-ai-studio.mp4) (1920×1080, 30 fps, H.264 + AAC, −14 LUFS)
+**LinkedIn cuts** (burned-in captions, for new audiences):
+[`linkedin`](out/eagerworks-ai-studio-linkedin.mp4) (1:29, overview) ·
+[`linkedin-cv`](out/eagerworks-ai-studio-linkedin-cv.mp4) (1:50, every computer-vision case) ·
+[`linkedin-genai`](out/eagerworks-ai-studio-linkedin-genai.mp4) (1:44, generative and document AI)
 **Creative treatment** (narrative, storyboard, timings, VO script, on-screen text, visual & sound direction, reference mapping):
 [`docs/creative-treatment.md`](docs/creative-treatment.md)
 
@@ -12,7 +16,7 @@ HTML/Canvas/SVG scenes rendered frame by frame in headless Chromium. The voiceov
 local open-weight TTS model, and the music and sound design are synthesized with numpy.
 The marketplace's location photos are photoreal renders of procedural Blender scenes. No stock media is used,
 and no client screenshots, names, logos or data appear. The external assets are the supplied Eagerworks logo,
-the story character sheets, and two clips of Eagerworks' own packing-line vision product (`video/assets/inhouse/`).
+the story character sheets, and a clip of Eagerworks' own packing-line vision product (`video/assets/inhouse/`).
 
 ## Structure
 
@@ -69,3 +73,21 @@ cd .. && scripts/finalize.sh
 
 Editing a scene is safe: every animation is keyed to VO clause timestamps from `video/src/timeline.js`,
 so changing the narration and re-running steps 1–5 keeps picture, music and effects in sync.
+
+### Alternate cuts (LinkedIn)
+
+A cut is a second narration script, `audio/vo_script.<cut>.json`, listing the scenes it keeps (in order) and their lines.
+It can also burn in captions (`"captions": true`, with `"caption": false` on lines whose words are already on screen)
+and renumber the chapters it keeps (`"chapters"`). Every step takes `CUT=<cut>` and writes `*-<cut>` files next to the
+full film's, so the two never overwrite each other:
+
+```bash
+cd audio && export CUT=linkedin
+python3 tts.py && python3 build_timeline.py          # → build/vo-linkedin/, video/src/timeline-linkedin.js
+python3 music.py && python3 sfx.py && python3 mix.py # → build/mix-linkedin.wav
+cd ../video && node render.mjs --video --workers 4 --query cut=linkedin --out build/frames-linkedin.mkv
+cd .. && scripts/finalize.sh video/build/frames-linkedin.mkv audio/build/mix-linkedin.wav out/eagerworks-ai-studio-linkedin.mp4
+```
+
+Review stills for a cut with `node render.mjs --stills 12.5 --query cut=linkedin`. The same steps build
+`linkedin-cv` and `linkedin-genai` (swap the cut name).

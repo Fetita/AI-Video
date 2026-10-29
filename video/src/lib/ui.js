@@ -1,5 +1,5 @@
 // Shared film UI: chapter label, pipeline stepper, text effects, detection overlays.
-import { h, put, prog, E, clamp, lerp, env, rgba, C, hash, rrect } from '../engine.js';
+import { h, put, prog, E, clamp, lerp, env, rgba, C, hash, rrect, TIMELINE } from '../engine.js';
 
 // ------------------------------------------------------------------ chapter + stepper HUD
 /**
@@ -8,6 +8,7 @@ import { h, put, prog, E, clamp, lerp, env, rgba, C, hash, rrect } from '../engi
  * badge: optional pill after the title (e.g. "Client project").
  */
 export function makeHud(ctx, { num, title, badge = null, steps = [], stepY = 58 }) {
+  num = TIMELINE.chapters?.[ctx.id] ?? num; // a cut that drops chapters renumbers the rest
   const chapter = h('div', { class: 'hud-chapter' },
     h('span', { class: 'num' }, num), h('span', { class: 'bar' }), h('span', { class: 'ttl' }, title),
     badge ? h('span', { class: 'tag' }, badge) : null);
