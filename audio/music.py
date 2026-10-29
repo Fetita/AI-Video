@@ -15,7 +15,9 @@ from synth import (SR, n_of, t_of, midi_hz, adsr, exp_env, saw, pluck, fm_bell, 
                    reverb, kick, clap, hat, shaker, rim, tom, crash, soft_clip, sine, limiter, undb)
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-TL = json.load(open(os.path.join(HERE, 'build', 'timeline.json')))
+CUT = os.environ.get('CUT', '')  # alternate edit, e.g. CUT=linkedin → vo_script.linkedin.json, *-linkedin outputs
+SUF = f'-{CUT}' if CUT else ''
+TL = json.load(open(os.path.join(HERE, 'build', f'timeline{SUF}.json')))
 BEAT = 60.0 / TL['bpm']
 DUR = TL['duration'] + 2.5
 N = n_of(DUR)
@@ -215,169 +217,208 @@ def section_beats(sid):
 
 
 # HOOK ---------------------------------------------------------------
-t0, nb = section_beats('hook')
-hit1 = 13 * BEAT      # line converges
-hit2 = 21 * BEAT      # logo fills
-w_pad(t0, 'Am9', 13, bright=0.25, gain=0.8)
-w_pad(t0 + hit1, 'Fmaj9', 8, bright=0.45, gain=0.9)
-w_pad(t0 + hit2, 'Cmaj9', 6, bright=0.75, gain=1.0)
-w_pad(t0 + 27 * BEAT, 'G6sus', 5.2, bright=0.7, gain=0.95)
-w_drums(t0 + 2 * BEAT, 11, 'tick', gain=0.9)
-for tc in [cue('h2') - 0.12, cue('h3') - 0.12, cue('h4') - 0.1]:
-    place(S['fx'], impact(0.35, seed=int(tc * 10)), tc, 0.55)
-place(S['fx'], riser(1.6, 3), t0 + hit1 - 1.6, 0.5)
-place(S['fx'], impact(1.0, 5), t0 + hit1, 0.9)
-place(S['drums'], pan(_CR, 0), t0 + hit1, 0.25)
-w_bass(t0 + hit1, 'Fmaj9', 8, pattern='4', grit=0.2, gain=0.55)
-w_arp(t0 + hit1 + 2 * BEAT, 'Fmaj9', 6, rate=0.5, bright=0.5, gain=0.35)
-place(S['fx'], riser(1.8, 7), t0 + hit2 - 1.8, 0.55)
-place(S['fx'], reverse_swell(1.2), t0 + hit2 - 1.2, 0.7)
-place(S['fx'], impact(1.3, 9), t0 + hit2, 1.0)
-place(S['drums'], pan(_CR, 0), t0 + hit2, 0.4)
-w_bells(t0 + hit2, [(76, 0), (79, 0.5), (83, 1.0), (86, 1.5)], gain=0.35)
-w_drums(t0 + 23 * BEAT, 9, 'half', gain=0.75)
-w_bass(t0 + 23 * BEAT, 'Cmaj9', 4, pattern='8', grit=0.3, gain=0.7)
-w_bass(t0 + 27 * BEAT, 'G6sus', 5, pattern='8', grit=0.3, gain=0.7)
-w_arp(t0 + 23 * BEAT, 'Cmaj9', 4, rate=0.25, bright=0.6, gain=0.35)
-w_arp(t0 + 27 * BEAT, 'G6sus', 5, rate=0.25, bright=0.65, gain=0.38)
+if 'hook' in SC:
+    t0, nb = section_beats('hook')
+    hit1 = 13 * BEAT      # line converges
+    hit2 = 21 * BEAT      # logo fills
+    w_pad(t0, 'Am9', 13, bright=0.25, gain=0.8)
+    w_pad(t0 + hit1, 'Fmaj9', 8, bright=0.45, gain=0.9)
+    w_pad(t0 + hit2, 'Cmaj9', 6, bright=0.75, gain=1.0)
+    w_pad(t0 + 27 * BEAT, 'G6sus', 5.2, bright=0.7, gain=0.95)
+    w_drums(t0 + 2 * BEAT, 11, 'tick', gain=0.9)
+    for tc in [cue('h2') - 0.12, cue('h3') - 0.12, cue('h4') - 0.1]:
+        place(S['fx'], impact(0.35, seed=int(tc * 10)), tc, 0.55)
+    place(S['fx'], riser(1.6, 3), t0 + hit1 - 1.6, 0.5)
+    place(S['fx'], impact(1.0, 5), t0 + hit1, 0.9)
+    place(S['drums'], pan(_CR, 0), t0 + hit1, 0.25)
+    w_bass(t0 + hit1, 'Fmaj9', 8, pattern='4', grit=0.2, gain=0.55)
+    w_arp(t0 + hit1 + 2 * BEAT, 'Fmaj9', 6, rate=0.5, bright=0.5, gain=0.35)
+    place(S['fx'], riser(1.8, 7), t0 + hit2 - 1.8, 0.55)
+    place(S['fx'], reverse_swell(1.2), t0 + hit2 - 1.2, 0.7)
+    place(S['fx'], impact(1.3, 9), t0 + hit2, 1.0)
+    place(S['drums'], pan(_CR, 0), t0 + hit2, 0.4)
+    w_bells(t0 + hit2, [(76, 0), (79, 0.5), (83, 1.0), (86, 1.5)], gain=0.35)
+    w_drums(t0 + 23 * BEAT, 9, 'half', gain=0.75)
+    w_bass(t0 + 23 * BEAT, 'Cmaj9', 4, pattern='8', grit=0.3, gain=0.7)
+    w_bass(t0 + 27 * BEAT, 'G6sus', 5, pattern='8', grit=0.3, gain=0.7)
+    w_arp(t0 + 23 * BEAT, 'Cmaj9', 4, rate=0.25, bright=0.6, gain=0.35)
+    w_arp(t0 + 27 * BEAT, 'G6sus', 5, rate=0.25, bright=0.65, gain=0.38)
+
 
 # INTRO (who we are → client work) ---------------------------------------
-t0, nb = section_beats('intro')
-prog = [('Am9', 8), ('Fmaj9', 8), ('G6sus', nb - 16)]
-b = 0
-for i, (ch, n_) in enumerate(prog):
-    w_pad(t0 + b * BEAT, ch, n_, bright=0.4 + 0.1 * i, gain=0.8)
-    w_bass(t0 + b * BEAT, ch, n_, pattern='hold' if i < 2 else '4', grit=0.15, gain=0.45)
-    w_arp(t0 + b * BEAT, ch, n_, rate=0.5, bright=0.5, gain=0.3)
-    b += n_
-w_drums(t0, 8, 'tick', gain=0.8)
-w_drums(t0 + 8 * BEAT, 8, 'soft', gain=0.65)
-w_drums(t0 + 16 * BEAT, nb - 16, 'half', gain=0.7)
-w_bells(cue('i2') + (L['i2']['end'] - cue('i2')) - 0.75, [(84, 0), (88, 0.5)], gain=0.3)  # "…runs on AI"
-place(S['fx'], riser(1.6, 31), t0 + nb * BEAT - 1.6, 0.4)
+if 'intro' in SC:
+    t0, nb = section_beats('intro')
+    prog = [('Am9', 8), ('Fmaj9', 8), ('G6sus', nb - 16)]
+    b = 0
+    for i, (ch, n_) in enumerate(prog):
+        w_pad(t0 + b * BEAT, ch, n_, bright=0.4 + 0.1 * i, gain=0.8)
+        w_bass(t0 + b * BEAT, ch, n_, pattern='hold' if i < 2 else '4', grit=0.15, gain=0.45)
+        w_arp(t0 + b * BEAT, ch, n_, rate=0.5, bright=0.5, gain=0.3)
+        b += n_
+    w_drums(t0, 8, 'tick', gain=0.8)
+    w_drums(t0 + 8 * BEAT, 8, 'soft', gain=0.65)
+    w_drums(t0 + 16 * BEAT, nb - 16, 'half', gain=0.7)
+    w_bells(cue('i2') + (L['i2']['end'] - cue('i2')) - 0.75, [(84, 0), (88, 0.5)], gain=0.3)  # "…runs on AI"
+    place(S['fx'], riser(1.6, 31), t0 + nb * BEAT - 1.6, 0.4)
+
 
 # SEARCH ------------------------------------------------------------
-t0, nb = section_beats('search')
-prog = [('Am9', 8), ('Fmaj9', 8), ('Cmaj9', 8), ('G6sus', nb - 24)]
-b = 0
-for ch, n_ in prog:
-    w_pad(t0 + b * BEAT, ch, n_, bright=0.5, gain=0.75)
-    w_bass(t0 + b * BEAT, ch, n_ - (2 if ch == 'G6sus' else 0), pattern='8', grit=0.4, gain=0.8)
-    w_arp(t0 + b * BEAT, ch, n_ - (2 if ch == 'G6sus' else 0), rate=0.25, bright=0.7, gain=0.42, pattern='updown')
-    b += n_
-w_drums(t0, nb - 2, 'half', gain=0.9)
-place(S['fx'], impact(0.5, 11), t0, 0.5)
+if 'search' in SC:
+    t0, nb = section_beats('search')
+    prog = [('Am9', 8), ('Fmaj9', 8), ('Cmaj9', 8), ('G6sus', nb - 24)]
+    b = 0
+    for ch, n_ in prog:
+        w_pad(t0 + b * BEAT, ch, n_, bright=0.5, gain=0.75)
+        w_bass(t0 + b * BEAT, ch, n_ - (2 if ch == 'G6sus' else 0), pattern='8', grit=0.4, gain=0.8)
+        w_arp(t0 + b * BEAT, ch, n_ - (2 if ch == 'G6sus' else 0), rate=0.25, bright=0.7, gain=0.42, pattern='updown')
+        b += n_
+    w_drums(t0, nb - 2, 'half', gain=0.9)
+    place(S['fx'], impact(0.5, 11), t0, 0.5)
+
 
 # STORY -------------------------------------------------------------
-t0, nb = section_beats('story')
-prog = [('Fmaj9', 8), ('Cmaj9', 8), ('Am9', 8), ('G6sus', 8)]
-b = 0
-for i, (ch, n_) in enumerate(prog):
-    w_pad(t0 + b * BEAT, ch, n_, bright=0.35, gain=0.85)
-    if i >= 1:
-        w_bass(t0 + b * BEAT, ch, n_, pattern='hold' if i < 3 else '4', grit=0.1, gain=0.32)
-    b += n_
-motif = [(72, 0), (76, 1), (79, 1.5), (81, 2), (79, 3), (76, 3.5), (74, 4), (76, 5), (72, 6)]
-for rep, off in enumerate([0, 8, 16, 24]):
-    w_bells(t0 + off * BEAT, [(m + (0 if rep % 2 == 0 else -3 if m != 72 else 0), bb) for m, bb in motif], gain=0.3 if rep < 2 else 0.36)
-w_arp(t0 + 16 * BEAT, 'Am9', 8, rate=0.5, bright=0.45, gain=0.3)
-w_arp(t0 + 24 * BEAT, 'G6sus', 8, rate=0.25, bright=0.55, gain=0.3)
-w_drums(t0 + 8 * BEAT, 16, 'soft', gain=0.6)
-w_drums(t0 + 24 * BEAT, 8, 'half', gain=0.6)
-place(S['fx'], riser(2.4, 13), t0 + nb * BEAT - 2.4, 0.6)
-place(S['fx'], reverse_swell(1.2, 6), t0 + nb * BEAT - 1.2, 0.8)
+if 'story' in SC:
+    t0, nb = section_beats('story')
+    prog = [('Fmaj9', 8), ('Cmaj9', 8), ('Am9', 8), ('G6sus', 8)]
+    b = 0
+    for i, (ch, n_) in enumerate(prog):
+        w_pad(t0 + b * BEAT, ch, n_, bright=0.35, gain=0.85)
+        if i >= 1:
+            w_bass(t0 + b * BEAT, ch, n_, pattern='hold' if i < 3 else '4', grit=0.1, gain=0.32)
+        b += n_
+    motif = [(72, 0), (76, 1), (79, 1.5), (81, 2), (79, 3), (76, 3.5), (74, 4), (76, 5), (72, 6)]
+    for rep, off in enumerate([0, 8, 16, 24]):
+        w_bells(t0 + off * BEAT, [(m + (0 if rep % 2 == 0 else -3 if m != 72 else 0), bb) for m, bb in motif], gain=0.3 if rep < 2 else 0.36)
+    w_arp(t0 + 16 * BEAT, 'Am9', 8, rate=0.5, bright=0.45, gain=0.3)
+    w_arp(t0 + 24 * BEAT, 'G6sus', 8, rate=0.25, bright=0.55, gain=0.3)
+    w_drums(t0 + 8 * BEAT, 16, 'soft', gain=0.6)
+    w_drums(t0 + 24 * BEAT, 8, 'half', gain=0.6)
+    place(S['fx'], riser(2.4, 13), t0 + nb * BEAT - 2.4, 0.6)
+    place(S['fx'], reverse_swell(1.2, 6), t0 + nb * BEAT - 1.2, 0.8)
+
 
 # VISION (peak) -----------------------------------------------------
-t0, nb = section_beats('vision')
-place(S['fx'], impact(1.0, 15), t0, 0.8)
-place(S['drums'], pan(_CR, 0), t0, 0.3)
-w_pad(t0, 'Am9', 4, bright=0.3, gain=0.6)
-w_drums(t0, 4, 'tick', gain=1.0)
-for k in range(4):
-    place(S['drums'], pan(_KS, 0), t0 + k * BEAT, 0.55); KICKS.append(t0 + k * BEAT)
-drop = t0 + 4 * BEAT
-place(S['fx'], impact(1.2, 17), drop, 0.9)
-place(S['drums'], pan(_CR, 0), drop, 0.35)
-prog = [('Am9', 4), ('Fmaj9', 8), ('Dm9', 8), ('G6sus', 8)]
-b = 4
-for ch, n_ in prog:
-    w_pad(t0 + b * BEAT, ch, n_, bright=0.65, gain=0.65)
-    w_bass(t0 + b * BEAT, ch, n_, pattern='16', grit=0.7, gain=0.85)
-    w_arp(t0 + b * BEAT, ch, n_, rate=0.25, bright=1.0, gain=0.5, span=2, pattern='updown')
-    for bb in range(int(n_ // 4)):
-        place(S['stab'], pan(stab(ch), 0.15), t0 + (b + bb * 4 + 3.5) * BEAT, 0.5)
-    b += n_
-w_drums(drop, 19, 'drive', gain=1.0)
-w_drums(drop + 19 * BEAT, 9, 'four', gain=0.85)  # robot: lighter hats
-fill(t0 + 20 * BEAT, 0.9)
-fill(t0 + nb * BEAT, 1.0)
+if 'vision' in SC:
+    t0, nb = section_beats('vision')
+    place(S['fx'], impact(1.0, 15), t0, 0.8)
+    place(S['drums'], pan(_CR, 0), t0, 0.3)
+    w_pad(t0, 'Am9', 4, bright=0.3, gain=0.6)
+    w_drums(t0, 4, 'tick', gain=1.0)
+    for k in range(4):
+        place(S['drums'], pan(_KS, 0), t0 + k * BEAT, 0.55); KICKS.append(t0 + k * BEAT)
+    drop = t0 + 4 * BEAT
+    place(S['fx'], impact(1.2, 17), drop, 0.9)
+    place(S['drums'], pan(_CR, 0), drop, 0.35)
+    prog = [('Am9', 4), ('Fmaj9', 8), ('Dm9', 8), ('G6sus', 8)]
+    b = 4
+    for ch, n_ in prog:
+        w_pad(t0 + b * BEAT, ch, n_, bright=0.65, gain=0.65)
+        w_bass(t0 + b * BEAT, ch, n_, pattern='16', grit=0.7, gain=0.85)
+        w_arp(t0 + b * BEAT, ch, n_, rate=0.25, bright=1.0, gain=0.5, span=2, pattern='updown')
+        for bb in range(int(n_ // 4)):
+            place(S['stab'], pan(stab(ch), 0.15), t0 + (b + bb * 4 + 3.5) * BEAT, 0.5)
+        b += n_
+    w_drums(drop, 19, 'drive', gain=1.0)
+    w_drums(drop + 19 * BEAT, 9, 'four', gain=0.85)  # robot: lighter hats
+    fill(t0 + 20 * BEAT, 0.9)
+    fill(t0 + nb * BEAT, 1.0)
+
 
 # AGRI ---------------------------------------------------------------
-t0, nb = section_beats('agri')
-place(S['fx'], impact(0.7, 19), t0, 0.6)
-prog = [('Am9', 8), ('Fmaj9', 8), ('Cmaj9', 8), ('G6sus', 8)]
-b = 0
-for ch, n_ in prog:
-    w_pad(t0 + b * BEAT, ch, n_, bright=0.55, gain=0.62)
-    w_bass(t0 + b * BEAT, ch, n_, pattern='8', grit=0.55, gain=0.85)
-    w_arp(t0 + b * BEAT, ch, n_, rate=0.25, bright=0.85, gain=0.42)
-    b += n_
-w_drums(t0, 10, 'mech', gain=0.85)
-w_drums(t0 + 10 * BEAT, 22, 'four', gain=0.9)
-w_drums(t0 + 20 * BEAT, 12, 'mech', gain=0.5)
-fill(t0 + nb * BEAT, 0.7)
+if 'agri' in SC:
+    t0, nb = section_beats('agri')
+    place(S['fx'], impact(0.7, 19), t0, 0.6)
+    prog = [('Am9', 8), ('Fmaj9', 8), ('Cmaj9', 8), ('G6sus', 8)]
+    b = 0
+    for ch, n_ in prog:
+        w_pad(t0 + b * BEAT, ch, n_, bright=0.55, gain=0.62)
+        w_bass(t0 + b * BEAT, ch, n_, pattern='8', grit=0.55, gain=0.85)
+        w_arp(t0 + b * BEAT, ch, n_, rate=0.25, bright=0.85, gain=0.42)
+        b += n_
+    w_drums(t0, 10, 'mech', gain=0.85)
+    w_drums(t0 + 10 * BEAT, 22, 'four', gain=0.9)
+    w_drums(t0 + 20 * BEAT, 12, 'mech', gain=0.5)
+    fill(t0 + nb * BEAT, 0.7)
+
 
 # DOCS ---------------------------------------------------------------
-t0, nb = section_beats('docs')
-place(S['fx'], impact(0.5, 21), t0, 0.5)
-prog = [('Fmaj9', 8), ('Am9', 6), ('G6sus', 4), ('Cmaj9', nb - 18)]
-b = 0
-for ch, n_ in prog:
-    w_pad(t0 + b * BEAT, ch, n_, bright=0.5, gain=0.72)
-    w_bass(t0 + b * BEAT, ch, n_, pattern='8', grit=0.4, gain=0.78)
-    w_arp(t0 + b * BEAT, ch, n_, rate=0.5, bright=0.6, gain=0.36)
-    b += n_
-w_drums(t0, nb, 'half', gain=0.85)
+if 'docs' in SC:
+    t0, nb = section_beats('docs')
+    place(S['fx'], impact(0.5, 21), t0, 0.5)
+    prog = [('Fmaj9', 8), ('Am9', 6), ('G6sus', 4), ('Cmaj9', nb - 18)]
+    b = 0
+    for ch, n_ in prog:
+        w_pad(t0 + b * BEAT, ch, n_, bright=0.5, gain=0.72)
+        w_bass(t0 + b * BEAT, ch, n_, pattern='8', grit=0.4, gain=0.78)
+        w_arp(t0 + b * BEAT, ch, n_, rate=0.5, bright=0.6, gain=0.36)
+        b += n_
+    w_drums(t0, nb, 'half', gain=0.85)
+
 
 # INHOUSE (our own product: packing-line vision) ---------------------------
-t0, nb = section_beats('inhouse')
-place(S['fx'], impact(0.5, 33), t0, 0.5)
-prog = [('Am9', 8), ('Fmaj9', 8), ('Cmaj9', 8), ('Am9', 8), ('G6sus', nb - 32)]
-b = 0
-for i, (ch, n_) in enumerate(prog):
-    w_pad(t0 + b * BEAT, ch, n_, bright=0.5 + 0.05 * i, gain=0.7)
-    w_bass(t0 + b * BEAT, ch, n_, pattern='hold' if i == 0 else '8', grit=0.45, gain=0.8)
-    w_arp(t0 + b * BEAT, ch, n_, rate=0.5 if i == 0 else 0.25, bright=0.75, gain=0.38)
-    b += n_
-w_drums(t0, 8, 'tick', gain=0.85)
-w_drums(t0 + 8 * BEAT, nb - 10, 'mech', gain=0.85)
-fill(t0 + nb * BEAT, 0.7)
+if 'inhouse' in SC:
+    t0, nb = section_beats('inhouse')
+    place(S['fx'], impact(0.5, 33), t0, 0.5)
+    prog = [('Am9', 8), ('Fmaj9', 8), ('Cmaj9', 8), ('Am9', 8), ('G6sus', nb - 32)]
+    b = 0
+    for i, (ch, n_) in enumerate(prog):
+        w_pad(t0 + b * BEAT, ch, n_, bright=0.5 + 0.05 * i, gain=0.7)
+        w_bass(t0 + b * BEAT, ch, n_, pattern='hold' if i == 0 else '8', grit=0.45, gain=0.8)
+        w_arp(t0 + b * BEAT, ch, n_, rate=0.5 if i == 0 else 0.25, bright=0.75, gain=0.38)
+        b += n_
+    w_drums(t0, 8, 'tick', gain=0.85)
+    w_drums(t0 + 8 * BEAT, nb - 10, 'mech', gain=0.85)
+    place(S['fx'], reverse_swell(1.2, 10), t0 + nb * BEAT - 1.2, 0.6)
+
+
+# PROMISE (how we work: the personal beat) ---------------------------------
+if 'promise' in SC:
+    t0, nb = section_beats('promise')
+    prog = [('Fmaj9', 8), ('Cmaj9', 8), ('Am9', 8), ('G6sus', nb - 24)]
+    b = 0
+    for i, (ch, n_) in enumerate(prog):
+        w_pad(t0 + b * BEAT, ch, n_, bright=0.35 + 0.08 * i, gain=0.9)
+        w_bass(t0 + b * BEAT, ch, n_, pattern='hold', grit=0.05, gain=0.35 + 0.05 * i)
+        b += n_
+    w_bells(cue('p1') + 0.1, [(76, 0), (79, 1), (84, 2)], gain=0.3)
+    w_bells(cue('p2'), [(72, 0), (76, 1), (79, 1.5), (81, 2), (79, 3), (76, 3.5)], gain=0.28)
+    w_bells(cue('p4'), [(76, 0), (79, 1), (84, 1.5), (83, 2.5), (84, 3)], gain=0.32)
+    w_arp(t0 + 8 * BEAT, 'Cmaj9', 8, rate=0.5, bright=0.4, gain=0.22)
+    w_arp(t0 + 16 * BEAT, 'Am9', 8, rate=0.5, bright=0.45, gain=0.26)
+    w_arp(t0 + 24 * BEAT, 'G6sus', nb - 24, rate=0.25, bright=0.55, gain=0.3)
+    w_drums(t0 + 8 * BEAT, 16, 'soft', gain=0.55)
+    w_drums(t0 + 24 * BEAT, nb - 24, 'half', gain=0.65)
+    place(S['fx'], riser(2.4, 35), t0 + nb * BEAT - 2.4, 0.6)
+    place(S['fx'], reverse_swell(1.2, 12), t0 + nb * BEAT - 1.2, 0.8)
+
 
 # FINALE -------------------------------------------------------------
-t0, nb = section_beats('finale')
-hitF = 11 * BEAT
-place(S['fx'], impact(0.8, 23), t0, 0.6)
-place(S['drums'], pan(_CR, 0), t0, 0.3)
-w_pad(t0, 'Fmaj9', 8, bright=0.7, gain=0.7)
-w_bass(t0, 'Fmaj9', 8, pattern='8', grit=0.6, gain=0.85)
-w_arp(t0, 'Fmaj9', 8, rate=0.25, bright=0.95, gain=0.45, pattern='updown')
-w_drums(t0, 8, 'four', gain=1.0)
-place(S['drums'], pan(_CR, 0), t0 + 3 * BEAT, 0.35)   # "One team."
-place(S['fx'], impact(0.6, 25), t0 + 3 * BEAT, 0.5)
-w_pad(t0 + 8 * BEAT, 'G6sus', 3.2, bright=0.9, gain=0.75)
-place(S['fx'], riser(3 * BEAT + 0.3, 27), t0 + hitF - 3 * BEAT - 0.3, 0.75)
-place(S['fx'], reverse_swell(1.5, 8), t0 + hitF - 1.5, 0.9)
-place(S['fx'], impact(1.6, 29), t0 + hitF, 1.0)
-place(S['drums'], pan(_CR, 0), t0 + hitF, 0.45)
-w_pad(t0 + hitF, 'Cmaj9', 8, bright=0.8, gain=1.05)
-w_pad(t0 + hitF + 8 * BEAT, 'Fmaj9', 4, bright=0.55, gain=0.8)
-w_pad(t0 + hitF + 12 * BEAT, 'Cmaj9', nb - hitF / BEAT - 12 + 4, bright=0.5, gain=0.9)
-w_bass(t0 + hitF, 'Cmaj9', 8, pattern='hold', grit=0.1, gain=0.6)
-w_bells(t0 + hitF, [(72, 0), (76, 0.5), (79, 1.0), (83, 1.5), (84, 2.0), (88, 3.0)], gain=0.4)
-w_bells(t0 + hitF + 8 * BEAT, [(76, 0), (79, 1), (84, 2)], gain=0.3)
-cta = cue('f4') - 0.1
-w_bells(cta, [(84, 0), (91, 0.25)], gain=0.35)
-w_arp(t0 + hitF + 2 * BEAT, 'Cmaj9', 8, rate=0.5, bright=0.5, gain=0.25)
+if 'finale' in SC:
+    t0, nb = section_beats('finale')
+    hitF = 11 * BEAT
+    place(S['fx'], impact(0.8, 23), t0, 0.6)
+    place(S['drums'], pan(_CR, 0), t0, 0.3)
+    w_pad(t0, 'Fmaj9', 8, bright=0.7, gain=0.7)
+    w_bass(t0, 'Fmaj9', 8, pattern='8', grit=0.6, gain=0.85)
+    w_arp(t0, 'Fmaj9', 8, rate=0.25, bright=0.95, gain=0.45, pattern='updown')
+    w_drums(t0, 8, 'four', gain=1.0)
+    place(S['drums'], pan(_CR, 0), t0 + 3 * BEAT, 0.35)   # "One team."
+    place(S['fx'], impact(0.6, 25), t0 + 3 * BEAT, 0.5)
+    w_pad(t0 + 8 * BEAT, 'G6sus', 3.2, bright=0.9, gain=0.75)
+    place(S['fx'], riser(3 * BEAT + 0.3, 27), t0 + hitF - 3 * BEAT - 0.3, 0.75)
+    place(S['fx'], reverse_swell(1.5, 8), t0 + hitF - 1.5, 0.9)
+    place(S['fx'], impact(1.6, 29), t0 + hitF, 1.0)
+    place(S['drums'], pan(_CR, 0), t0 + hitF, 0.45)
+    w_pad(t0 + hitF, 'Cmaj9', 8, bright=0.8, gain=1.05)
+    w_pad(t0 + hitF + 8 * BEAT, 'Fmaj9', 4, bright=0.55, gain=0.8)
+    w_pad(t0 + hitF + 12 * BEAT, 'Cmaj9', nb - hitF / BEAT - 12 + 4, bright=0.5, gain=0.9)
+    w_bass(t0 + hitF, 'Cmaj9', 8, pattern='hold', grit=0.1, gain=0.6)
+    w_bells(t0 + hitF, [(72, 0), (76, 0.5), (79, 1.0), (83, 1.5), (84, 2.0), (88, 3.0)], gain=0.4)
+    w_bells(t0 + hitF + 8 * BEAT, [(76, 0), (79, 1), (84, 2)], gain=0.3)
+    cta = cue('f4') - 0.1
+    w_bells(cta, [(84, 0), (91, 0.25)], gain=0.35)
+    w_arp(t0 + hitF + 2 * BEAT, 'Cmaj9', 8, rate=0.5, bright=0.5, gain=0.25)
+
 
 # ------------------------------------------------------------------ sidechain + mixdown
 t = t_of(N)
@@ -402,7 +443,7 @@ S['bass'] = filt(S['bass'], 'hp', 32, 0.7)
 LEVELS = {'drums': 0.62, 'bass': 0.3, 'pad': 0.85, 'arp': 0.52, 'bell': 0.28, 'fx': 0.38, 'stab': 1.0}
 mix = sum(S[k] * LEVELS[k] for k in S)
 # section dynamics: let the story breathe, peak at vision/agri
-SEC_GAIN = {'hook': 1.0, 'intro': 0.78, 'search': 0.84, 'story': 0.72, 'vision': 1.0, 'agri': 0.94, 'docs': 0.84, 'inhouse': 0.88, 'finale': 1.0}
+SEC_GAIN = {'hook': 1.0, 'intro': 0.78, 'search': 0.84, 'story': 0.72, 'vision': 1.0, 'agri': 0.94, 'docs': 0.84, 'inhouse': 0.88, 'promise': 0.8, 'finale': 1.0}
 gcurve = np.ones(N)
 for sc in TL['scenes']:
     a, b2 = int(sc['start'] * SR), int(sc['end'] * SR) if sc['id'] != 'finale' else N
@@ -413,8 +454,8 @@ mix *= gcurve[:, None]
 mix = filt(mix, 'highshelf', 9000, 0.7, 1.5)
 mix = limiter(mix * 0.9, ceiling_db=-1.5)
 os.makedirs(os.path.join(HERE, 'build'), exist_ok=True)
-sf.write(os.path.join(HERE, 'build', 'music.wav'), mix.astype(np.float32), SR)
+sf.write(os.path.join(HERE, 'build', f'music{SUF}.wav'), mix.astype(np.float32), SR)
 for k in S:
-    sf.write(os.path.join(HERE, 'build', f'stem_{k}.wav'), (S[k] * LEVELS[k]).astype(np.float32), SR)
+    sf.write(os.path.join(HERE, 'build', f'stem_{k}{SUF}.wav'), (S[k] * LEVELS[k]).astype(np.float32), SR)
 pk = np.max(np.abs(mix))
 print(f'music: {DUR:.1f}s  peak {20 * np.log10(pk):.1f} dBFS  kicks {len(KICKS)}')

@@ -3,7 +3,7 @@ export default {
  "fps": 30,
  "bpm": 100.0,
  "beat": 0.6,
- "duration": 166.8,
+ "duration": 186.0,
  "scenes": [
   {
    "id": "hook",
@@ -29,30 +29,9 @@ export default {
    ]
   },
   {
-   "id": "search",
-   "start": 33.6,
-   "end": 54.0,
-   "lines": [
-    "s1",
-    "s2",
-    "s3"
-   ]
-  },
-  {
-   "id": "story",
-   "start": 54.0,
-   "end": 73.2,
-   "lines": [
-    "t1",
-    "t2",
-    "t3",
-    "t4"
-   ]
-  },
-  {
    "id": "vision",
-   "start": 73.2,
-   "end": 92.4,
+   "start": 33.6,
+   "end": 52.8,
    "lines": [
     "v1",
     "v2",
@@ -61,12 +40,33 @@ export default {
   },
   {
    "id": "agri",
-   "start": 92.4,
-   "end": 111.6,
+   "start": 52.8,
+   "end": 72.0,
    "lines": [
     "a1",
     "a2",
     "a3"
+   ]
+  },
+  {
+   "id": "search",
+   "start": 72.0,
+   "end": 92.4,
+   "lines": [
+    "s1",
+    "s2",
+    "s3"
+   ]
+  },
+  {
+   "id": "story",
+   "start": 92.4,
+   "end": 111.6,
+   "lines": [
+    "t1",
+    "t2",
+    "t3",
+    "t4"
    ]
   },
   {
@@ -81,7 +81,7 @@ export default {
   {
    "id": "inhouse",
    "start": 127.2,
-   "end": 151.2,
+   "end": 152.4,
    "lines": [
     "o1",
     "o2",
@@ -90,9 +90,20 @@ export default {
    ]
   },
   {
+   "id": "promise",
+   "start": 152.4,
+   "end": 170.4,
+   "lines": [
+    "p1",
+    "p2",
+    "p3",
+    "p4"
+   ]
+  },
+  {
    "id": "finale",
-   "start": 151.2,
-   "end": 166.8,
+   "start": 170.4,
+   "end": 186.0,
    "lines": [
     "f1",
     "f2",
@@ -243,146 +254,19 @@ export default {
    ],
    "text": "Here are a few of the projects we've built for our clients."
   },
-  "s1": {
-   "id": "s1",
-   "scene": "search",
-   "start": 34.3,
-   "end": 38.13,
-   "segs": [
-    [
-     34.33,
-     36.88
-    ],
-    [
-     37.19,
-     38.06
-    ]
-   ],
-   "text": "A production team describes the location they need, in their own words."
-  },
-  "s2": {
-   "id": "s2",
-   "scene": "search",
-   "start": 38.73,
-   "end": 47.221,
-   "segs": [
-    [
-     38.76,
-     40.55
-    ],
-    [
-     40.95,
-     42.06
-    ],
-    [
-     42.41,
-     44.76
-    ],
-    [
-     45.05,
-     47.15
-    ]
-   ],
-   "text": "AI parses every requirement, searches the catalog, evaluates each location against the brief, and returns a personalized shortlist."
-  },
-  "s3": {
-   "id": "s3",
-   "scene": "search",
-   "start": 48.521,
-   "end": 52.83,
-   "segs": [
-    [
-     48.551,
-     50.211
-    ],
-    [
-     50.541,
-     52.751
-    ]
-   ],
-   "text": "Then the conversation keeps going, and every reply makes the results sharper."
-  },
-  "t1": {
-   "id": "t1",
-   "scene": "story",
-   "start": 54.5,
-   "end": 58.363,
-   "segs": [
-    [
-     54.53,
-     55.39
-    ],
-    [
-     55.7,
-     58.27
-    ]
-   ],
-   "text": "For another client, AI turns something physical into something personal."
-  },
-  "t2": {
-   "id": "t2",
-   "scene": "story",
-   "start": 58.863,
-   "end": 61.146,
-   "segs": [
-    [
-     58.893,
-     61.053
-    ]
-   ],
-   "text": "A child places a few pieces on a board."
-  },
-  "t3": {
-   "id": "t3",
-   "scene": "story",
-   "start": 61.746,
-   "end": 67.911,
-   "segs": [
-    [
-     61.766,
-     63.436
-    ],
-    [
-     63.786,
-     65.386
-    ],
-    [
-     65.696,
-     67.846
-    ]
-   ],
-   "text": "The system recognizes each one, reasons about how they connect, and writes a story that's entirely theirs."
-  },
-  "t4": {
-   "id": "t4",
-   "scene": "story",
-   "start": 69.011,
-   "end": 71.976,
-   "segs": [
-    [
-     69.041,
-     70.131
-    ],
-    [
-     70.401,
-     71.891
-    ]
-   ],
-   "text": "We build it end to end, from the app to the story engine."
-  },
   "v1": {
    "id": "v1",
    "scene": "vision",
-   "start": 73.6,
-   "end": 76.245,
+   "start": 34.0,
+   "end": 36.645,
    "segs": [
     [
-     73.63,
-     74.69
+     34.03,
+     35.09
     ],
     [
-     74.87,
-     76.16
+     35.27,
+     36.56
     ]
    ],
    "text": "Some problems need more than an API call."
@@ -390,24 +274,24 @@ export default {
   "v2": {
    "id": "v2",
    "scene": "vision",
-   "start": 76.745,
-   "end": 83.914,
+   "start": 37.145,
+   "end": 44.314,
    "segs": [
     [
-     76.775,
-     79.145
+     37.175,
+     39.545
     ],
     [
-     79.625,
-     80.965
+     40.025,
+     41.365
     ],
     [
-     81.175,
-     82.465
+     41.575,
+     42.865
     ],
     [
-     82.655,
-     83.855
+     43.055,
+     44.255
     ]
    ],
    "text": "For robotics, we build the vision stack itself: hand and face detection, camera and wrist tracking, and custom datasets."
@@ -415,16 +299,16 @@ export default {
   "v3": {
    "id": "v3",
    "scene": "vision",
-   "start": 84.614,
-   "end": 89.115,
+   "start": 45.014,
+   "end": 49.515,
    "segs": [
     [
-     84.644,
-     86.694
+     45.044,
+     47.094
     ],
     [
-     87.044,
-     89.034
+     47.444,
+     49.434
     ]
    ],
    "text": "Then we train and benchmark every model, until the data is ready to teach a robot."
@@ -432,20 +316,20 @@ export default {
   "a1": {
    "id": "a1",
    "scene": "agri",
-   "start": 92.9,
-   "end": 97.114,
+   "start": 53.3,
+   "end": 57.514,
    "segs": [
     [
-     92.93,
-     93.79
+     53.33,
+     54.19
     ],
     [
-     94.0,
-     94.75
+     54.4,
+     55.15
     ],
     [
-     94.95,
-     97.04
+     55.35,
+     57.44
     ]
    ],
    "text": "Computer vision turns a camera into a live source of operational data."
@@ -453,20 +337,20 @@ export default {
   "a2": {
    "id": "a2",
    "scene": "agri",
-   "start": 97.664,
-   "end": 103.009,
+   "start": 58.064,
+   "end": 63.409,
    "segs": [
     [
-     97.694,
-     99.124
+     58.094,
+     59.524
     ],
     [
-     99.414,
-     100.894
+     59.814,
+     61.294
     ],
     [
-     101.114,
-     102.944
+     61.514,
+     63.344
     ]
    ],
    "text": "On a tractor, it detects, counts and measures every plant, and maps exactly where each one is."
@@ -474,23 +358,150 @@ export default {
   "a3": {
    "id": "a3",
    "scene": "agri",
-   "start": 104.509,
-   "end": 110.418,
+   "start": 64.909,
+   "end": 70.818,
    "segs": [
     [
-     104.539,
-     105.469
+     64.939,
+     65.869
     ],
     [
-     105.769,
-     108.539
+     66.169,
+     68.939
     ],
     [
-     108.909,
-     110.329
+     69.309,
+     70.729
     ]
    ],
    "text": "On the packing line, every pumpkin gets its own ID the moment it appears, and keeps it until it's counted."
+  },
+  "s1": {
+   "id": "s1",
+   "scene": "search",
+   "start": 72.7,
+   "end": 76.53,
+   "segs": [
+    [
+     72.73,
+     75.28
+    ],
+    [
+     75.59,
+     76.46
+    ]
+   ],
+   "text": "A production team describes the location they need, in their own words."
+  },
+  "s2": {
+   "id": "s2",
+   "scene": "search",
+   "start": 77.13,
+   "end": 85.621,
+   "segs": [
+    [
+     77.16,
+     78.96
+    ],
+    [
+     79.35,
+     80.46
+    ],
+    [
+     80.81,
+     83.16
+    ],
+    [
+     83.45,
+     85.55
+    ]
+   ],
+   "text": "AI parses every requirement, searches the catalog, evaluates each location against the brief, and returns a personalized shortlist."
+  },
+  "s3": {
+   "id": "s3",
+   "scene": "search",
+   "start": 86.921,
+   "end": 91.23,
+   "segs": [
+    [
+     86.951,
+     88.611
+    ],
+    [
+     88.941,
+     91.151
+    ]
+   ],
+   "text": "Then the conversation keeps going, and every reply makes the results sharper."
+  },
+  "t1": {
+   "id": "t1",
+   "scene": "story",
+   "start": 92.9,
+   "end": 96.763,
+   "segs": [
+    [
+     92.93,
+     93.79
+    ],
+    [
+     94.1,
+     96.67
+    ]
+   ],
+   "text": "For another client, AI turns something physical into something personal."
+  },
+  "t2": {
+   "id": "t2",
+   "scene": "story",
+   "start": 97.263,
+   "end": 99.546,
+   "segs": [
+    [
+     97.293,
+     99.453
+    ]
+   ],
+   "text": "A child places a few pieces on a board."
+  },
+  "t3": {
+   "id": "t3",
+   "scene": "story",
+   "start": 100.146,
+   "end": 106.311,
+   "segs": [
+    [
+     100.166,
+     101.836
+    ],
+    [
+     102.186,
+     103.786
+    ],
+    [
+     104.096,
+     106.246
+    ]
+   ],
+   "text": "The system recognizes each one, reasons about how they connect, and writes a story that's entirely theirs."
+  },
+  "t4": {
+   "id": "t4",
+   "scene": "story",
+   "start": 107.411,
+   "end": 110.376,
+   "segs": [
+    [
+     107.441,
+     108.531
+    ],
+    [
+     108.801,
+     110.291
+    ]
+   ],
+   "text": "We build it end to end, from the app to the story engine."
   },
   "d1": {
    "id": "d1",
@@ -597,40 +608,120 @@ export default {
    "id": "o4",
    "scene": "inhouse",
    "start": 143.017,
-   "end": 149.428,
+   "end": 150.91,
    "segs": [
     [
      143.047,
-     145.987
+     144.627
     ],
     [
-     146.357,
-     148.237
+     144.947,
+     146.917
     ],
     [
-     148.547,
-     149.357
+     147.277,
+     149.747
+    ],
+    [
+     150.027,
+     150.837
     ]
    ],
-   "text": "It can also count fruit as it crosses a line on the conveyor, so the team can follow throughput live, crate by crate."
+   "text": "As each apple crosses the line, it's sized and graded for ripeness, so the team can follow throughput and quality live, crate by crate."
+  },
+  "p1": {
+   "id": "p1",
+   "scene": "promise",
+   "start": 153.0,
+   "end": 155.15,
+   "segs": [
+    [
+     153.03,
+     155.03
+    ]
+   ],
+   "text": "We're not just another AI studio."
+  },
+  "p2": {
+   "id": "p2",
+   "scene": "promise",
+   "start": 156.05,
+   "end": 160.958,
+   "segs": [
+    [
+     156.08,
+     157.16
+    ],
+    [
+     157.59,
+     158.32
+    ],
+    [
+     158.41,
+     159.15
+    ],
+    [
+     159.27,
+     160.89
+    ]
+   ],
+   "text": "We start by listening: to your people, your users, and the problem behind the request."
+  },
+  "p3": {
+   "id": "p3",
+   "scene": "promise",
+   "start": 161.558,
+   "end": 164.993,
+   "segs": [
+    [
+     161.588,
+     163.078
+    ],
+    [
+     163.378,
+     164.918
+    ]
+   ],
+   "text": "We stay flexible and agile, adapting as your needs change."
+  },
+  "p4": {
+   "id": "p4",
+   "scene": "promise",
+   "start": 165.593,
+   "end": 168.964,
+   "segs": [
+    [
+     165.623,
+     166.543
+    ],
+    [
+     166.673,
+     167.603
+    ],
+    [
+     167.843,
+     168.893
+    ]
+   ],
+   "text": "And we stay with you, side by side, until it really works."
   },
   "f1": {
    "id": "f1",
    "scene": "finale",
-   "start": 151.8,
-   "end": 156.099,
+   "start": 171.0,
+   "end": 175.299,
    "segs": [
     [
-     151.83,
-     152.71
+     171.03,
+     171.91
     ],
     [
-     153.09,
-     154.32
+     172.29,
+     173.52
     ],
     [
-     154.49,
-     156.02
+     173.69,
+     175.22
     ]
    ],
    "text": "Different problems. One team that designs, builds and ships the whole system."
@@ -638,12 +729,12 @@ export default {
   "f2": {
    "id": "f2",
    "scene": "finale",
-   "start": 157.399,
-   "end": 159.019,
+   "start": 176.599,
+   "end": 178.219,
    "segs": [
     [
-     157.429,
-     158.899
+     176.629,
+     178.099
     ]
    ],
    "text": "Eagerworks AI Studio."
@@ -651,12 +742,12 @@ export default {
   "f3": {
    "id": "f3",
    "scene": "finale",
-   "start": 159.619,
-   "end": 162.148,
+   "start": 178.819,
+   "end": 181.348,
    "segs": [
     [
-     159.649,
-     162.079
+     178.849,
+     181.279
     ]
    ],
    "text": "From AI ideas to real-world products."
@@ -664,12 +755,12 @@ export default {
   "f4": {
    "id": "f4",
    "scene": "finale",
-   "start": 163.148,
-   "end": 164.516,
+   "start": 182.348,
+   "end": 183.716,
    "segs": [
     [
-     163.178,
-     164.418
+     182.378,
+     183.618
     ]
    ],
    "text": "Let's build what's next."
