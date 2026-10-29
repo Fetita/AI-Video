@@ -56,7 +56,7 @@ addScene({
     this.colKicker = h('div', { class: 'kicker', style: { marginBottom: '30px' } }, 'What it does');
     this.col.append(this.colKicker);
     this.items = FEATURES.map(([k, v], i) => {
-      const num = h('span', { class: 'mono', style: { fontSize: '15px', letterSpacing: '0.14em', color: 'var(--text3)' } }, String(i + 1).padStart(2, '0'));
+      const num = h('span', { class: 'tnum', style: { fontSize: '15px', letterSpacing: '0.14em', color: 'var(--text3)' } }, String(i + 1).padStart(2, '0'));
       const title = h('div', { style: { fontSize: '30px', fontWeight: 550, letterSpacing: '-0.01em', color: 'var(--text3)' } }, k);
       const desc = h('div', { style: { fontSize: '19px', lineHeight: '1.4', color: 'var(--text3)', marginTop: '6px' } }, v);
       const el = h('div', { style: { display: 'flex', gap: '20px', padding: '22px 0', borderTop: '1px solid var(--line2)' } }, num, h('div', {}, title, desc));

@@ -139,7 +139,7 @@ const ctx0 = addScene({
     // ---------------- candidate cards
     this.cands = CANDS.map((c, i) => {
       const art = h('div', { style: { width: '100%', height: '156px', overflow: 'hidden', position: 'relative' } }, photo(c.art));
-      const dots = c.checks.map(() => h('span', { style: { width: '22px', height: '22px', borderRadius: '6px', border: '1px solid var(--line2)', display: 'grid', placeItems: 'center', fontSize: '12px', fontWeight: 700, fontFamily: 'var(--font-mono)' } }, ''));
+      const dots = c.checks.map(() => h('span', { style: { width: '22px', height: '22px', borderRadius: '6px', border: '1px solid var(--line2)', display: 'grid', placeItems: 'center', fontSize: '12px', fontWeight: 700, fontFamily: 'var(--font-ui)' } }, ''));
       const badge = h('span', { class: 'badge neutral', style: { position: 'absolute', right: '12px', top: '12px', backdropFilter: 'none', boxShadow: '0 0 0 1px rgba(255,255,255,0.08), 0 6px 18px rgba(0,0,0,0.45)' } }, '');
       const scan = h('div', { style: { position: 'absolute', left: '0', top: '0', width: '2px', height: '100%', background: 'linear-gradient(180deg, transparent, var(--accent), transparent)', boxShadow: '0 0 18px rgba(130,52,254,0.6)' } });
       const card = h('div', { class: 'panel', style: { left: '0', top: '0', width: '252px', transformOrigin: '50% 50%' } },
@@ -155,7 +155,7 @@ const ctx0 = addScene({
     // ---------------- shortlist cards (large)
     const bigCard = (c, id) => {
       const art = h('div', { style: { width: '100%', height: '250px', overflow: 'hidden', position: 'relative' } }, photo(c.art));
-      const rank = h('span', { class: 'mono', style: { color: 'var(--accent-text)', fontSize: '14px', letterSpacing: '0.14em' } }, '01');
+      const rank = h('span', { class: 'tnum', style: { color: 'var(--accent-text)', fontSize: '14px', letterSpacing: '0.14em' } }, '01');
       const upd = h('span', { class: 'badge ok', style: { position: 'absolute', left: '16px', top: '16px', opacity: 0 } }, 'New match');
       art.append(upd);
       const tags = h('div', { style: { display: 'flex', gap: '8px', margin: '14px 0 16px' } });
@@ -165,7 +165,7 @@ const ctx0 = addScene({
           h('div', { style: { display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' } }, rank, h('span', { class: 'kicker' }, c.meta)),
           h('div', { style: { fontSize: '25px', fontWeight: 600, letterSpacing: '-0.01em' } }, c.name),
           tags,
-          h('div', { style: { fontSize: '15.5px', lineHeight: 1.5, color: 'var(--text2)' } }, h('span', { style: { color: 'var(--accent-text)', fontFamily: 'var(--font-mono)', fontSize: '11.5px', letterSpacing: '0.14em', marginRight: '8px' } }, 'WHY IT FITS'), c.why)));
+          h('div', { style: { fontSize: '15.5px', lineHeight: 1.5, color: 'var(--text2)' } }, h('span', { style: { color: 'var(--accent-text)', fontFamily: 'var(--font-ui)', fontWeight: 600, fontSize: '11.5px', letterSpacing: '0.14em', marginRight: '8px' } }, 'WHY IT FITS'), c.why)));
       R.append(card);
       return { card, rank, tags, upd };
     };

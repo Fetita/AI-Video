@@ -106,7 +106,6 @@ export function placeCaret(caret, spans, { dx = 5, dy = 0 } = {}) {
 export const typed = (text, p) => text.slice(0, Math.round(clamp(p) * text.length));
 
 // ------------------------------------------------------------------ canvas overlays
-export const FONT_MONO = '"JetBrains Mono", monospace';
 export const FONT_UI = 'Manrope, sans-serif';
 
 /** Detection box in the film's style: hairline + bright corners + faint fill. */
@@ -134,7 +133,7 @@ export function box(g, x, y, w, hh, { color = C.accent, a = 1, lw = 1.5, corner 
 }
 
 /** Small label tag. anchor: 'tl' puts the tag above the point's left. */
-export function tag(g, x, y, text, { bg = C.accent, fg = '#ffffff', size = 12, a = 1, pad = 6, hgt = null, font = FONT_MONO, weight = 600, anchor = 'bl', r = 3, stroke = null, track = 0 } = {}) {
+export function tag(g, x, y, text, { bg = C.accent, fg = '#ffffff', size = 12, a = 1, pad = 6, hgt = null, font = FONT_UI, weight = 600, anchor = 'bl', r = 3, stroke = null, track = 0.04 } = {}) {
   if (a <= 0.001) return;
   g.save();
   g.globalAlpha = a;
@@ -202,11 +201,20 @@ export function recHud(g, x, y, label, t, { a = 1 } = {}) {
   g.globalAlpha = a;
   g.fillStyle = C.coral;
   g.beginPath(); g.arc(x + 6, y + 8, 5, 0, Math.PI * 2); g.fill();
-  g.font = `500 13px ${FONT_MONO}`;
+  g.font = `600 13px ${FONT_UI}`;
+  g.letterSpacing = '0.04em';
   g.fillStyle = 'rgba(255,255,255,0.8)';
   g.textBaseline = 'middle';
   const tc = (s) => { const f = Math.floor((s % 1) * 30); const ss = Math.floor(s) % 60; const mm = Math.floor(s / 60); return `${String(mm).padStart(2, '0')}:${String(ss).padStart(2, '0')}:${String(f).padStart(2, '0')}`; };
-  g.fillText(`${label}   ${tc(Math.max(0, t))}`, x + 20, y + 8.5);
+  g.fillText(label, x + 20, y + 8.5);
+  // Manrope digits are proportional: set the running timecode in fixed cells so it doesn't jitter.
+  const cell = g.measureText('0').width + 1;
+  let cx = x + 20 + g.measureText(label).width + 18;
+  for (const ch of tc(Math.max(0, t))) {
+    const w = /\d/.test(ch) ? cell : g.measureText(ch).width;
+    g.fillText(ch, cx + (w - g.measureText(ch).width) / 2, y + 8.5);
+    cx += w;
+  }
   g.restore();
 }
 

@@ -42,7 +42,7 @@ addScene({
     this.rows = PROJECTS.map(([title, kind], i) => {
       const top = LINE.y - ROW_H + i * ROW_H;
       const el = h('div', { class: 'abs', style: { left: `${LINE.x}px`, top: `${top}px`, width: `${LINE.w}px`, height: `${ROW_H}px`, display: 'flex', alignItems: 'center', gap: '28px' } },
-        h('span', { class: 'mono', style: { fontSize: '17px', letterSpacing: '0.14em', color: 'var(--accent-text)', width: '36px' } }, String(i + 1).padStart(2, '0')),
+        h('span', { class: 'tnum', style: { fontSize: '17px', letterSpacing: '0.14em', color: 'var(--accent-text)', width: '36px' } }, String(i + 1).padStart(2, '0')),
         h('span', { style: { fontSize: '30px', fontWeight: 500, letterSpacing: '-0.01em', color: 'var(--text)', flex: '1' } }, title),
         h('span', { class: 'kicker', style: { fontSize: '13px', color: 'var(--text3)' } }, kind));
       const rule = i === 0 ? null : h('div', { class: 'abs', style: { left: `${LINE.x}px`, top: `${top + ROW_H - 1}px`, width: `${LINE.w}px`, height: '1px', background: 'var(--line2)', transformOrigin: '0 50%' } });

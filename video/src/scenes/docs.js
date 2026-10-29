@@ -43,7 +43,7 @@ addScene({
     this.fileRows = FILES.map(([ext, col, name, size]) => {
       const bar = h('i', { style: { display: 'block', height: '100%', width: '0%', background: 'var(--accent)', borderRadius: '2px' } });
       const row = h('div', { style: { display: 'flex', alignItems: 'center', gap: '14px', padding: '14px 8px', borderBottom: '1px solid var(--line)' } },
-        h('div', { style: { width: '38px', height: '46px', borderRadius: '6px', background: rgba(col, 0.14), border: `1px solid ${rgba(col, 0.5)}`, color: col, display: 'grid', placeItems: 'center', fontFamily: 'var(--font-mono)', fontSize: '10.5px', fontWeight: 700 } }, ext),
+        h('div', { style: { width: '38px', height: '46px', borderRadius: '6px', background: rgba(col, 0.14), border: `1px solid ${rgba(col, 0.5)}`, color: col, display: 'grid', placeItems: 'center', fontFamily: 'var(--font-ui)', fontSize: '10.5px', fontWeight: 700 } }, ext),
         h('div', { style: { flex: 1, minWidth: 0 } },
           h('div', { style: { fontSize: '16px', whiteSpace: 'nowrap', marginBottom: '8px' } }, name),
           h('div', { style: { height: '3px', background: 'rgba(255,255,255,0.08)', borderRadius: '2px', overflow: 'hidden' } }, bar)),
@@ -54,7 +54,7 @@ addScene({
     this.ev.append(list);
     this.view.append(this.ev);
     this.handPage = h('div', { class: 'abs', style: { left: '760px', top: '280px', width: '400px', height: '520px', borderRadius: '10px', background: '#f4f3ef', boxShadow: '0 40px 80px rgba(0,0,0,0.6)', padding: '34px', transformOrigin: '0 0', zIndex: 20 } },
-      h('div', { style: { fontFamily: 'var(--font-mono)', fontSize: '11px', letterSpacing: '0.16em', color: '#6b6f76', marginBottom: '12px' } }, 'DAILY OPERATIONS REPORT'),
+      h('div', { style: { fontFamily: 'var(--font-ui)', fontWeight: 600, fontSize: '11px', letterSpacing: '0.16em', color: '#6b6f76', marginBottom: '12px' } }, 'DAILY OPERATIONS REPORT'),
       h('div', { style: { fontSize: '22px', fontWeight: 650, color: '#15171a', marginBottom: '22px' } }, 'Packing line · shift summary'),
       ...Array.from({ length: 11 }, (_, i) => h('div', { style: { height: '9px', borderRadius: '3px', background: i % 4 === 0 ? '#c9ccd1' : '#e2e4e7', width: `${[92, 80, 86, 60, 90, 76, 84, 58, 88, 70, 64][i]}%`, marginBottom: '14px' } })));
 
@@ -63,12 +63,12 @@ addScene({
     const hl = (text, kind) => { const s = h('span', { class: `hl-${kind}`, style: { backgroundImage: `linear-gradient(${kind === 'bad' ? 'rgba(255,107,87,0.28)' : 'rgba(102,134,246,0.38)'}, ${kind === 'bad' ? 'rgba(255,107,87,0.28)' : 'rgba(102,134,246,0.38)'})`, backgroundRepeat: 'no-repeat', backgroundSize: '0% 100%', borderRadius: '3px', padding: '1px 2px' } }, text); return s; };
     this.hls = [hl('All employee accounts', 'ok'), hl('revoked within 48 hours', 'ok'), hl('enforced for administrators', 'mid'), hl('Contractor accounts were out of scope', 'bad')];
     const p = (...kids) => h('p', { style: { fontSize: '17px', lineHeight: '1.62', color: '#34373d', margin: '0 0 16px' } }, ...kids);
-    const sec = (n, t) => h('div', { style: { fontSize: '13px', fontFamily: 'var(--font-mono)', letterSpacing: '0.12em', color: '#7a7e86', margin: '22px 0 8px' } }, `${n}  ${t.toUpperCase()}`);
+    const sec = (n, t) => h('div', { style: { fontSize: '13px', fontFamily: 'var(--font-ui)', fontWeight: 600, letterSpacing: '0.12em', color: '#7a7e86', margin: '22px 0 8px' } }, `${n}  ${t.toUpperCase()}`);
     const tr = (cells, head) => h('div', { style: { display: 'grid', gridTemplateColumns: '1.3fr 0.8fr 0.7fr 1.1fr', padding: '9px 0', borderBottom: '1px solid #e1e2e4', fontSize: '14.5px', color: head ? '#7a7e86' : '#2a2d33', fontWeight: head ? 600 : 400 } }, ...cells.map((c) => h('span', {}, c)));
     this.doc.append(
       h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '26px' } },
         h('div', { style: { width: '34px', height: '34px', borderRadius: '8px', background: '#1b1d21' } }),
-        h('span', { style: { fontFamily: 'var(--font-mono)', fontSize: '11.5px', letterSpacing: '0.14em', color: '#7a7e86' } }, 'INTERNAL · Q3')),
+        h('span', { style: { fontFamily: 'var(--font-ui)', fontWeight: 600, fontSize: '11.5px', letterSpacing: '0.14em', color: '#7a7e86' } }, 'INTERNAL · Q3')),
       h('div', { style: { fontSize: '30px', fontWeight: 700, letterSpacing: '-0.01em', marginBottom: '8px' } }, 'Quarterly User Access Review'),
       h('div', { style: { fontSize: '14px', color: '#7a7e86', marginBottom: '6px' } }, 'Owner: IT Operations  ·  Status: Approved'),
       sec('01', 'Scope'), p(this.hls[0], ' in the identity provider were reviewed by their managers.'),

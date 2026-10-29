@@ -75,7 +75,7 @@ addScene({
     this.lockWrap = h('div', { class: 'abs', style: { left: '0', top: '0', transformOrigin: '50% 50%' } }, this.lock.el);
     this.lock.el.style.position = 'relative';
     R.append(this.lockWrap);
-    this.outcomes = h('div', { class: 'abs', style: { left: '0', width: '1920px', top: '668px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '26px', fontFamily: 'var(--font-mono)', fontSize: '19px', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--text2)' } });
+    this.outcomes = h('div', { class: 'abs', style: { left: '0', width: '1920px', top: '668px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '26px', fontFamily: 'var(--font-ui)', fontWeight: 600, fontSize: '19px', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--text2)' } });
     this.outItems = ['Real products', 'Workflows', 'Measurable outcomes'].map((x, i) => {
       const el = h('span', { style: { display: 'flex', alignItems: 'center', gap: '26px' } }, i ? h('i', { style: { width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent)', display: 'block' } }) : null, h('span', {}, x));
       this.outcomes.append(el);
