@@ -1,7 +1,7 @@
 // 02 — Real-world AI · Detection · Tracking
 // Tractor camera → live crop feed (detect · count · measure · map) → packing line (ID · track · count).
 import { addScene, h, put, prog, E, clamp, lerp, env, makeCanvas, rng, rgba, C, hash, rrect, keys, TIMELINE } from '../engine.js';
-import { makeHud, box, tag, recHud, brackets, FONT_MONO, FONT_UI } from '../lib/ui.js';
+import { makeHud, box, tag, recHud, brackets, FONT_UI } from '../lib/ui.js';
 
 import { FRAME, ROWS, ROW_X0, ROW_DX, PITCH, SPEED, plantSprite, pumpkinSprite, soilTile, plantAt } from '../lib/field.js';
 const COUNT_Y = FRAME.y + FRAME.h * 0.64;
@@ -79,7 +79,7 @@ addScene({
     // telemetry card (tractor shot)
     this.tele = h('div', { class: 'panel', style: { left: '1290px', top: '190px', width: '440px', padding: '22px 26px' } });
     this.teleRows = [['Plants detected', '0'], ['Row', '14 of 38'], ['Position', '41.12341, −98.45672'], ['Feed', 'Live']].map(([k, v]) => {
-      const val = h('span', { class: 'mono', style: { color: 'var(--text)', fontSize: '17px' } }, v);
+      const val = h('span', { class: 'tnum', style: { color: 'var(--text)', fontSize: '17px' } }, v);
       const row = h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '44px', borderBottom: '1px solid var(--line)' } }, h('span', { class: 'kicker' }, k), val);
       return { row, val };
     });
@@ -88,7 +88,7 @@ addScene({
     R.append(this.tele);
     // live audit panel (field feed)
     this.audit = h('div', { class: 'panel', style: { left: '1370px', top: '150px', width: '370px', padding: '20px 24px', background: 'rgba(12,14,17,0.88)' } });
-    const stat = (k, cls) => { const v = h('div', { class: 'mono', style: { fontSize: '26px', color: cls || 'var(--text)', marginTop: '2px' } }, '0'); return { el: h('div', { style: { padding: '10px 0', borderBottom: '1px solid var(--line)' } }, h('div', { class: 'kicker', style: { fontSize: '11px' } }, k), v), v }; };
+    const stat = (k, cls) => { const v = h('div', { class: 'tnum', style: { fontSize: '26px', color: cls || 'var(--text)', marginTop: '2px' } }, '0'); return { el: h('div', { style: { padding: '10px 0', borderBottom: '1px solid var(--line)' } }, h('div', { class: 'kicker', style: { fontSize: '11px' } }, k), v), v }; };
     this.sPlants = stat('Plants counted', 'var(--accent)');
     this.sSpacing = stat('Avg spacing');
     this.sGaps = stat('Gaps', 'var(--coral)');
@@ -100,7 +100,7 @@ addScene({
     R.append(this.audit);
     // packing-line panel
     this.pack = h('div', { class: 'panel', style: { left: '190px', top: '806px', display: 'flex', alignItems: 'center', gap: '44px', padding: '14px 30px', background: 'rgba(12,14,17,0.9)' } });
-    const pstat = (k, col) => { const v = h('span', { class: 'mono', style: { fontSize: '24px', color: col || 'var(--text)' } }, '0'); return { el: h('div', { style: { display: 'flex', flexDirection: 'column', gap: '4px' } }, h('span', { class: 'kicker', style: { fontSize: '11px' } }, k), v), v }; };
+    const pstat = (k, col) => { const v = h('span', { class: 'tnum', style: { fontSize: '24px', color: col || 'var(--text)' } }, '0'); return { el: h('div', { style: { display: 'flex', flexDirection: 'column', gap: '4px' } }, h('span', { class: 'kicker', style: { fontSize: '11px' } }, k), v), v }; };
     this.pCount = pstat('Counted', 'var(--accent)');
     this.pView = pstat('Tracked in view');
     this.pSize = pstat('Avg diameter');
@@ -313,7 +313,7 @@ addScene({
         g.restore();
         tag(g, px + 150, py - 70 + 13, 'PLANT #04812 · 41.12417, −98.45691 · Ø 14 cm', { a: ca, bg: '#0b0d10', fg: C.accentText, stroke: rgba(C.accent, 0.6), size: 12, anchor: 'bl', hgt: 26 });
       }
-      tag(g, 260, 180, 'FIELD MAP · EVERY PLANT GEO-LOCATED', { a: mapA * prog(t, cMap + 0.6, 0.5), bg: null, fg: 'rgba(255,255,255,0.7)', size: 13, anchor: 'bl', pad: 0 });
+      tag(g, 260, 180, 'FIELD MAP · EVERY PLANT GEO-LOCATED', { a: mapA * prog(t, cMap + 0.6, 0.5), font: FONT_UI, track: 0.16, bg: null, fg: 'rgba(255,255,255,0.7)', size: 13, anchor: 'bl', pad: 0 });
     }
 
     // ================= D: packing line — ID, track, count

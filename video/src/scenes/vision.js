@@ -1,7 +1,7 @@
 // 01 — Computer vision · Custom models · Robotics
 // API call → full vision stack → hands → faces → camera & wrist tracking → dataset → train/benchmark → robot.
 import { addScene, h, put, prog, E, clamp, lerp, env, makeCanvas, rng, rgba, C, keys, rrect, makeNoise, TIMELINE } from '../engine.js';
-import { makeHud, box, tag, recHud, brackets, FONT_MONO, FONT_UI } from '../lib/ui.js';
+import { makeHud, box, tag, recHud, brackets, FONT_UI } from '../lib/ui.js';
 import { handPoints, basis, drawHand, drawPose, bbox, FINGER_COLORS } from '../lib/hand.js';
 import { v3, add, sub, mul, norm, camera, lerp3, cross } from '../lib/three.js';
 import { drawEgo } from '../lib/ego.js';
@@ -130,7 +130,7 @@ function drawTracking(g, t, p, a) {
   // legend
   const items = [['Camera · estimate', C.accent, false], ['Ground truth', 'rgba(255,255,255,0.6)', true], ['Left wrist', C.sky, false], ['Right wrist', C.coral, false]];
   let lx = 200;
-  g.save(); g.globalAlpha = a; g.font = `500 14px ${FONT_MONO}`; g.textBaseline = 'middle';
+  g.save(); g.globalAlpha = a; g.font = `600 14px ${FONT_UI}`; g.textBaseline = 'middle';
   items.forEach(([label, col, dashed]) => {
     g.strokeStyle = col; g.lineWidth = 2.5; if (dashed) g.setLineDash([5, 5]);
     g.beginPath(); g.moveTo(lx, 900); g.lineTo(lx + 28, 900); g.stroke(); g.setLineDash([]);
@@ -226,12 +226,12 @@ function drawCharts(g, t, a, p) {
   panels.forEach((pn, pi) => {
     g.fillStyle = '#0f1115'; g.strokeStyle = 'rgba(255,255,255,0.13)'; g.lineWidth = 1;
     rrect(g, pn.x, pn.y, pn.w, pn.h, 18); g.fill(); g.stroke();
-    g.font = `600 13px ${FONT_MONO}`; g.fillStyle = 'rgba(243,243,239,0.85)'; g.textBaseline = 'middle'; g.fillText(pn.title, pn.x + 28, pn.y + 34);
+    g.font = `700 13px ${FONT_UI}`; g.letterSpacing = '0.06em'; g.fillStyle = 'rgba(243,243,239,0.85)'; g.textBaseline = 'middle'; g.fillText(pn.title, pn.x + 28, pn.y + 34);
     const ax = { x: pn.x + 70, y: pn.y + 80, w: pn.w - 110, h: pn.h - 150 };
     g.strokeStyle = 'rgba(255,255,255,0.08)';
     for (let i = 0; i <= 4; i++) { const yy = ax.y + (i / 4) * ax.h; g.beginPath(); g.moveTo(ax.x, yy); g.lineTo(ax.x + ax.w, yy); g.stroke(); }
     g.strokeStyle = 'rgba(255,255,255,0.3)'; g.beginPath(); g.moveTo(ax.x, ax.y); g.lineTo(ax.x, ax.y + ax.h); g.lineTo(ax.x + ax.w, ax.y + ax.h); g.stroke();
-    g.font = `500 12px ${FONT_MONO}`; g.fillStyle = 'rgba(168,172,179,0.8)';
+    g.font = `600 12px ${FONT_UI}`; g.fillStyle = 'rgba(168,172,179,0.8)';
     g.fillText(pn.xl, ax.x + ax.w - g.measureText(pn.xl).width, ax.y + ax.h + 26);
     g.save(); g.translate(ax.x - 26, ax.y + ax.h / 2); g.rotate(-Math.PI / 2); g.fillText(pn.yl, -g.measureText(pn.yl).width / 2, 0); g.restore();
     models.forEach((m, mi) => {
@@ -349,7 +349,7 @@ addScene({
     }
     this.stack = STACK.map(([k, v], i) => {
       const el = h('div', { class: 'panel', style: { left: '560px', top: '0', width: '800px', height: '74px', display: 'flex', alignItems: 'center', padding: '0 30px', gap: '20px', borderRadius: '14px' } },
-        h('span', { class: 'mono', style: { color: 'var(--accent-text)', fontSize: '14px', width: '30px' } }, `0${i + 1}`),
+        h('span', { class: 'tnum', style: { color: 'var(--accent-text)', fontSize: '14px', width: '30px' } }, `0${i + 1}`),
         h('span', { class: 'display', style: { fontSize: '30px', fontWeight: 600, flex: 1, letterSpacing: '-0.01em' } }, k),
         h('span', { class: 'kicker', style: { color: 'var(--text2)' } }, v));
       R.append(el);

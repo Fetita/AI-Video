@@ -43,7 +43,7 @@ addScene({
     this.fileRows = FILES.map(([ext, col, name, size]) => {
       const bar = h('i', { style: { display: 'block', height: '100%', width: '0%', background: 'var(--accent)', borderRadius: '2px' } });
       const row = h('div', { style: { display: 'flex', alignItems: 'center', gap: '14px', padding: '14px 8px', borderBottom: '1px solid var(--line)' } },
-        h('div', { style: { width: '38px', height: '46px', borderRadius: '6px', background: rgba(col, 0.14), border: `1px solid ${rgba(col, 0.5)}`, color: col, display: 'grid', placeItems: 'center', fontFamily: 'var(--font-mono)', fontSize: '10.5px', fontWeight: 700 } }, ext),
+        h('div', { style: { width: '38px', height: '46px', borderRadius: '6px', background: rgba(col, 0.14), border: `1px solid ${rgba(col, 0.5)}`, color: col, display: 'grid', placeItems: 'center', fontFamily: 'var(--font-ui)', fontSize: '10.5px', fontWeight: 700 } }, ext),
         h('div', { style: { flex: 1, minWidth: 0 } },
           h('div', { style: { fontSize: '16px', whiteSpace: 'nowrap', marginBottom: '8px' } }, name),
           h('div', { style: { height: '3px', background: 'rgba(255,255,255,0.08)', borderRadius: '2px', overflow: 'hidden' } }, bar)),
@@ -58,19 +58,19 @@ addScene({
     const hl = (text, kind) => { const s = h('span', { class: `hl-${kind}`, style: { backgroundImage: `linear-gradient(${kind === 'bad' ? 'rgba(255,107,87,0.28)' : 'rgba(102,134,246,0.38)'}, ${kind === 'bad' ? 'rgba(255,107,87,0.28)' : 'rgba(102,134,246,0.38)'})`, backgroundRepeat: 'no-repeat', backgroundSize: '0% 100%', borderRadius: '3px', padding: '1px 2px' } }, text); return s; };
     this.hls = [hl('All employee accounts', 'ok'), hl('revoked within 48 hours', 'ok'), hl('enforced for administrators', 'mid'), hl('Contractor accounts were out of scope', 'bad')];
     const p = (...kids) => h('p', { style: { fontSize: '17px', lineHeight: '1.62', color: '#34373d', margin: '0 0 16px' } }, ...kids);
-    const sec = (n, t) => h('div', { style: { fontSize: '13px', fontFamily: 'var(--font-mono)', letterSpacing: '0.12em', color: '#7a7e86', margin: '22px 0 8px' } }, `${n}  ${t.toUpperCase()}`);
+    const sec = (n, t) => h('div', { style: { fontSize: '13px', fontFamily: 'var(--font-ui)', fontWeight: 600, letterSpacing: '0.12em', color: '#7a7e86', margin: '22px 0 8px' } }, `${n}  ${t.toUpperCase()}`);
     const tr = (cells, head) => h('div', { style: { display: 'grid', gridTemplateColumns: '1.3fr 0.8fr 0.7fr 1.1fr', padding: '9px 0', borderBottom: '1px solid #e1e2e4', fontSize: '14.5px', color: head ? '#7a7e86' : '#2a2d33', fontWeight: head ? 600 : 400 } }, ...cells.map((c) => h('span', {}, c)));
     this.doc.append(
       h('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '26px' } },
         h('div', { style: { width: '34px', height: '34px', borderRadius: '8px', background: '#1b1d21' } }),
-        h('span', { style: { fontFamily: 'var(--font-mono)', fontSize: '11.5px', letterSpacing: '0.14em', color: '#7a7e86' } }, 'INTERNAL · Q3')),
+        h('span', { style: { fontFamily: 'var(--font-ui)', fontWeight: 600, fontSize: '11.5px', letterSpacing: '0.14em', color: '#7a7e86' } }, 'INTERNAL · Q3')),
       h('div', { style: { fontSize: '30px', fontWeight: 700, letterSpacing: '-0.01em', marginBottom: '8px' } }, 'Quarterly User Access Review'),
       h('div', { style: { fontSize: '14px', color: '#7a7e86', marginBottom: '6px' } }, 'Owner: IT Operations  ·  Status: Approved'),
       sec('01', 'Scope'), p(this.hls[0], ' in the identity provider were reviewed by their managers.'),
       sec('02', 'Method'), p('Managers confirmed each user’s access. Exceptions were ', this.hls[1], '. MFA is ', this.hls[2], '.'),
       h('div', { style: { margin: '6px 0 10px' } }, tr(['User group', 'Accounts', 'Reviewed', 'Approver'], true), tr(['Engineering', '42', '✓', 'Eng. manager']), tr(['Finance', '12', '✓', 'Finance lead']), tr(['Operations', '27', '✓', 'Ops manager'])),
       sec('03', 'Exclusions'), p(this.hls[3], ' for this review cycle.'),
-      h('div', { style: { marginTop: '26px', display: 'flex', alignItems: 'center', gap: '12px', fontSize: '14px', color: '#7a7e86' } }, h('span', { style: { fontFamily: 'var(--font-story)', fontStyle: 'italic', fontSize: '24px', color: '#2a2d33' } }, 'J. Rivera'), '— IT lead, sign-off'));
+      h('div', { style: { marginTop: '26px', display: 'flex', alignItems: 'center', gap: '12px', fontSize: '14px', color: '#7a7e86' } }, h('span', { style: { fontFamily: 'var(--font-story)', fontSize: '24px', color: '#2a2d33' } }, 'J. Rivera'), '— IT lead, sign-off'));
     this.scan = h('div', { class: 'abs', style: { left: '0', right: '0', top: '0', height: '120px', background: 'linear-gradient(180deg, rgba(130,52,254,0), rgba(102,134,246,0.22) 70%, rgba(102,134,246,0.9) 100%)', mixBlendMode: 'multiply' } });
     this.doc.append(this.scan);
     this.view.append(this.doc);

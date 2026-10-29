@@ -143,7 +143,7 @@ and shown frame-accurately (`video/src/lib/clip.js`). It plays at about 0.5× (e
 | 2:32.8 | A soft violet glow breathes behind the centre. Kicker `HOW WE WORK`; **"Not just another AI studio."** rises in, with *another AI studio* in grey. |
 | 2:34.2 | On the end of the line, a violet stroke strikes through *another AI studio.* |
 | 2:35.3 | The headline rises and shrinks to the top of the frame. |
-| 2:36.2 | **01 *Listen*** (serif italic) with a violet rule drawing beneath it; *"Your people, your users, and the problem behind the request."* reveals word by word with the narration. |
+| 2:36.2 | **01 *Listen*** (upright serif) with a violet rule drawing beneath it; *"Your people, your users, and the problem behind the request."* reveals word by word with the narration. |
 | 2:41.3 | **02 *Adapt*** · *"Flexible and agile, as your needs change."* The previous pillar dims. |
 | 2:45.3 | **03 *Stay*** · *"Side by side, until it really works."* |
 | 2:49.2 | All three pillars light up together, then lift away into the finale. |
@@ -232,7 +232,7 @@ Everything else on screen is diegetic interface content of fictional products, e
 ## 5. Visual direction
 
 - **Palette:** monochrome graphite base taken from the white-on-black logo (`#07080A` → `#15181D`), warm white text, and the **brand signal pair, violet `#8234FE` → blue `#6686F6`**. Violet always means *what the AI sees, infers or produces*: parsed chips, detection boxes, reticles, the story caret, matched evidence, the selected model; the violet → blue gradient carries progress (stepper links) and the CTA. Small violet text on dark uses a lighter tint (`#B89CFF`) for legibility. Coral marks gaps and issues; amber marks partial matches; teal and rose are used only for secondary series (left hand, Model B, row lines).
-- **Typography:** *Archivo* at 112–118 % width for display type, echoing the logo's wide wordmark · *Manrope* as the secondary typeface, for interface and body text · *JetBrains Mono* (uppercase, tracked) for labels, telemetry and steppers · *Fraunces* for the children's story.
+- **Typography:** *Archivo* at 112–118 % width for display type, echoing the logo's wide wordmark · *Manrope* as the secondary typeface, for interface and body text, and (semibold, uppercase, tracked) for every label: chapter headers, kickers, steppers, badges, canvas tags and telemetry, with tabular figures on running numbers · *JetBrains Mono* only for the one line of code on screen (`vision.detect(frame)`) · *Fraunces* (upright only; the film uses no italics) for the children's story.
 - **Logo:** the supplied vector logo (`video/assets/logo/eagerworks-logo.svg`), shown at a restrained size (icon ≈ 90 px tall in a 1080p frame) so the lockup sits balanced with *AI Studio*.
 - **Look:** premium dark SaaS film. Matte panels with hairline borders, soft shadows, a faint engineering grid, a subtle vignette and fine film grain. Glow is reserved for AI signals. No neural-network clichés, no stock footage, and the only robot is the one the robotics story needs.
 - **Location photography:** the marketplace's locations are photoreal Cycles renders of fictional spaces, built procedurally in Blender (`scripts/render_locations.py`): physically based brick, timber, concrete and glass under a real sun-and-sky model.

@@ -34,8 +34,8 @@ addScene({
     // ---- pillars
     this.cols = PILLARS.map(([word, desc], i) => {
       const el = h('div', { class: 'abs', style: { left: `${COLS_X + i * (COL_W + COL_GAP)}px`, top: `${COLS_Y}px`, width: `${COL_W}px` } });
-      const num = h('div', { class: 'mono', style: { fontSize: '16px', letterSpacing: '0.16em', color: 'var(--accent-text)' } }, String(i + 1).padStart(2, '0'));
-      const title = h('div', { style: { fontFamily: 'var(--font-story)', fontStyle: 'italic', fontSize: '96px', fontWeight: 400, letterSpacing: '-0.01em', lineHeight: '1.15', color: '#ffffff', margin: '8px 0 18px' } }, word);
+      const num = h('div', { class: 'tnum', style: { fontSize: '16px', letterSpacing: '0.16em', color: 'var(--accent-text)' } }, String(i + 1).padStart(2, '0'));
+      const title = h('div', { style: { fontFamily: 'var(--font-story)', fontSize: '96px', fontWeight: 400, letterSpacing: '-0.01em', lineHeight: '1.15', color: '#ffffff', margin: '8px 0 18px' } }, word);
       const rule = h('div', { style: { position: 'relative', height: '2px', background: 'var(--line2)' } });
       const fill = h('i', { style: { position: 'absolute', left: '0', top: '0', height: '2px', width: '100%', background: 'var(--accent)', boxShadow: '0 0 12px rgba(130,52,254,0.7)', transformOrigin: '0 50%', display: 'block' } });
       rule.append(fill);

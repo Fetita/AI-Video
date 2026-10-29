@@ -22,7 +22,7 @@ addScene({
   setup(ctx) {
     const R = ctx.root;
     // ---- who we are
-    this.kicker = h('div', { class: 'abs kicker', style: { left: `${LINE.x}px`, top: '300px', color: 'var(--accent-text)', letterSpacing: '0.24em' } }, 'Who we are');
+    this.kicker = h('div', { class: 'abs kicker', style: { left: `${LINE.x}px`, top: '300px', color: 'var(--accent-text)', fontFamily: 'var(--font-ui)', fontWeight: 600, letterSpacing: '0.24em' } }, 'Who we are');
     this.head = h('div', { class: 'abs display', style: { left: `${LINE.x}px`, top: '372px', width: '1100px', fontSize: '80px', fontWeight: 600, letterSpacing: '-0.02em', lineHeight: '1.08', whiteSpace: 'nowrap', overflow: 'hidden', paddingBottom: '6px' } });
     this.headA = h('div', {}, 'Designers & engineers.');
     this.headB = h('div', { style: { position: 'absolute', left: '0', top: '0' } }, 'Products that run on ', h('span', { style: { color: 'var(--accent-text)' } }, 'AI'), '.');
@@ -36,13 +36,13 @@ addScene({
     R.append(this.kicker, this.head, this.sub, this.pills);
 
     // ---- client work index
-    this.kicker2 = h('div', { class: 'abs kicker', style: { left: `${LINE.x}px`, top: '238px', color: 'var(--accent-text)', letterSpacing: '0.24em' } }, 'Client work');
+    this.kicker2 = h('div', { class: 'abs kicker', style: { left: `${LINE.x}px`, top: '238px', color: 'var(--accent-text)', fontFamily: 'var(--font-ui)', fontWeight: 600, letterSpacing: '0.24em' } }, 'Client work');
     this.head2 = h('div', { class: 'abs display', style: { left: `${LINE.x}px`, top: '276px', fontSize: '64px', fontWeight: 600, letterSpacing: '-0.02em', lineHeight: '1.1', whiteSpace: 'nowrap' } }, 'Built for our clients.');
     R.append(this.kicker2, this.head2);
     this.rows = PROJECTS.map(([title, kind], i) => {
       const top = LINE.y - ROW_H + i * ROW_H;
       const el = h('div', { class: 'abs', style: { left: `${LINE.x}px`, top: `${top}px`, width: `${LINE.w}px`, height: `${ROW_H}px`, display: 'flex', alignItems: 'center', gap: '28px' } },
-        h('span', { class: 'mono', style: { fontSize: '17px', letterSpacing: '0.14em', color: 'var(--accent-text)', width: '36px' } }, String(i + 1).padStart(2, '0')),
+        h('span', { class: 'tnum', style: { fontSize: '17px', letterSpacing: '0.14em', color: 'var(--accent-text)', width: '36px' } }, String(i + 1).padStart(2, '0')),
         h('span', { style: { fontSize: '30px', fontWeight: 500, letterSpacing: '-0.01em', color: 'var(--text)', flex: '1' } }, title),
         h('span', { class: 'kicker', style: { fontSize: '13px', color: 'var(--text3)' } }, kind));
       const rule = i === 0 ? null : h('div', { class: 'abs', style: { left: `${LINE.x}px`, top: `${top + ROW_H - 1}px`, width: `${LINE.w}px`, height: '1px', background: 'var(--line2)', transformOrigin: '0 50%' } });
