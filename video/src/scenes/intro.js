@@ -22,7 +22,7 @@ addScene({
   setup(ctx) {
     const R = ctx.root;
     // ---- who we are
-    this.kicker = h('div', { class: 'abs kicker', style: { left: `${LINE.x}px`, top: '300px', color: 'var(--accent-text)', letterSpacing: '0.24em' } }, 'Who we are');
+    this.kicker = h('div', { class: 'abs kicker', style: { left: `${LINE.x}px`, top: '300px', color: 'var(--accent-text)', fontFamily: 'var(--font-ui)', fontWeight: 600, letterSpacing: '0.24em' } }, 'Who we are');
     this.head = h('div', { class: 'abs display', style: { left: `${LINE.x}px`, top: '372px', width: '1100px', fontSize: '80px', fontWeight: 600, letterSpacing: '-0.02em', lineHeight: '1.08', whiteSpace: 'nowrap', overflow: 'hidden', paddingBottom: '6px' } });
     this.headA = h('div', {}, 'Designers & engineers.');
     this.headB = h('div', { style: { position: 'absolute', left: '0', top: '0' } }, 'Products that run on ', h('span', { style: { color: 'var(--accent-text)' } }, 'AI'), '.');
@@ -36,7 +36,7 @@ addScene({
     R.append(this.kicker, this.head, this.sub, this.pills);
 
     // ---- client work index
-    this.kicker2 = h('div', { class: 'abs kicker', style: { left: `${LINE.x}px`, top: '238px', color: 'var(--accent-text)', letterSpacing: '0.24em' } }, 'Client work');
+    this.kicker2 = h('div', { class: 'abs kicker', style: { left: `${LINE.x}px`, top: '238px', color: 'var(--accent-text)', fontFamily: 'var(--font-ui)', fontWeight: 600, letterSpacing: '0.24em' } }, 'Client work');
     this.head2 = h('div', { class: 'abs display', style: { left: `${LINE.x}px`, top: '276px', fontSize: '64px', fontWeight: 600, letterSpacing: '-0.02em', lineHeight: '1.1', whiteSpace: 'nowrap' } }, 'Built for our clients.');
     R.append(this.kicker2, this.head2);
     this.rows = PROJECTS.map(([title, kind], i) => {

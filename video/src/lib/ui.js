@@ -134,11 +134,12 @@ export function box(g, x, y, w, hh, { color = C.accent, a = 1, lw = 1.5, corner 
 }
 
 /** Small label tag. anchor: 'tl' puts the tag above the point's left. */
-export function tag(g, x, y, text, { bg = C.accent, fg = '#ffffff', size = 12, a = 1, pad = 6, hgt = null, font = FONT_MONO, weight = 600, anchor = 'bl', r = 3, stroke = null } = {}) {
+export function tag(g, x, y, text, { bg = C.accent, fg = '#ffffff', size = 12, a = 1, pad = 6, hgt = null, font = FONT_MONO, weight = 600, anchor = 'bl', r = 3, stroke = null, track = 0 } = {}) {
   if (a <= 0.001) return;
   g.save();
   g.globalAlpha = a;
   g.font = `${weight} ${size}px ${font}`;
+  if (track) g.letterSpacing = `${track}em`;
   const tw = g.measureText(text).width;
   const th = hgt || Math.round(size * 1.75);
   const w = tw + pad * 2;

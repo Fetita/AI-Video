@@ -54,7 +54,7 @@ async function boot() {
     '400 20px Manrope', '500 20px Manrope', '600 20px Manrope', '700 20px Manrope',
     '500 20px Archivo', '600 20px Archivo', '700 20px Archivo',
     '400 20px "JetBrains Mono"', '500 20px "JetBrains Mono"', '600 20px "JetBrains Mono"',
-    '400 20px Fraunces', 'italic 400 20px Fraunces', '600 20px Fraunces',
+    '400 20px Fraunces', '600 20px Fraunces',
   ].map((f) => document.fonts.load(f)));
   await Promise.all([...document.images].map((im) => im.decode().catch(() => {})));
   window.__seek = (t) => seek(t);

@@ -314,7 +314,7 @@ addScene({
         g.restore();
         tag(g, px + 150, py - 70 + 13, 'PLANT #04812 · 41.12417, −98.45691 · Ø 14 cm', { a: ca, bg: '#0b0d10', fg: C.accentText, stroke: rgba(C.accent, 0.6), size: 12, anchor: 'bl', hgt: 26 });
       }
-      tag(g, 260, 180, 'FIELD MAP · EVERY PLANT GEO-LOCATED', { a: mapA * prog(t, cMap + 0.6, 0.5), bg: null, fg: 'rgba(255,255,255,0.7)', size: 13, anchor: 'bl', pad: 0 });
+      tag(g, 260, 180, 'FIELD MAP · EVERY PLANT GEO-LOCATED', { a: mapA * prog(t, cMap + 0.6, 0.5), font: FONT_UI, track: 0.16, bg: null, fg: 'rgba(255,255,255,0.7)', size: 13, anchor: 'bl', pad: 0 });
     }
 
     // ================= D: packing line — ID, track, count

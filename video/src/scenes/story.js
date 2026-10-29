@@ -114,7 +114,7 @@ addScene({
     this.bodySpans = words(this.body, STORY_TEXT);
     this.caret = h('span', { style: { position: 'absolute', display: 'block', width: '3px', height: '32px', background: '#8234fe', borderRadius: '2px' } });
     this.body.append(this.caret);
-    const pno = h('div', { style: { position: 'absolute', bottom: '40px', right: '64px', fontFamily: 'var(--font-story)', fontSize: '20px', color: '#9a8f80', fontStyle: 'italic' } }, '1');
+    const pno = h('div', { style: { position: 'absolute', bottom: '40px', right: '64px', fontFamily: 'var(--font-story)', fontSize: '20px', color: '#9a8f80' } }, '1');
     const orn = h('div', { style: { position: 'absolute', left: '84px', top: '222px', width: '60px', height: '2px', background: '#c9a86a' } });
     right.append(this.title, orn, this.body, pno);
     const edge = h('div', { style: { position: 'absolute', left: '-8px', right: '-8px', top: '8px', bottom: '-14px', borderRadius: '18px', background: '#3a2618', boxShadow: '0 50px 100px -20px rgba(0,0,0,0.8)' } });

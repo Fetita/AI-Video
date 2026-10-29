@@ -75,7 +75,7 @@ addScene({
       sec('02', 'Method'), p('Managers confirmed each user’s access. Exceptions were ', this.hls[1], '. MFA is ', this.hls[2], '.'),
       h('div', { style: { margin: '6px 0 10px' } }, tr(['User group', 'Accounts', 'Reviewed', 'Approver'], true), tr(['Engineering', '42', '✓', 'Eng. manager']), tr(['Finance', '12', '✓', 'Finance lead']), tr(['Operations', '27', '✓', 'Ops manager'])),
       sec('03', 'Exclusions'), p(this.hls[3], ' for this review cycle.'),
-      h('div', { style: { marginTop: '26px', display: 'flex', alignItems: 'center', gap: '12px', fontSize: '14px', color: '#7a7e86' } }, h('span', { style: { fontFamily: 'var(--font-story)', fontStyle: 'italic', fontSize: '24px', color: '#2a2d33' } }, 'J. Rivera'), '— IT lead, sign-off'));
+      h('div', { style: { marginTop: '26px', display: 'flex', alignItems: 'center', gap: '12px', fontSize: '14px', color: '#7a7e86' } }, h('span', { style: { fontFamily: 'var(--font-story)', fontSize: '24px', color: '#2a2d33' } }, 'J. Rivera'), '— IT lead, sign-off'));
     this.scan = h('div', { class: 'abs', style: { left: '0', right: '0', top: '0', height: '120px', background: 'linear-gradient(180deg, rgba(130,52,254,0), rgba(102,134,246,0.22) 70%, rgba(102,134,246,0.9) 100%)', mixBlendMode: 'multiply' } });
     this.doc.append(this.scan);
     this.view.append(this.doc);

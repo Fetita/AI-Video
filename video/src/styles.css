@@ -144,7 +144,8 @@ canvas.fill { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px
   display: flex;
   align-items: center;
   gap: 16px;
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
+  font-weight: 600;
   font-size: 14px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -163,7 +164,8 @@ canvas.fill { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px
   display: flex;
   align-items: center;
   gap: 0;
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
+  font-weight: 600;
   font-size: 13px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
