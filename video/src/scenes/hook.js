@@ -64,7 +64,7 @@ addScene({
     this.type = h('div', { class: 'abs display', style: { left: '0', top: '470px', width: '1920px', textAlign: 'center', fontSize: '128px', fontWeight: 600, letterSpacing: '-0.02em', lineHeight: '1', whiteSpace: 'nowrap' } });
     this.typeA = h('span', { style: { color: 'var(--text)' } }, 'AI as ');
     this.typeB = h('span', { style: { position: 'relative', display: 'inline-block' } }, 'a feature');
-    this.under = h('i', { style: { position: 'absolute', left: '-4px', right: '-4px', top: '58%', height: '6px', background: 'var(--text2)', transformOrigin: '0 50%', display: 'block', borderRadius: '3px' } });
+    this.under = h('i', { style: { position: 'absolute', left: '-4px', right: '-4px', top: '108%', height: '6px', background: 'var(--text2)', transformOrigin: '0 50%', display: 'block', borderRadius: '3px' } });
     this.typeB.append(this.under);
     this.type.append(this.typeA, this.typeB, h('span', {}, '.'));
     this.typeWrap = h('div', { class: 'abs', style: { left: '0', top: '0', width: '1920px', height: '1080px', transformOrigin: '960px 530px' } }, this.type);
@@ -212,7 +212,7 @@ addScene({
     // ---- typography
     const tIn = prog(t, cNot - 0.2, 0.55, E.outCubic);
     const tOut = prog(t, cName - 0.75, 0.5, E.inCubic);
-    const fromLine = `inset(${((1 - tIn) * 50).toFixed(2)}% -10% ${((1 - tIn) * 50).toFixed(2)}% -10%)`;
+    const fromLine = `inset(${((1 - tIn) * 50).toFixed(2)}% -10% ${((1 - tIn) * 50 - tIn * 40).toFixed(2)}% -10%)`; // open below for the underline
     this.type.style.clipPath = fromLine;
     put(this.typeWrap, { s: lerp(1, 0.94, tOut) * lerp(0.98, 1, tIn), sy: 1 - tOut * 0.9, o: tIn * (1 - tOut) });
     const dp = prog(t, cProd - 0.05, 0.55, E.linear);
@@ -220,10 +220,10 @@ addScene({
     this.typeB.firstChild.textContent = dp <= 0 ? 'a feature' : dp >= 1 ? 'the product' : decode('a feature', 'the product', dp, 7, frame);
     this.typeB.style.color = dp > 0.95 ? '#ffffff' : dp > 0 ? 'var(--accent)' : 'var(--text2)';
     this.typeA.style.color = 'var(--text)';
-    // strike through "a feature", then drop into the underline beneath "the product"
-    const strike = prog(t, cNot + 0.35, 0.45, E.inOutCubic);
+    // a grey underline draws beneath "a feature", then turns violet under "the product"
+    const draw = prog(t, cNot + 0.35, 0.45, E.inOutCubic);
     const sink = prog(t, cProd + 0.25, 0.5, E.inOutCubic);
-    this.under.style.transform = `translateY(${(sink * 70).toFixed(1)}px) scaleX(${strike.toFixed(3)})`;
+    this.under.style.transform = `scaleX(${draw.toFixed(3)})`;
     this.under.style.background = sink > 0.5 ? 'var(--accent)' : 'var(--text2)';
     this.under.style.boxShadow = sink > 0.5 ? `0 0 ${(18 * sink).toFixed(1)}px rgba(130,52,254,0.6)` : 'none';
 

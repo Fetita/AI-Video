@@ -332,9 +332,10 @@ addScene({
     this.api = h('div', { class: 'abs', style: { left: '0', top: '0', width: '1920px', display: 'flex', justifyContent: 'center' } });
     this.apiPill = h('div', { class: 'panel', style: { position: 'relative', padding: '22px 34px', display: 'flex', alignItems: 'center', gap: '22px' } },
       h('span', { class: 'kicker', style: { color: 'var(--text3)' } }, 'API call'),
-      h('span', { class: 'mono', style: { fontSize: '40px', color: 'var(--text)' } }, h('span', { style: { color: 'var(--sky)' } }, 'vision'), '.detect(', h('span', { style: { color: 'var(--amber)' } }, 'frame'), ')'));
-    this.strike = h('div', { style: { position: 'absolute', left: '24px', right: '24px', top: '50%', height: '2px', background: 'var(--coral)', transformOrigin: '0 50%' } });
-    this.apiPill.append(this.strike);
+      this.code = h('span', { class: 'mono', style: { fontSize: '40px', color: 'var(--text)' } }, h('span', { style: { color: 'var(--sky)' } }, 'vision'), '.detect(', h('span', { style: { color: 'var(--amber)' } }, 'frame'), ')'));
+    // "more than an API call": the call greys out and a badge sets it aside (no strikethrough)
+    this.notEnough = h('span', { class: 'badge bad', style: { opacity: 0, height: '32px', padding: '0 14px', fontSize: '14px' } }, 'Not enough');
+    this.apiPill.append(this.notEnough);
     this.api.append(this.apiPill);
     R.append(this.api);
     // incoming hand-off: the intro's violet line (same position) contracts and opens the API call card
@@ -387,7 +388,10 @@ addScene({
     this.apiPill.style.clipPath = `inset(${((1 - apiIn) * 50).toFixed(2)}% 0 ${((1 - apiIn) * 50).toFixed(2)}% 0 round 18px)`;
     const shrink = prog(t, -0.3, 0.45, E.inOutCubic);
     put(this.handIn, { sx: lerp(1, pillW / 1000, shrink), o: (1 - prog(t, 0.2, 0.3)) * (t < 0.6 ? 1 : 0) });
-    this.strike.style.transform = `scaleX(${prog(t, cStack + 0.35, 0.45, E.inOutCubic).toFixed(3)})`;
+    const aside = prog(t, cStack + 0.35, 0.45, E.inOutCubic);
+    this.code.style.filter = `grayscale(${aside.toFixed(3)})`;
+    this.code.style.opacity = lerp(1, 0.5, aside).toFixed(3);
+    put(this.notEnough, { x: (1 - aside) * -8, o: aside });
     this.apiPill.style.opacity = (1 - 0.45 * prog(t, cStack + 0.4, 0.5)).toFixed(3);
     this.stack.forEach((el, i) => {
       const q = prog(t, cStack + 0.12 + i * 0.1, 0.5, E.outCubic);

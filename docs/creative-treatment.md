@@ -51,8 +51,8 @@ Scene cuts are snapped to the music's half-bar grid (100 BPM), so every change l
 | 0:04.3 | **"A camera feed."** The reticle opens into a split viewfinder: ego-view hands with 21-point skeletons \| crop rows with detection boxes. | Ring → viewfinder |
 | 0:05.8 | **"A stack of evidence."** Three documents fan out; a scan beam passes; `✓ SOC 2 mapped` and `Gap found` pop. | Viewfinder → pages |
 | 0:07.1 | All four vignettes snap into a 2×2 grid, then collapse into one glowing line (music hit). | Many → one |
-| 0:08.1 | **"AI as a feature."** in wide display type. The line strikes through *a feature*. | Line → strike-through |
-| 0:09.8 | **"AI as the product."** Glyphs scramble-decode into *the product*; the strike drops into a violet underline. | Strike → underline |
+| 0:08.1 | **"AI as a feature."** in wide display type. The line settles as a grey underline beneath *a feature*. | Line → underline |
+| 0:09.8 | **"AI as the product."** Glyphs scramble-decode into *the product*; the underline turns violet and glows. | Grey → violet underline |
 | 0:11.6 | The underline's energy becomes the three "E" strokes; the hexagon draws around them and fills (music hit); the wordmark and **AI Studio** slide out. | Strokes → logo |
 | 0:15.3 | `REAL PRODUCTS · WORKFLOWS · MEASURABLE OUTCOMES` appear as each is spoken. | — |
 | 0:18.7 | The lockup lifts away; a violet line draws exactly where the next scene's brief card opens. | Line → card |
@@ -71,7 +71,7 @@ Scene cuts are snapped to the music's half-bar grid (100 BPM), so every change l
 Stepper: `DETECT → TRACK → DATASET → TRAIN → BENCHMARK → ROBOTICS`
 | Time | Visual |
 |---|---|
-| 0:33.6 | The intro's violet line contracts and the API card opens from it: `vision.detect(frame)`, a single API call. On "…more than an API call" it is struck through and unfolds into the six-layer vision stack Eagerworks builds (Capture, Annotate, Dataset, Train, Evaluate, Deploy). |
+| 0:33.6 | The intro's violet line contracts and the API card opens from it: `vision.detect(frame)`, a single API call. On "…more than an API call" it greys out beside a coral *Not enough* badge and unfolds into the six-layer vision stack Eagerworks builds (Capture, Annotate, Dataset, Train, Evaluate, Deploy). |
 | 0:36.9 | The stack collapses into an egocentric workbench camera: two hands, per-hand boxes, 21 keypoints each, finger-coloured skeletons. |
 | 0:40.0 | Cut to a room view: three people, face boxes, then a privacy mosaic (`FACE · ANONYMIZED`). |
 | 0:41.6 | **Track:** 3D view of the head-camera frustum moving along its path; violet estimate vs. dashed ground truth; left/right wrist trails. |
@@ -141,9 +141,9 @@ and shown frame-accurately (`video/src/lib/clip.js`). It plays at about 0.5× (e
 | Time | Visual |
 |---|---|
 | 2:32.8 | A soft violet glow breathes behind the centre. Kicker `HOW WE WORK`; **"Not just another AI studio."** rises in, with *another AI studio* in grey. |
-| 2:34.2 | On the end of the line, a violet stroke strikes through *another AI studio.* |
+| 2:34.2 | On the end of the line, *another AI studio.* fades and blurs away word by word. |
 | 2:35.3 | The headline rises and shrinks to the top of the frame. |
-| 2:36.2 | **01 *Listen*** (upright serif) with a violet rule drawing beneath it; *"Your people, your users, and the problem behind the request."* reveals word by word with the narration. |
+| 2:36.2 | **01 Listen** (Manrope semibold) with a violet rule drawing beneath it; *"Your people, your users, and the problem behind the request."* reveals word by word with the narration. |
 | 2:41.3 | **02 *Adapt*** · *"Flexible and agile, as your needs change."* The previous pillar dims. |
 | 2:45.3 | **03 *Stay*** · *"Side by side, until it really works."* |
 | 2:49.2 | All three pillars light up together, then lift away into the finale. |
@@ -232,7 +232,7 @@ Everything else on screen is diegetic interface content of fictional products, e
 ## 5. Visual direction
 
 - **Palette:** monochrome graphite base taken from the white-on-black logo (`#07080A` → `#15181D`), warm white text, and the **brand signal pair, violet `#8234FE` → blue `#6686F6`**. Violet always means *what the AI sees, infers or produces*: parsed chips, detection boxes, reticles, the story caret, matched evidence, the selected model; the violet → blue gradient carries progress (stepper links) and the CTA. Small violet text on dark uses a lighter tint (`#B89CFF`) for legibility. Coral marks gaps and issues; amber marks partial matches; teal and rose are used only for secondary series (left hand, Model B, row lines).
-- **Typography:** *Archivo* at 112–118 % width for display type, echoing the logo's wide wordmark · *Manrope* as the secondary typeface, for interface and body text, and (semibold, uppercase, tracked) for every label: chapter headers, kickers, steppers, badges, canvas tags and telemetry, with tabular figures on running numbers · *JetBrains Mono* only for the one line of code on screen (`vision.detect(frame)`) · *Fraunces* (upright only; the film uses no italics) for the children's story.
+- **Typography:** *Archivo* at 112–118 % width for display type, echoing the logo's wide wordmark · *Manrope* as the secondary typeface, for interface and body text, and (semibold, uppercase, tracked) for every label: chapter headers, kickers, steppers, badges, canvas tags and telemetry, with tabular figures on running numbers · *JetBrains Mono* only for the one line of code on screen (`vision.detect(frame)`) · *Fraunces* (upright only; the film uses no italics or strikethroughs) for the children's story only.
 - **Logo:** the supplied vector logo (`video/assets/logo/eagerworks-logo.svg`), shown at a restrained size (icon ≈ 90 px tall in a 1080p frame) so the lockup sits balanced with *AI Studio*.
 - **Look:** premium dark SaaS film. Matte panels with hairline borders, soft shadows, a faint engineering grid, a subtle vignette and fine film grain. Glow is reserved for AI signals. No neural-network clichés, no stock footage, and the only robot is the one the robotics story needs.
 - **Location photography:** the marketplace's locations are photoreal Cycles renders of fictional spaces, built procedurally in Blender (`scripts/render_locations.py`): physically based brick, timber, concrete and glass under a real sun-and-sky model.
@@ -245,7 +245,7 @@ Everything else on screen is diegetic interface content of fictional products, e
 2. Brief chips → round toy piece (text becomes an object).
 3. Recognition ring → camera viewfinder (object becomes camera data).
 4. Four vignettes → 2×2 grid → one line (many capabilities, one studio).
-5. Line → strike-through → underline → the logo's E strokes.
+5. Line → underline → the logo's E strokes.
 6. Hook line → the intro's divider → row 01's underline in the client-work index → the line contracts and the API call card opens from it.
 7. API call → vision stack → the stack collapses into the camera feed.
 8. Camera's FOV footprint → top-down field feed; plant detections → map coordinates.
@@ -255,7 +255,7 @@ Everything else on screen is diegetic interface content of fictional products, e
 12. Chat status dot → recognition ring on the story board.
 13. Story → end-to-end system row (the book shrinks into its node).
 14. Evidence sentences → framework requirements (documents become structured requirements).
-15. Product dashboard → the headline "Not just another AI studio." struck through (the hook's strike-through idea, turned on ourselves) → three pillars.
+15. Product dashboard → the headline "Not just another AI studio." with *another AI studio.* fading away (the hook's "not X" idea, turned on ourselves) → three pillars.
 16. Pillars → recap wall → tiles collapse into the E strokes → logo.
 
 ## 7. Music & sound design
