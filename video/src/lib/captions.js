@@ -2,7 +2,7 @@
 // people watch muted). Each VO line is split into short chunks at word boundaries (preferring punctuation),
 // and each chunk is shown for a share of the line's time proportional to its length.
 // Lines whose words are already on screen as typography opt out with "caption": false.
-import { h, put, prog, E, TIMELINE } from '../engine.js';
+import { h, put, prog, E, TIMELINE, BRAND } from '../engine.js';
 
 const MAX_CHARS = 34;
 
@@ -48,7 +48,7 @@ function buildCues() {
 export function makeCaptions(stage) {
   const cues = buildCues();
   const wrap = h('div', { class: 'layer', style: { zIndex: 800, pointerEvents: 'none' } });
-  const box = h('div', { class: 'abs', style: { left: '50%', bottom: '104px', maxWidth: '1700px', padding: '12px 32px 15px', borderRadius: '16px', background: 'rgba(7,8,10,0.8)', border: '1px solid rgba(255,255,255,0.08)', color: '#f3f3ef', fontSize: '58px', fontWeight: 600, letterSpacing: '-0.005em', lineHeight: '1.25', textAlign: 'center', whiteSpace: 'nowrap', boxShadow: '0 12px 40px -12px rgba(0,0,0,0.7)' } });
+  const box = h('div', { class: 'abs', style: { left: '50%', bottom: '104px', maxWidth: '1700px', padding: '12px 32px 15px', borderRadius: '16px', background: BRAND.captionBg || 'rgba(7,8,10,0.8)', border: '1px solid rgba(255,255,255,0.08)', color: '#f3f3ef', fontSize: '58px', fontWeight: 600, letterSpacing: '-0.005em', lineHeight: '1.25', textAlign: 'center', whiteSpace: 'nowrap', boxShadow: '0 12px 40px -12px rgba(0,0,0,0.7)' } });
   wrap.append(box);
   stage.append(wrap);
   let shown = null;

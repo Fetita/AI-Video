@@ -1,14 +1,10 @@
 // 07 — How we work: the personal beat before the finale.
 // "Not just another AI studio." ("another AI studio." fades and blurs away word by word), then the headline
 // rises and three pillars light up as they're spoken: Listen → Adapt → Stay.
-import { addScene, h, put, prog, E, clamp, lerp, env } from '../engine.js';
+import { addScene, h, put, prog, E, clamp, lerp, env, C, PAL, BRAND } from '../engine.js';
 import { words, revealWords } from '../lib/ui.js';
 
-const PILLARS = [
-  ['Listen', 'Your people, your users, and the problem behind the request.'],
-  ['Adapt', 'Flexible and agile, as your needs change.'],
-  ['Stay', 'Side by side, until it really works.'],
-];
+const PILLARS = BRAND.copy.pillars;
 const COL_W = 470, COL_GAP = 70;
 const COLS_X = (1920 - (3 * COL_W + 2 * COL_GAP)) / 2;
 const COLS_Y = 500;
@@ -19,7 +15,7 @@ addScene({
   post: 0.3,
   setup(ctx) {
     const R = ctx.root;
-    this.glow = h('div', { class: 'layer', style: { background: 'radial-gradient(ellipse 45% 40% at 50% 52%, rgba(130,52,254,0.13), transparent 70%)' } });
+    this.glow = h('div', { class: 'layer', style: { background: `radial-gradient(ellipse 45% 40% at 50% 52%, rgba(${PAL.acc},0.13), transparent 70%)` } });
     R.append(this.glow);
 
     // ---- headline
@@ -36,7 +32,7 @@ addScene({
       const num = h('div', { class: 'tnum', style: { fontSize: '16px', letterSpacing: '0.16em', color: 'var(--accent-text)' } }, String(i + 1).padStart(2, '0'));
       const title = h('div', { style: { fontFamily: 'var(--font-ui)', fontSize: '92px', fontWeight: 600, letterSpacing: '-0.035em', lineHeight: '1.15', color: '#ffffff', margin: '8px 0 18px' } }, word);
       const rule = h('div', { style: { position: 'relative', height: '2px', background: 'var(--line2)' } });
-      const fill = h('i', { style: { position: 'absolute', left: '0', top: '0', height: '2px', width: '100%', background: 'var(--accent)', boxShadow: '0 0 12px rgba(130,52,254,0.7)', transformOrigin: '0 50%', display: 'block' } });
+      const fill = h('i', { style: { position: 'absolute', left: '0', top: '0', height: '2px', width: '100%', background: 'var(--accent)', boxShadow: `0 0 12px rgba(${PAL.acc},0.7)`, transformOrigin: '0 50%', display: 'block' } });
       rule.append(fill);
       const text = h('div', { style: { fontSize: '28px', fontWeight: 430, lineHeight: '1.42', letterSpacing: '-0.005em', color: 'var(--text)', marginTop: '24px', width: `${COL_W - 20}px` } });
       const spans = words(text, desc);
@@ -77,7 +73,7 @@ addScene({
       const dim = prog(t, next, 0.5) * (1 - allOn);
       put(c.el, { y: (1 - q) * 34 - out * 30, o: q * lerp(1, 0.5, dim) * (1 - out) });
       put(c.fill, { sx: Math.max(prog(t, a + 0.25, 0.8, E.inOutCubic), 0.0001) });
-      c.title.style.textShadow = q > 0.5 && dim < 0.5 ? `0 0 34px rgba(130,52,254,${(0.45 * (1 - dim)).toFixed(3)})` : 'none';
+      c.title.style.textShadow = q > 0.5 && dim < 0.5 ? `0 0 34px rgba(${PAL.acc},${(0.45 * (1 - dim)).toFixed(3)})` : 'none';
       // description follows the narration (p2 starts its list after "We start by listening")
       const r0 = i === 0 ? li.segs[1][0] - 0.1 : li.start;
       revealWords(c.spans, prog(t, r0, li.end - r0 + 0.2, E.linear), { rise: 8, soft: 2.5 });

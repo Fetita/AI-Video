@@ -1,11 +1,11 @@
 // 02 — Real-world AI · Detection · Tracking
 // Tractor camera → live crop feed (detect · count · measure · map) → packing line (ID · track · count).
-import { addScene, h, put, prog, E, clamp, lerp, env, makeCanvas, rng, rgba, C, hash, rrect, keys, TIMELINE } from '../engine.js';
+import { addScene, h, put, prog, E, clamp, lerp, env, makeCanvas, rng, rgba, C, hash, rrect, keys, TIMELINE, PAL } from '../engine.js';
 import { makeHud, box, tag, recHud, brackets, FONT_UI } from '../lib/ui.js';
 
 import { FRAME, ROWS, ROW_X0, ROW_DX, PITCH, SPEED, plantSprite, pumpkinSprite, soilTile, plantAt } from '../lib/field.js';
 const COUNT_Y = FRAME.y + FRAME.h * 0.64;
-const ROW_COLORS = ['#ffb35c', '#ff7b6b', '#5fe0c2', '#ff8fc8', '#ffd76b', '#c8e86b'];
+const ROW_COLORS = ['#ffb35c', '#ff7b6b', '#5fe0c2', `${C.violet}`, '#ffd76b', '#c8e86b'];
 const fmt = (n) => n.toLocaleString('en-US');
 
 // ------------------------------------------------------------ tractor (line art, side view)
@@ -17,7 +17,7 @@ function drawTractor(g, t, ox, oy, S, camPulse, a) {
   g.strokeStyle = ink; g.lineWidth = 3;
   g.beginPath(); g.moveTo(300, -40); g.lineTo(430, -120); g.lineTo(520, -120); g.stroke();
   const fov = g.createLinearGradient(0, -110, 0, 95);
-  fov.addColorStop(0, `rgba(130,52,254,${0.35 + camPulse * 0.25})`); fov.addColorStop(1, 'rgba(130,52,254,0.04)');
+  fov.addColorStop(0, `rgba(${PAL.acc},${0.35 + camPulse * 0.25})`); fov.addColorStop(1, `rgba(${PAL.acc},0.04)`);
   g.fillStyle = fov; g.beginPath(); g.moveTo(520, -108); g.lineTo(420, 95); g.lineTo(650, 95); g.closePath(); g.fill();
   g.strokeStyle = rgba(C.accent, 0.55); g.lineWidth = 1.5; g.beginPath(); g.moveTo(520, -108); g.lineTo(420, 95); g.moveTo(520, -108); g.lineTo(650, 95); g.stroke();
   g.fillStyle = fill; g.strokeStyle = C.accent; g.lineWidth = 3; rrect(g, 500, -134, 42, 28, 6); g.fill(); g.stroke();
@@ -35,7 +35,7 @@ function drawTractor(g, t, ox, oy, S, camPulse, a) {
   g.beginPath(); g.moveTo(-80, -226); g.lineTo(106, -226); g.stroke();
   // wheels
   const wheel = (x, y, R) => {
-    g.fillStyle = '#0b0d10'; g.beginPath(); g.arc(x, y, R, 0, Math.PI * 2); g.fill();
+    g.fillStyle = `${C.bg2}`; g.beginPath(); g.arc(x, y, R, 0, Math.PI * 2); g.fill();
     g.strokeStyle = ink; g.lineWidth = 3; g.stroke();
     g.strokeStyle = 'rgba(243,243,239,0.5)'; g.lineWidth = 2; g.beginPath(); g.arc(x, y, R * 0.58, 0, Math.PI * 2); g.stroke();
     const rot = -t * (SPEED * 0.9 / R);
@@ -94,7 +94,7 @@ addScene({
     this.sGaps = stat('Gaps', 'var(--coral)');
     this.sOff = stat('Off-row', 'var(--coral)');
     this.hist = h('div', { style: { display: 'flex', alignItems: 'flex-end', gap: '4px', height: '56px', marginTop: '14px' } });
-    this.histBars = Array.from({ length: 14 }, (_, i) => { const b = h('i', { style: { display: 'block', flex: 1, background: i > 3 && i < 11 ? 'var(--accent)' : 'rgba(130,52,254,0.35)', borderRadius: '2px 2px 0 0' } }); this.hist.append(b); return b; });
+    this.histBars = Array.from({ length: 14 }, (_, i) => { const b = h('i', { style: { display: 'block', flex: 1, background: i > 3 && i < 11 ? 'var(--accent)' : `rgba(${PAL.acc},0.35)`, borderRadius: '2px 2px 0 0' } }); this.hist.append(b); return b; });
     this.audit.append(h('div', { style: { fontSize: '17px', fontWeight: 600, marginBottom: '6px' } }, 'Live field audit'), this.sPlants.el, this.sSpacing.el, this.sGaps.el, this.sOff.el,
       h('div', { class: 'kicker', style: { fontSize: '11px', marginTop: '12px' } }, 'Plant size distribution'), this.hist);
     R.append(this.audit);
@@ -107,7 +107,7 @@ addScene({
     this.pack.append(h('div', { style: { fontSize: '16px', fontWeight: 600, width: '130px', lineHeight: 1.3 } }, 'Packing line', h('br'), h('span', { class: 'kicker', style: { fontSize: '10.5px', color: 'var(--coral)' } }, '● Live')), this.pCount.el, this.pView.el, this.pSize.el);
     R.append(this.pack);
     // hand-off line into the search scene's brief card (same position as the hook/intro line)
-    this.handoff = h('div', { class: 'abs', style: { left: '460px', top: '483px', width: '1000px', height: '2px', background: 'var(--accent)', transformOrigin: '50% 50%', boxShadow: '0 0 16px rgba(130,52,254,0.6)' } });
+    this.handoff = h('div', { class: 'abs', style: { left: '460px', top: '483px', width: '1000px', height: '2px', background: 'var(--accent)', transformOrigin: '50% 50%', boxShadow: `0 0 16px rgba(${PAL.acc},0.6)` } });
     R.append(this.handoff);
     const scenes = TIMELINE.scenes.map((s) => s.id);
     this.handsOff = scenes[scenes.indexOf('agri') + 1] === 'search'; // other cuts end without it
@@ -214,7 +214,7 @@ addScene({
               const flash = passed ? clamp(1 - (py - COUNT_Y) / 60) : 0;
               box(g, x - bw / 2, py - bw / 2, bw, bw, { color: col, a, lw: 1.4 + flash * 1.5, fill: 0.04 + flash * 0.15 });
               tag(g, x - bw / 2, py - bw / 2 - 3, p.off ? 'OFF-ROW' : `#${p.id}`, { bg: p.off ? C.coral : rgba(C.accent, 0.9), a: a * (p.off ? 1 : 0.85), size: 10, pad: 4 });
-              if (p.off && a > 0) { g.strokeStyle = rgba(C.coral, a); g.lineWidth = 2; g.setLineDash([4, 4]); g.beginPath(); g.moveTo(x, py); g.lineTo(ROW_X0 + r * ROW_DX, py); g.stroke(); g.setLineDash([]); tag(g, (x + ROW_X0 + r * ROW_DX) / 2, py + 16, `${Math.round(Math.abs(p.off) / 7)} cm`, { bg: '#0b0d10', fg: C.coral, a, size: 10, anchor: 'c' }); }
+              if (p.off && a > 0) { g.strokeStyle = rgba(C.coral, a); g.lineWidth = 2; g.setLineDash([4, 4]); g.beginPath(); g.moveTo(x, py); g.lineTo(ROW_X0 + r * ROW_DX, py); g.stroke(); g.setLineDash([]); tag(g, (x + ROW_X0 + r * ROW_DX) / 2, py + 16, `${Math.round(Math.abs(p.off) / 7)} cm`, { bg: `${C.bg2}`, fg: C.coral, a, size: 10, anchor: 'c' }); }
               // measurement: diameter on rows 1 and 4
               if (measureA > 0 && (r === 1 || r === 4) && k % 2 === 0) {
                 const ang = 0.6 + p.v * 0.3, rr = sz * 0.36;
@@ -222,19 +222,19 @@ addScene({
                 g.beginPath(); g.moveTo(x - Math.cos(ang) * rr, py - Math.sin(ang) * rr); g.lineTo(x + Math.cos(ang) * rr, py + Math.sin(ang) * rr); g.stroke();
                 g.fillStyle = rgba('#ffffff', a * measureA);
                 [-1, 1].forEach((sg) => { g.beginPath(); g.arc(x + sg * Math.cos(ang) * rr, py + sg * Math.sin(ang) * rr, 3.5, 0, Math.PI * 2); g.fill(); });
-                tag(g, x + bw / 2 + 4, py + 6, `Ø ${Math.round(11 + p.s * 5)} cm`, { bg: '#0b0d10', fg: '#fff', a: a * measureA, size: 11, anchor: 'bl', stroke: 'rgba(255,255,255,0.3)' });
+                tag(g, x + bw / 2 + 4, py + 6, `Ø ${Math.round(11 + p.s * 5)} cm`, { bg: `${C.bg2}`, fg: '#fff', a: a * measureA, size: 11, anchor: 'bl', stroke: 'rgba(255,255,255,0.3)' });
               }
               // spacing ticks on row 2
               if (measureA > 0 && r === 2 && prev) {
                 g.strokeStyle = rgba(C.sky, a * measureA); g.lineWidth = 1.5;
                 const x2 = ROW_X0 + r * ROW_DX + 70;
                 g.beginPath(); g.moveTo(x2, prev.y); g.lineTo(x2, py); g.moveTo(x2 - 6, prev.y); g.lineTo(x2 + 6, prev.y); g.moveTo(x2 - 6, py); g.lineTo(x2 + 6, py); g.stroke();
-                tag(g, x2 + 10, (prev.y + py) / 2 + 9, `${Math.round((prev.y - py) / 5)} cm`, { bg: '#0b0d10', fg: C.sky, a: a * measureA, size: 10, anchor: 'bl' });
+                tag(g, x2 + 10, (prev.y + py) / 2 + 9, `${Math.round((prev.y - py) / 5)} cm`, { bg: `${C.bg2}`, fg: C.sky, a: a * measureA, size: 10, anchor: 'bl' });
               }
               // GPS pin as it's counted
               if (passed && py - COUNT_Y < 90 && t > cMap - 0.3) {
                 const ga = clamp(1 - (py - COUNT_Y) / 90) * ovA;
-                tag(g, x + 30, py - 30, `${(41.12 + p.id * 0.000013).toFixed(5)}, −98.4${(5600 + p.id % 97).toString()}`, { bg: '#0b0d10', fg: C.accentText, a: ga, size: 10, stroke: rgba(C.accent, 0.4) });
+                tag(g, x + 30, py - 30, `${(41.12 + p.id * 0.000013).toFixed(5)}, −98.4${(5600 + p.id % 97).toString()}`, { bg: `${C.bg2}`, fg: C.accentText, a: ga, size: 10, stroke: rgba(C.accent, 0.4) });
               }
             }
           }
@@ -311,7 +311,7 @@ addScene({
         g.strokeStyle = C.accent; g.lineWidth = 2; g.beginPath(); g.arc(px, py, 12, 0, Math.PI * 2); g.stroke();
         g.beginPath(); g.moveTo(px + 12, py - 8); g.lineTo(px + 90, py - 70); g.lineTo(px + 150, py - 70); g.stroke();
         g.restore();
-        tag(g, px + 150, py - 70 + 13, 'PLANT #04812 · 41.12417, −98.45691 · Ø 14 cm', { a: ca, bg: '#0b0d10', fg: C.accentText, stroke: rgba(C.accent, 0.6), size: 12, anchor: 'bl', hgt: 26 });
+        tag(g, px + 150, py - 70 + 13, 'PLANT #04812 · 41.12417, −98.45691 · Ø 14 cm', { a: ca, bg: `${C.bg2}`, fg: C.accentText, stroke: rgba(C.accent, 0.6), size: 12, anchor: 'bl', hgt: 26 });
       }
       tag(g, 260, 180, 'FIELD MAP · EVERY PLANT GEO-LOCATED', { a: mapA * prog(t, cMap + 0.6, 0.5), font: FONT_UI, track: 0.16, bg: null, fg: 'rgba(255,255,255,0.7)', size: 13, anchor: 'bl', pad: 0 });
     }
@@ -373,7 +373,7 @@ addScene({
           const an = 0.45;
           g.strokeStyle = rgba('#ffffff', md * 0.9); g.lineWidth = 1.6;
           g.beginPath(); g.moveTo(it.x - Math.cos(an) * it.R * 0.84, it.y + Math.sin(an) * it.R * 0.84); g.lineTo(it.x + Math.cos(an) * it.R * 0.84, it.y - Math.sin(an) * it.R * 0.84); g.stroke();
-          tag(g, it.x - it.R, it.y + it.R + 22, `Ø ${Math.round(it.R / 3.1)} cm`, { bg: '#0b0d10', fg: '#fff', a: md, size: 10.5, anchor: 'bl', stroke: 'rgba(255,255,255,0.25)' });
+          tag(g, it.x - it.R, it.y + it.R + 22, `Ø ${Math.round(it.R / 3.1)} cm`, { bg: `${C.bg2}`, fg: '#fff', a: md, size: 10.5, anchor: 'bl', stroke: 'rgba(255,255,255,0.25)' });
         }
       });
       g.restore();

@@ -1,0 +1,45 @@
+/* FS Studio brand layer (loaded by main.js when the cut's brand is "fsstudio").
+   From the FS Studio brand book: charcoal #2F2F2F statement pages, neutrals #A5A5A5 / #D0D0D0 / #F2F2F2,
+   the pink → purple gradient (#FF059F → #8154B1) as the signal colour, cyan #39DAE0 as the second voice,
+   and a single geometric typeface (Europa; Figtree is the open stand-in). */
+:root[data-brand="fsstudio"] {
+  --bg: #262626;
+  --bg2: #2b2b2b;
+  --panel: #303030;
+  --panel2: #363636;
+  --panel3: #3d3d3d;
+  --line: rgba(255, 255, 255, 0.09);
+  --line2: rgba(255, 255, 255, 0.15);
+  --line3: rgba(255, 255, 255, 0.26);
+  --text: #f2f2f2;
+  --text2: #bcbcbc;
+  --text3: #8e8e8e;
+  --accent: #ff059f;
+  --accent2: #8154b1;
+  --accent-text: #ff80c8;
+  --accent-grad: linear-gradient(90deg, #ff059f, #8154b1);
+  --accent-dim: rgba(255, 5, 159, 0.14);
+  --cta-grad: linear-gradient(90deg, #ff9a43, #ff059f);
+  --cyan: #39dae0;
+  --coral: #ff3b30;
+  --amber: #ffc543;
+  --sky: #39dae0;
+  --violet: #ff9a43;
+  --font-ui: 'Figtree', system-ui, sans-serif;
+  --font-display: 'Figtree', sans-serif;
+}
+
+[data-brand="fsstudio"] .display { font-stretch: 100%; }
+
+[data-brand="fsstudio"] .panel {
+  background: linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0) 40%), var(--panel);
+  box-shadow: 0 40px 90px -30px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+[data-brand="fsstudio"] .chip.ai { border-color: rgba(255,5,159,0.5); background: rgba(255,5,159,0.1); color: #ffd6ee; }
+[data-brand="fsstudio"] .badge.ok { background: rgba(255,5,159,0.2); color: var(--accent-text); }
+[data-brand="fsstudio"] .badge.mid { background: rgba(255,197,67,0.16); }
+[data-brand="fsstudio"] .badge.bad { background: rgba(255,59,48,0.16); }
+[data-brand="fsstudio"] .hud-chapter .tag { border-color: rgba(255,5,159,0.6); }
+/* the pipeline stepper's progress uses the brand's cyan → purple transition */
+[data-brand="fsstudio"] .stepper .link i { background: linear-gradient(90deg, #39dae0, #8154b1); }

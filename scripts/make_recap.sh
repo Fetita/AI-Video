@@ -2,8 +2,15 @@
 # Regenerate the finale's recap-wall thumbnails from the film itself (run after visual changes,
 # before the final render): each tile is a frame of its chapter, scaled to 768×432.
 # Times are offsets from the start of the tile's scene, so reordering scenes keeps them valid.
+# CUT=<cut> takes the frames from that cut (it must contain every tile's scene) and writes them to the
+# cut's brand folder, e.g. CUT=fsstudio → assets/recap-fsstudio/ (the brand's LinkedIn cut reuses them).
 set -euo pipefail
 cd "$(dirname "$0")/../video"
+CUT="${CUT:-}"
+TL="./src/timeline${CUT:+-$CUT}.js"
+brand=$(node -e "import('$TL').then(({default: t}) => console.log(t.brand || ''))")
+OUT="assets/recap${brand:+-$brand}"
+mkdir -p "$OUT"
 TILES=(
   hands:vision:6.05 faces:vision:7.65 tracking3d:vision:8.85 dataset:vision:10.95 benchmark:vision:13.65 robot:vision:16.05
   field:agri:9.05 conveyor:agri:16.65
@@ -11,7 +18,7 @@ TILES=(
   physical:story:10.45 generative:story:14.05
   documents:docs:8.55 readiness:docs:13.85
 )
-starts=$(node -e "import('./src/timeline.js').then(({default: t}) => console.log(t.scenes.map((s) => s.id + '=' + s.start).join(' ')))")
+starts=$(node -e "import('$TL').then(({default: t}) => console.log(t.scenes.map((s) => s.id + '=' + s.start).join(' ')))")
 abs=()
 for tile in "${TILES[@]}"; do
   IFS=: read -r name scene off <<<"$tile"
@@ -20,10 +27,10 @@ for tile in "${TILES[@]}"; do
 done
 times=$(printf '%s\n' "${abs[@]}" | cut -d: -f2 | paste -sd, -)
 rm -rf build/recap
-node render.mjs --stills "$times" --outdir build/recap
+node render.mjs --stills "$times" --outdir build/recap ${CUT:+--query cut=$CUT}
 for tile in "${abs[@]}"; do
   name=${tile%%:*}; t=${tile##*:}
   src=build/recap/$(printf 'still_%07.2f.png' "$t")
-  ffmpeg -loglevel error -y -i "$src" -vf scale=768:432:flags=lanczos -q:v 4 "assets/recap/$name.jpg"
+  ffmpeg -loglevel error -y -i "$src" -vf scale=768:432:flags=lanczos -q:v 4 "$OUT/$name.jpg"
 done
-echo "recap thumbnails updated"
+echo "recap thumbnails updated in $OUT"

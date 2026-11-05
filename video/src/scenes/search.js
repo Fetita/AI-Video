@@ -1,6 +1,6 @@
 // 03 — Generative AI · Search · Recommendation
 // Brief → parse → search → evaluate → recommend → refine (conversation).
-import { TIMELINE, addScene, h, svg, put, prog, E, clamp, lerp, env, makeCanvas, rng, rgba, C, hash, rrect } from '../engine.js';
+import { TIMELINE, addScene, h, svg, put, prog, E, clamp, lerp, env, makeCanvas, rng, rgba, C, hash, rrect, PAL } from '../engine.js';
 import { makeHud, words, revealWords, pop, placeCaret } from '../lib/ui.js';
 import { photo, preloadCatalog, thumb } from '../lib/places.js';
 
@@ -61,7 +61,7 @@ const ctx0 = addScene({
         this.briefText.append(holder);
         this.wordSpans.push(...words(holder, text));
       } else {
-        const ph = h('span', { class: 'hl', style: { backgroundImage: 'linear-gradient(rgba(130,52,254,0.16), rgba(130,52,254,0.16))', backgroundRepeat: 'no-repeat', backgroundSize: '0% 100%', borderRadius: '4px', boxShadow: 'inset 0 -2px 0 rgba(130,52,254,0)', padding: '0 2px', margin: '0 -2px' } });
+        const ph = h('span', { class: 'hl', style: { backgroundImage: `linear-gradient(rgba(${PAL.acc},0.16), rgba(${PAL.acc},0.16))`, backgroundRepeat: 'no-repeat', backgroundSize: '0% 100%', borderRadius: '4px', boxShadow: `inset 0 -2px 0 rgba(${PAL.acc},0)`, padding: '0 2px', margin: '0 -2px' } });
         this.briefText.append(ph);
         this.wordSpans.push(...words(ph, text));
         this.phrases[key] = ph;
@@ -94,7 +94,7 @@ const ctx0 = addScene({
     this.flyLayer = h('div', { class: 'layer', style: { zIndex: 40 } });
     this.flyers = [];
     this.reqRows.forEach((r, i) => r.chips.forEach((c, j) => {
-      const f = h('span', { class: 'chip ai', style: { position: 'absolute', left: '0', top: '0', transformOrigin: '0 0', boxShadow: '0 10px 30px rgba(0,0,0,0.5), 0 0 18px rgba(130,52,254,0.25)' } }, c.textContent);
+      const f = h('span', { class: 'chip ai', style: { position: 'absolute', left: '0', top: '0', transformOrigin: '0 0', boxShadow: `0 10px 30px rgba(0,0,0,0.5), 0 0 18px rgba(${PAL.acc},0.25)` } }, c.textContent);
       this.flyLayer.append(f);
       this.flyers.push({ f, row: i, chip: c, src: r.src, k: j });
     }));
@@ -141,7 +141,7 @@ const ctx0 = addScene({
       const art = h('div', { style: { width: '100%', height: '156px', overflow: 'hidden', position: 'relative' } }, photo(c.art));
       const dots = c.checks.map(() => h('span', { style: { width: '22px', height: '22px', borderRadius: '6px', border: '1px solid var(--line2)', display: 'grid', placeItems: 'center', fontSize: '12px', fontWeight: 700, fontFamily: 'var(--font-ui)' } }, ''));
       const badge = h('span', { class: 'badge neutral', style: { position: 'absolute', right: '12px', top: '12px', backdropFilter: 'none', boxShadow: '0 0 0 1px rgba(255,255,255,0.08), 0 6px 18px rgba(0,0,0,0.45)' } }, '');
-      const scan = h('div', { style: { position: 'absolute', left: '0', top: '0', width: '2px', height: '100%', background: 'linear-gradient(180deg, transparent, var(--accent), transparent)', boxShadow: '0 0 18px rgba(130,52,254,0.6)' } });
+      const scan = h('div', { style: { position: 'absolute', left: '0', top: '0', width: '2px', height: '100%', background: 'linear-gradient(180deg, transparent, var(--accent), transparent)', boxShadow: `0 0 18px rgba(${PAL.acc},0.6)` } });
       const card = h('div', { class: 'panel', style: { left: '0', top: '0', width: '252px', transformOrigin: '50% 50%' } },
         art,
         h('div', { style: { padding: '14px 16px 16px' } },
@@ -182,15 +182,15 @@ const ctx0 = addScene({
     // ---------------- chat panel
     this.chat = h('div', { class: 'panel', style: { left: '1300px', top: '262px', width: '500px', height: '500px' } });
     this.chat.append(h('div', { class: 'panel-head' },
-      h('span', { style: { width: '10px', height: '10px', borderRadius: '50%', background: 'var(--accent)', boxShadow: '0 0 12px rgba(130,52,254,0.7)' } }),
+      h('span', { style: { width: '10px', height: '10px', borderRadius: '50%', background: 'var(--accent)', boxShadow: `0 0 12px rgba(${PAL.acc},0.7)` } }),
       h('span', { class: 'title' }, 'Scouting assistant'), h('span', { class: 'spacer' }), h('span', { class: 'kicker' }, 'Live')));
     const bubble = (who, text) => h('div', {
       style: who === 'me'
         ? { alignSelf: 'flex-end', maxWidth: '360px', background: 'var(--panel3)', border: '1px solid var(--line2)', borderRadius: '18px 18px 4px 18px', padding: '14px 18px', fontSize: '18px', lineHeight: 1.45 }
-        : { alignSelf: 'flex-start', maxWidth: '380px', background: 'rgba(130,52,254,0.07)', border: '1px solid rgba(130,52,254,0.35)', borderRadius: '18px 18px 18px 4px', padding: '14px 18px', fontSize: '18px', lineHeight: 1.45, color: '#efe8ff' },
+        : { alignSelf: 'flex-start', maxWidth: '380px', background: `rgba(${PAL.acc},0.07)`, border: `1px solid rgba(${PAL.acc},0.35)`, borderRadius: '18px 18px 18px 4px', padding: '14px 18px', fontSize: '18px', lineHeight: 1.45, color: '#efe8ff' },
     }, text);
     this.bUser = bubble('me', 'Love the second one. Anything similar with a rooftop?');
-    this.bTyping = h('div', { style: { alignSelf: 'flex-start', display: 'flex', gap: '6px', padding: '16px 18px', borderRadius: '18px', background: 'rgba(130,52,254,0.07)', border: '1px solid rgba(130,52,254,0.3)' } },
+    this.bTyping = h('div', { style: { alignSelf: 'flex-start', display: 'flex', gap: '6px', padding: '16px 18px', borderRadius: '18px', background: `rgba(${PAL.acc},0.07)`, border: `1px solid rgba(${PAL.acc},0.3)` } },
       h('i', { style: { width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent)', display: 'block' } }),
       h('i', { style: { width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent)', display: 'block' } }),
       h('i', { style: { width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent)', display: 'block' } }));
@@ -202,7 +202,7 @@ const ctx0 = addScene({
     R.append(this.chat);
 
     // outro dot (hands off to the story scene's recognition ring)
-    this.dot = h('div', { class: 'abs', style: { left: '0', top: '0', width: '28px', height: '28px', marginLeft: '-14px', marginTop: '-14px', borderRadius: '50%', background: 'var(--accent)', boxShadow: '0 0 30px rgba(130,52,254,0.8)' } });
+    this.dot = h('div', { class: 'abs', style: { left: '0', top: '0', width: '28px', height: '28px', marginLeft: '-14px', marginTop: '-14px', borderRadius: '50%', background: 'var(--accent)', boxShadow: `0 0 30px rgba(${PAL.acc},0.8)` } });
     R.append(this.dot);
   },
 
@@ -230,7 +230,7 @@ const ctx0 = addScene({
       const p = prog(t, cP + 0.05 + i * 0.16, 0.4, E.outCubic);
       const ph = this.phrases[k];
       ph.style.backgroundSize = `${(p * 100).toFixed(1)}% 100%`;
-      ph.style.boxShadow = `inset 0 -2px 0 rgba(130,52,254,${(0.9 * p).toFixed(3)})`;
+      ph.style.boxShadow = `inset 0 -2px 0 rgba(${PAL.acc},${(0.9 * p).toFixed(3)})`;
       ph.style.color = p > 0.5 ? '#eeffc6' : '';
     });
 
@@ -278,12 +278,12 @@ const ctx0 = addScene({
         if (!isLit && d > 0) { g.fillStyle = `rgba(7,8,10,${(0.72 * d).toFixed(3)})`; g.fillRect(x - 1, y - 1, cat.TW + 2, cat.TH + 2); }
       }
       const grad = g.createLinearGradient(bx - 220, 0, bx + 30, 0);
-      grad.addColorStop(0, 'rgba(130,52,254,0)');
-      grad.addColorStop(0.85, 'rgba(130,52,254,0.22)');
-      grad.addColorStop(1, 'rgba(130,52,254,0)');
+      grad.addColorStop(0, `rgba(${PAL.acc},0)`);
+      grad.addColorStop(0.85, `rgba(${PAL.acc},0.22)`);
+      grad.addColorStop(1, `rgba(${PAL.acc},0)`);
       g.fillStyle = grad;
       g.fillRect(bx - 220, 0, 250, cat.H);
-      g.fillStyle = 'rgba(130,52,254,0.9)';
+      g.fillStyle = `rgba(${PAL.acc},0.9)`;
       g.fillRect(bx, 0, 2, cat.H);
       for (const l of this.lit) {
         const x = l.i * (cat.TW + cat.GAP), y = l.j * (cat.TH + cat.GAP);
@@ -292,7 +292,7 @@ const ctx0 = addScene({
         g.save();
         g.strokeStyle = rgba(C.accent, d);
         g.lineWidth = 3;
-        g.shadowColor = 'rgba(130,52,254,0.7)';
+        g.shadowColor = `rgba(${PAL.acc},0.7)`;
         g.shadowBlur = 14 * d;
         rrect(g, x - 2, y - 2, cat.TW + 4, cat.TH + 4, 7);
         g.stroke();
@@ -330,7 +330,7 @@ const ctx0 = addScene({
       const [lbl, cls] = tiers[cd.c.tier];
       cd.badge.textContent = lbl;
       cd.badge.className = `badge ${cls}`;
-      cd.badge.style.background = cls === 'ok' ? '#1e1538' : cls === 'bad' ? '#2a1411' : '#1c1f24';
+      cd.badge.style.background = cls === 'ok' ? `${C.okBg}` : cls === 'bad' ? `${C.badBg}` : '#1c1f24';
       put(cd.badge, { s: bp > 0 ? lerp(0.6, 1, Math.min(bp, 1.2)) : 0.6, o: clamp(bp * 2) });
       // discarded cards dim
       const dimP = prog(t, evalAt + 0.6, 0.5);

@@ -1,13 +1,12 @@
 // Hook — four inputs flash by (brief · toy · camera · evidence), converge into one line,
 // "AI as a feature" decodes into "AI as the product", and the Eagerworks AI Studio lockup builds itself.
-import { addScene, h, put, prog, E, clamp, lerp, env, makeCanvas, rgba, C, rrect, W, H, FPS } from '../engine.js';
+import { addScene, h, put, prog, E, clamp, lerp, env, makeCanvas, rgba, C, rrect, W, H, FPS, PAL } from '../engine.js';
 import { words, revealWords, decode, tag, reticle, box, brackets, placeCaret } from '../lib/ui.js';
 import { piece } from '../lib/story-art.js';
 import { drawEgo } from '../lib/ego.js';
 import { drawPose } from '../lib/hand.js';
 import { plantSprite, soilTile } from '../lib/field.js';
-import { makeLockup } from '../lib/logo.js';
-import { VIEWBOX, ICON_VIEWBOX } from '../lib/logo-data.js';
+import { makeLockup, VIEWBOX, ICON_VIEWBOX, LOCK_SIZE } from '../lib/brand-logo.js';
 
 const BRIEF = 'A sunlit loft with exposed brick, close to the river.';
 const CHIPS = ['Loft', 'Sunlit', 'Exposed brick', 'Near the river'];
@@ -47,16 +46,16 @@ addScene({
     // V4 — stack of evidence
     this.v4 = h('div', { class: 'abs', style: { left: '0', top: '0', width: '1920px', height: '1080px', transformOrigin: '960px 540px' } });
     this.pages = [0, 1, 2].map((i) => {
-      const lines = Array.from({ length: 12 }, (_, k) => h('div', { style: { height: '10px', borderRadius: '3px', marginBottom: '14px', width: `${[90, 76, 84, 62, 88, 70, 80, 58, 86, 74, 66, 50][k]}%`, background: '#dcdee2', position: 'relative', overflow: 'hidden' } }, h('i', { style: { position: 'absolute', inset: '0', width: '0%', background: k === 7 ? 'rgba(255,107,87,0.75)' : 'rgba(102,134,246,0.85)', display: 'block' } })));
+      const lines = Array.from({ length: 12 }, (_, k) => h('div', { style: { height: '10px', borderRadius: '3px', marginBottom: '14px', width: `${[90, 76, 84, 62, 88, 70, 80, 58, 86, 74, 66, 50][k]}%`, background: '#dcdee2', position: 'relative', overflow: 'hidden' } }, h('i', { style: { position: 'absolute', inset: '0', width: '0%', background: k === 7 ? `rgba(${PAL.coral},0.75)` : `rgba(${PAL.acc2},0.85)`, display: 'block' } })));
       const pg = h('div', { class: 'abs', style: { left: '810px', top: '330px', width: '300px', height: '400px', borderRadius: '10px', background: '#f4f4f1', padding: '34px 30px', boxShadow: '0 30px 70px rgba(0,0,0,0.6)', transformOrigin: '50% 90%' } },
         h('div', { style: { height: '16px', width: '60%', background: '#1b1d21', borderRadius: '4px', marginBottom: '26px' } }), ...lines);
       this.v4.append(pg);
       return { pg, lines };
     });
-    this.scan = h('div', { class: 'abs', style: { left: '0', right: '0', top: '0', height: '90px', background: 'linear-gradient(180deg, rgba(130,52,254,0), rgba(102,134,246,0.35) 80%, rgba(102,134,246,0.95))', mixBlendMode: 'multiply' } });
+    this.scan = h('div', { class: 'abs', style: { left: '0', right: '0', top: '0', height: '90px', background: `linear-gradient(180deg, rgba(${PAL.acc},0), rgba(${PAL.acc2},0.35) 80%, rgba(${PAL.acc2},0.95))`, mixBlendMode: 'multiply' } });
     this.pages[1].pg.append(this.scan);
-    this.gapChip = h('span', { class: 'badge bad', style: { position: 'absolute', left: '1130px', top: '560px', fontSize: '14px', height: '32px', padding: '0 14px', background: '#2a1411' } }, 'Gap found');
-    this.okChip = h('span', { class: 'badge ok', style: { position: 'absolute', left: '1130px', top: '470px', fontSize: '14px', height: '32px', padding: '0 14px', background: '#1e1538' } }, '✓ SOC 2 mapped');
+    this.gapChip = h('span', { class: 'badge bad', style: { position: 'absolute', left: '1130px', top: '560px', fontSize: '14px', height: '32px', padding: '0 14px', background: `${C.badBg}` } }, 'Gap found');
+    this.okChip = h('span', { class: 'badge ok', style: { position: 'absolute', left: '1130px', top: '470px', fontSize: '14px', height: '32px', padding: '0 14px', background: `${C.okBg}` } }, '✓ SOC 2 mapped');
     this.v4.append(this.gapChip, this.okChip);
     R.append(this.v4);
 
@@ -71,7 +70,7 @@ addScene({
     R.append(this.typeWrap);
 
     // logo lockup + outcomes
-    this.lock = makeLockup({ height: 88 });
+    this.lock = makeLockup({ height: 88 * LOCK_SIZE });
     this.lockWrap = h('div', { class: 'abs', style: { left: '0', top: '0', transformOrigin: '50% 50%' } }, this.lock.el);
     this.lock.el.style.position = 'relative';
     R.append(this.lockWrap);
@@ -83,7 +82,7 @@ addScene({
     });
     R.append(this.outcomes);
     // handoff line into the search scene's brief card
-    this.handoff = h('div', { class: 'abs', style: { left: '460px', top: '483px', width: '1000px', height: '2px', background: 'var(--accent)', transformOrigin: '50% 50%', boxShadow: '0 0 16px rgba(130,52,254,0.6)' } });
+    this.handoff = h('div', { class: 'abs', style: { left: '460px', top: '483px', width: '1000px', height: '2px', background: 'var(--accent)', transformOrigin: '50% 50%', boxShadow: `0 0 16px rgba(${PAL.acc},0.6)` } });
     R.append(this.handoff);
   },
 
@@ -112,7 +111,7 @@ addScene({
     const lineOut = prog(t, 1.0, 0.25);
     if (lineP > 0 && lineOut < 1) {
       g.save(); g.globalAlpha = 1 - lineOut;
-      g.fillStyle = C.accent; g.shadowColor = 'rgba(130,52,254,0.7)'; g.shadowBlur = 16;
+      g.fillStyle = C.accent; g.shadowColor = `rgba(${PAL.acc},0.7)`; g.shadowBlur = 16;
       const w = 900 * lineP * (1 - lineOut);
       g.fillRect(960 - w / 2, 499, w, 2);
       g.restore();
@@ -127,7 +126,7 @@ addScene({
     this.chips.forEach((c, i) => { const q = prog(t, 1.95 + i * 0.09, 0.35, E.outBack); put(c, { y: (1 - Math.min(q, 1)) * 18, o: clamp(q * 2) }); });
     // highlight words that became chips
     ['sunlit', 'loft', 'exposed', 'brick,', 'river.'].forEach(() => {});
-    this.briefSpans.forEach((s) => { const w2 = s.textContent.toLowerCase(); if (['sunlit', 'loft', 'exposed', 'brick,', 'river.'].includes(w2)) s.style.color = t > 1.9 ? '#e9ffb3' : ''; });
+    this.briefSpans.forEach((s) => { const w2 = s.textContent.toLowerCase(); if (['sunlit', 'loft', 'exposed', 'brick,', 'river.'].includes(w2)) s.style.color = t > 1.9 ? `${C.lime}` : ''; });
 
     // ---- V2 toy
     const v2a = env(t, c2 - 0.12, c3 - 0.1, 0.12, 0.15);
@@ -202,7 +201,7 @@ addScene({
     if (collapse > 0 && t < cNot + 0.5) {
       const lp = prog(t, conv0 + 0.55, 0.4, E.inOutCubic);
       g.save();
-      g.fillStyle = C.accent; g.shadowColor = 'rgba(130,52,254,0.8)'; g.shadowBlur = 20;
+      g.fillStyle = C.accent; g.shadowColor = `rgba(${PAL.acc},0.8)`; g.shadowBlur = 20;
       const w = lerp(1500, 900, lp) * (1 - prog(t, cNot - 0.1, 0.35));
       g.globalAlpha = collapse;
       g.fillRect(960 - w / 2, 529, w, 3);
@@ -225,7 +224,7 @@ addScene({
     const sink = prog(t, cProd + 0.25, 0.5, E.inOutCubic);
     this.under.style.transform = `scaleX(${draw.toFixed(3)})`;
     this.under.style.background = sink > 0.5 ? 'var(--accent)' : 'var(--text2)';
-    this.under.style.boxShadow = sink > 0.5 ? `0 0 ${(18 * sink).toFixed(1)}px rgba(130,52,254,0.6)` : 'none';
+    this.under.style.boxShadow = sink > 0.5 ? `0 0 ${(18 * sink).toFixed(1)}px rgba(${PAL.acc},0.6)` : 'none';
 
     // ---- logo lockup
     if (!this.lockW) { const r = this.lock.el.getBoundingClientRect(); if (r.width > 10) this.lockW = r.width; }

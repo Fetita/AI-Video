@@ -1,6 +1,6 @@
 // 01 — Computer vision · Custom models · Robotics
 // API call → full vision stack → hands → faces → camera & wrist tracking → dataset → train/benchmark → robot.
-import { addScene, h, put, prog, E, clamp, lerp, env, makeCanvas, rng, rgba, C, keys, rrect, makeNoise, TIMELINE } from '../engine.js';
+import { addScene, h, put, prog, E, clamp, lerp, env, makeCanvas, rng, rgba, C, keys, rrect, makeNoise, TIMELINE, PAL } from '../engine.js';
 import { makeHud, box, tag, recHud, brackets, FONT_UI } from '../lib/ui.js';
 import { handPoints, basis, drawHand, drawPose, bbox, FINGER_COLORS } from '../lib/hand.js';
 import { v3, add, sub, mul, norm, camera, lerp3, cross } from '../lib/three.js';
@@ -110,7 +110,7 @@ function drawTracking(g, t, p, a) {
   const rt = norm(cross(fw, v3(0, 1, 0))), up = cross(rt, fw);
   const corner = (sx, sy) => P(add(add(add(c0, mul(fw, 0.55)), mul(rt, sx * 0.36)), mul(up, sy * 0.22)));
   const cc = P(c0), k1 = corner(-1, 1), k2 = corner(1, 1), k3 = corner(1, -1), k4 = corner(-1, -1);
-  g.fillStyle = 'rgba(130,52,254,0.12)'; g.strokeStyle = C.accent; g.lineWidth = 2;
+  g.fillStyle = `rgba(${PAL.acc},0.12)`; g.strokeStyle = C.accent; g.lineWidth = 2;
   g.beginPath(); g.moveTo(k1.x, k1.y); g.lineTo(k2.x, k2.y); g.lineTo(k3.x, k3.y); g.lineTo(k4.x, k4.y); g.closePath(); g.fill(); g.stroke();
   [k1, k2, k3, k4].forEach((k) => { g.beginPath(); g.moveTo(cc.x, cc.y); g.lineTo(k.x, k.y); g.stroke(); });
   // wrists: positions relative to the head camera, with 3 s trails
@@ -122,7 +122,7 @@ function drawTracking(g, t, p, a) {
     g.stroke();
     const q = P(wrist(side, U));
     g.fillStyle = col; g.beginPath(); g.arc(q.x, q.y, 7, 0, Math.PI * 2); g.fill();
-    g.strokeStyle = '#0b0d10'; g.lineWidth = 2; g.stroke();
+    g.strokeStyle = `${C.bg2}`; g.lineWidth = 2; g.stroke();
   });
   // axis gizmo at camera
   [[rt, C.coral], [up, C.accent], [fw, C.sky]].forEach(([d, col]) => { const e = P(add(c0, mul(d, 0.35))); g.strokeStyle = col; g.lineWidth = 2.5; g.beginPath(); g.moveTo(cc.x, cc.y); g.lineTo(e.x, e.y); g.stroke(); });
@@ -185,7 +185,7 @@ function drawRobot(g, t, a, U, hand) {
   const partPos = U <= 0.02 ? demoPath(0) : U >= 0.98 ? demoPath(1) : demoPath(U);
   { const c = add(partPos, v3(0, -0.12, 0)); const s = 0.12; const pts = []; for (const dx of [-1, 1]) for (const dy of [0, 2]) for (const dz of [-1, 1]) pts.push(P(add(c, v3(dx * s, dy * s, dz * s))));
     const face = (idx, fill) => { g.fillStyle = fill; g.beginPath(); idx.forEach((i, k) => (k ? g.lineTo(pts[i].x, pts[i].y) : g.moveTo(pts[i].x, pts[i].y))); g.closePath(); g.fill(); };
-    face([2, 3, 7, 6], '#ffc45c'); face([0, 1, 3, 2], '#d99a2b'); face([1, 3, 7, 5], '#b87d1c'); }
+    face([2, 3, 7, 6], `${C.amber}`); face([0, 1, 3, 2], '#d99a2b'); face([1, 3, 7, 5], '#b87d1c'); }
   // arm
   const T = demoPath(Math.max(0.0001, Math.min(0.9999, U)));
   const k = armIK(T);
@@ -224,7 +224,7 @@ function drawCharts(g, t, a, p) {
   const panels = [{ x: 170, y: 190, w: 760, h: 620, title: 'TRAINING', xl: 'EPOCHS', yl: 'LOSS' }, { x: 990, y: 190, w: 760, h: 620, title: 'BENCHMARK', xl: 'RECALL', yl: 'PRECISION' }];
   const models = [{ name: 'Baseline', col: 'rgba(200,205,212,0.75)', floor: 0.42, q: 1.6 }, { name: 'Model B', col: C.sky, floor: 0.3, q: 2.6 }, { name: 'Custom model', col: C.accent, floor: 0.16, q: 4.4 }];
   panels.forEach((pn, pi) => {
-    g.fillStyle = '#0f1115'; g.strokeStyle = 'rgba(255,255,255,0.13)'; g.lineWidth = 1;
+    g.fillStyle = `${C.panel}`; g.strokeStyle = 'rgba(255,255,255,0.13)'; g.lineWidth = 1;
     rrect(g, pn.x, pn.y, pn.w, pn.h, 18); g.fill(); g.stroke();
     g.font = `700 13px ${FONT_UI}`; g.letterSpacing = '0.06em'; g.fillStyle = 'rgba(243,243,239,0.85)'; g.textBaseline = 'middle'; g.fillText(pn.title, pn.x + 28, pn.y + 34);
     const ax = { x: pn.x + 70, y: pn.y + 80, w: pn.w - 110, h: pn.h - 150 };
@@ -238,7 +238,7 @@ function drawCharts(g, t, a, p) {
       const q = clamp(p * 1.25 - mi * 0.12);
       if (q <= 0) return;
       g.strokeStyle = m.col; g.lineWidth = mi === 2 ? 3.5 : 2.2;
-      if (mi === 2) { g.shadowColor = 'rgba(130,52,254,0.5)'; g.shadowBlur = 12; }
+      if (mi === 2) { g.shadowColor = `rgba(${PAL.acc},0.5)`; g.shadowBlur = 12; }
       g.beginPath();
       const N = 140;
       for (let k = 0; k <= N * q; k++) {
@@ -339,13 +339,13 @@ addScene({
     this.api.append(this.apiPill);
     R.append(this.api);
     // incoming hand-off: the intro's violet line (same position) contracts and opens the API call card
-    this.handIn = h('div', { class: 'abs', style: { left: '460px', top: '483px', width: '1000px', height: '2px', background: 'var(--accent)', transformOrigin: '50% 50%', boxShadow: '0 0 16px rgba(130,52,254,0.6)' } });
+    this.handIn = h('div', { class: 'abs', style: { left: '460px', top: '483px', width: '1000px', height: '2px', background: 'var(--accent)', transformOrigin: '50% 50%', boxShadow: `0 0 16px rgba(${PAL.acc},0.6)` } });
     R.insertBefore(this.handIn, this.api); // behind the card, so the card covers it as it opens
     // outgoing hand-off, only when the search scene follows directly (the LinkedIn cut): a violet line draws
     // where the search brief card opens, as the packing-line scene does in the full film
     const order = TIMELINE.scenes.map((s) => s.id);
     if (order[order.indexOf('vision') + 1] === 'search') {
-      this.handOut = h('div', { class: 'abs', style: { left: '460px', top: '483px', width: '1000px', height: '2px', background: 'var(--accent)', transformOrigin: '50% 50%', boxShadow: '0 0 16px rgba(130,52,254,0.6)' } });
+      this.handOut = h('div', { class: 'abs', style: { left: '460px', top: '483px', width: '1000px', height: '2px', background: 'var(--accent)', transformOrigin: '50% 50%', boxShadow: `0 0 16px rgba(${PAL.acc},0.6)` } });
       R.append(this.handOut);
     }
     this.stack = STACK.map(([k, v], i) => {
@@ -467,13 +467,13 @@ addScene({
       }
       g.restore();
       const vg = g.createLinearGradient(0, 0, 1920, 0);
-      vg.addColorStop(0, 'rgba(7,8,10,0.2)'); vg.addColorStop(0.62, 'rgba(7,8,10,0.35)'); vg.addColorStop(0.72, 'rgba(7,8,10,0.92)'); vg.addColorStop(1, 'rgba(7,8,10,0.96)');
+      vg.addColorStop(0, `rgba(${PAL.bg},0.2)`); vg.addColorStop(0.62, `rgba(${PAL.bg},0.35)`); vg.addColorStop(0.72, `rgba(${PAL.bg},0.92)`); vg.addColorStop(1, `rgba(${PAL.bg},0.96)`);
       g.save(); g.globalAlpha = dsA; g.fillStyle = vg; g.fillRect(0, 0, 1920, 1080); g.restore();
     }
     put(this.dsPanel, { x: (1 - prog(t, cDs + 0.05, 0.5, E.outCubic)) * 40, o: dsA * prog(t, cDs + 0.05, 0.5) });
 
     // ---------- F: training + benchmark
-    if (chA > 0.001) { g.save(); g.fillStyle = `rgba(7,8,10,${(0.85 * chA).toFixed(3)})`; g.fillRect(0, 0, 1920, 1080); g.restore(); }
+    if (chA > 0.001) { g.save(); g.fillStyle = `rgba(${PAL.bg},${(0.85 * chA).toFixed(3)})`; g.fillRect(0, 0, 1920, 1080); g.restore(); }
     drawCharts(g, t, chA, prog(t, cTr, cRb - cTr - 0.2, E.inOutSine));
 
     // ---------- G: robot replays the human demonstration

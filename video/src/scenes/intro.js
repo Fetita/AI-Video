@@ -1,10 +1,10 @@
 // Introduction — who Eagerworks is, then a "client work" index of the five projects that follow.
 // The hook's hand-off line becomes the divider under the headline, then the underline of row 01,
 // and finally hands off (same position) to the vision scene's API call card.
-import { addScene, h, put, prog, E, clamp, lerp, env } from '../engine.js';
+import { addScene, h, put, prog, E, clamp, lerp, env, C, PAL, BRAND } from '../engine.js';
 import { words, revealWords } from '../lib/ui.js';
 
-const DISCIPLINES = ['Product strategy', 'UX / UI design', 'Software engineering', 'Cloud & data'];
+const DISCIPLINES = BRAND.copy.disciplines;
 const PROJECTS = [
   ['Vision data for robotics', 'Computer vision'],
   ['Field & packing-line analytics', 'Computer vision'],
@@ -24,14 +24,18 @@ addScene({
     // ---- who we are
     this.kicker = h('div', { class: 'abs kicker', style: { left: `${LINE.x}px`, top: '300px', color: 'var(--accent-text)', fontFamily: 'var(--font-ui)', fontWeight: 600, letterSpacing: '0.24em' } }, 'Who we are');
     this.head = h('div', { class: 'abs display', style: { left: `${LINE.x}px`, top: '372px', width: '1100px', fontSize: '80px', fontWeight: 600, letterSpacing: '-0.02em', lineHeight: '1.08', whiteSpace: 'nowrap', overflow: 'hidden', paddingBottom: '6px' } });
-    this.headA = h('div', {}, 'Designers & engineers.');
+    this.headA = h('div', {}, BRAND.copy.introHead);
     this.headB = h('div', { style: { position: 'absolute', left: '0', top: '0' } }, 'Products that run on ', h('span', { style: { color: 'var(--accent-text)' } }, 'AI'), '.');
     this.head.append(this.headA, this.headB);
     this.sub = h('div', { class: 'abs', style: { left: `${LINE.x}px`, top: '516px', width: '1000px', fontSize: '34px', fontWeight: 430, letterSpacing: '-0.01em', color: 'var(--text2)' } });
-    this.subSpans = words(this.sub, 'We build digital products, from the first idea to launch.');
+    this.subSpans = words(this.sub, BRAND.copy.introSub);
     this.pills = h('div', { class: 'abs', style: { left: `${LINE.x}px`, top: '604px', width: '1100px', display: 'flex', gap: '14px', flexWrap: 'nowrap' } });
-    this.pillEls = DISCIPLINES.map((d) => { const el = h('span', { class: 'chip', style: { height: '46px', fontSize: '19px', padding: '0 20px' } }, d); this.pills.append(el); return el; });
-    this.aiPill = h('span', { class: 'chip ai', style: { height: '46px', fontSize: '19px', padding: '0 20px', boxShadow: '0 0 24px rgba(130,52,254,0.25)' } }, 'Applied AI');
+    // a brand can join the pills with a separator (FS Studio: "Innovative tech + Solid code + …")
+    const sep = () => h('span', { style: { alignSelf: 'center', fontSize: '26px', fontWeight: 600, color: 'var(--accent-text)', margin: '0 -4px' } }, BRAND.copy.disciplineSep);
+    this.seps = [];
+    this.pillEls = DISCIPLINES.map((d, i) => { if (i && BRAND.copy.disciplineSep) { const s = sep(); this.seps.push(s); this.pills.append(s); } const el = h('span', { class: 'chip', style: { height: '46px', fontSize: '19px', padding: '0 20px' } }, d); this.pills.append(el); return el; });
+    if (BRAND.copy.disciplineSep) { this.aiSep = sep(); this.seps.push(this.aiSep); this.pills.append(this.aiSep); }
+    this.aiPill = h('span', { class: 'chip ai', style: { height: '46px', fontSize: '19px', padding: '0 20px', boxShadow: `0 0 24px rgba(${PAL.acc},0.25)` } }, 'Applied AI');
     this.pills.append(this.aiPill);
     R.append(this.kicker, this.head, this.sub, this.pills);
 
@@ -52,7 +56,7 @@ addScene({
     });
 
     // the shared line (divider → row 01 underline → hand-off)
-    this.line = h('div', { class: 'abs', style: { left: `${LINE.x}px`, top: `${LINE.y}px`, width: `${LINE.w}px`, height: '2px', background: 'var(--accent)', transformOrigin: '50% 50%', boxShadow: '0 0 16px rgba(130,52,254,0.6)' } });
+    this.line = h('div', { class: 'abs', style: { left: `${LINE.x}px`, top: `${LINE.y}px`, width: `${LINE.w}px`, height: '2px', background: 'var(--accent)', transformOrigin: '50% 50%', boxShadow: `0 0 16px rgba(${PAL.acc},0.6)` } });
     R.append(this.line);
   },
 
@@ -79,9 +83,11 @@ addScene({
       const q = prog(t, c1b + 0.2 + i * 0.32, 0.45, E.outBack);
       const dim = prog(t, c2end - 0.7, 0.4);
       put(el, { y: (1 - Math.min(q, 1)) * 16, o: clamp(q * 2) * lerp(1, 0.55, dim) });
+      if (i && this.seps[i - 1]) put(this.seps[i - 1], { o: clamp(q * 2) * lerp(1, 0.55, dim) });
     });
     const qa = prog(t, c2end - 0.75, 0.5, E.outBack);
     put(this.aiPill, { y: (1 - Math.min(qa, 1)) * 16, s: lerp(0.85, 1, Math.min(qa, 1)), o: clamp(qa * 2) });
+    if (this.aiSep) put(this.aiSep, { o: clamp(qa * 2) });
     put(this.pills, { y: -out1 * 40, o: 1 - out1 });
 
     // ---- client work index
@@ -103,6 +109,6 @@ addScene({
     const quiet = env(t, 0.6, D - 1.0, 0.6, 0.6);
     // past the cut the next scene owns the line (vision.js draws it and opens the API card from it)
     this.line.style.opacity = t >= D ? '0' : lerp(1, 0.45, quiet).toFixed(3);
-    this.line.style.boxShadow = `0 0 ${lerp(16, 0, quiet).toFixed(1)}px rgba(130,52,254,0.6)`;
+    this.line.style.boxShadow = `0 0 ${lerp(16, 0, quiet).toFixed(1)}px rgba(${PAL.acc},0.6)`;
   },
 });

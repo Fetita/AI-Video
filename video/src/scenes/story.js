@@ -1,6 +1,6 @@
 // 04 — Generative AI · Physical to digital
 // Pieces on a board → recognition → reasoning → an illustrated story → end-to-end system.
-import { addScene, h, svg, put, prog, E, clamp, lerp, env, makeCanvas, rng, rgba, C, keys, makeNoise, rrect } from '../engine.js';
+import { addScene, h, svg, put, prog, E, clamp, lerp, env, makeCanvas, rng, rgba, C, keys, makeNoise, rrect, PAL } from '../engine.js';
 import { makeHud, words, revealWords, tag, reticle, brackets, placeCaret } from '../lib/ui.js';
 import { piece, storyIllustration, PIECE_KINDS } from '../lib/story-art.js';
 
@@ -112,7 +112,7 @@ addScene({
     this.titleSpans = words(this.title, STORY_TITLE);
     this.body = h('div', { style: { position: 'absolute', left: '84px', top: '260px', right: '76px', fontFamily: 'var(--font-story)', fontSize: '29px', lineHeight: '1.55', fontWeight: 400, color: '#3b3440', fontVariationSettings: '"SOFT" 50' } });
     this.bodySpans = words(this.body, STORY_TEXT);
-    this.caret = h('span', { style: { position: 'absolute', display: 'block', width: '3px', height: '32px', background: '#8234fe', borderRadius: '2px' } });
+    this.caret = h('span', { style: { position: 'absolute', display: 'block', width: '3px', height: '32px', background: `${C.accent}`, borderRadius: '2px' } });
     this.body.append(this.caret);
     const pno = h('div', { style: { position: 'absolute', bottom: '40px', right: '64px', fontFamily: 'var(--font-story)', fontSize: '20px', color: '#9a8f80' } }, '1');
     const orn = h('div', { style: { position: 'absolute', left: '84px', top: '222px', width: '60px', height: '2px', background: '#c9a86a' } });
@@ -146,7 +146,7 @@ addScene({
     this.nodes[1].vis.append(phone);
     const eng = h('div', { style: { position: 'absolute', left: '34px', top: '30px', right: '34px', display: 'flex', flexDirection: 'column', gap: '9px' } });
     this.engRows = ['Piece recognition', 'Story planning', 'Text generation', 'Illustration', 'Content guardrails'].map((k) => {
-      const r = h('div', { style: { height: '20px', borderRadius: '6px', border: '1px solid rgba(130,52,254,0.3)', background: 'rgba(130,52,254,0.06)', fontFamily: 'var(--font-ui)', fontWeight: 600, fontSize: '10.5px', letterSpacing: '0.1em', textTransform: 'uppercase', color: '#ddd0ff', display: 'flex', alignItems: 'center', padding: '0 10px' } }, k);
+      const r = h('div', { style: { height: '20px', borderRadius: '6px', border: `1px solid rgba(${PAL.acc},0.3)`, background: `rgba(${PAL.acc},0.06)`, fontFamily: 'var(--font-ui)', fontWeight: 600, fontSize: '10.5px', letterSpacing: '0.1em', textTransform: 'uppercase', color: '#ddd0ff', display: 'flex', alignItems: 'center', padding: '0 10px' } }, k);
       eng.append(r); return r;
     });
     this.nodes[2].vis.append(eng);
@@ -160,7 +160,7 @@ addScene({
     this.sys.append(this.sysKicker);
     this.sysLinks = svg('svg', { width: 1920, height: 1080, style: 'position:absolute;left:0;top:0' });
     this.sys.prepend(this.sysLinks);
-    this.linkEls = [0, 1, 2].map(() => { const p = svg('path', { stroke: 'rgba(130,52,254,0.5)', 'stroke-width': 1.5, fill: 'none', 'stroke-dasharray': '4 6' }); this.sysLinks.append(p); return p; });
+    this.linkEls = [0, 1, 2].map(() => { const p = svg('path', { stroke: `rgba(${PAL.acc},0.5)`, 'stroke-width': 1.5, fill: 'none', 'stroke-dasharray': '4 6' }); this.sysLinks.append(p); return p; });
     this.pulseEls = [0, 1, 2].map(() => { const c = svg('circle', { r: 4, fill: C.accent }); this.sysLinks.append(c); return c; });
     R.append(this.sys);
   },

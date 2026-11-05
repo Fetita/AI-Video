@@ -1,6 +1,7 @@
 // Deterministic motion engine: every frame is a pure function of time t.
 // The renderer calls window.__seek(t); nothing animates on its own.
 // ?cut=linkedin loads timeline-linkedin.js (an alternate edit built by CUT=linkedin in audio/).
+import { BRANDS } from './brand.js';
 const CUT = new URLSearchParams(location.search).get('cut');
 const TL = (await import(CUT ? `./timeline-${CUT}.js` : './timeline.js')).default;
 
@@ -193,10 +194,13 @@ export function rgba(hex, a = 1) {
   const n = parseInt(hex.slice(1), 16);
   return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`;
 }
-export const C = {
-  bg: '#07080a', panel: '#0f1115', text: '#f3f3ef', text2: '#a8acb3', text3: '#6c7179',
-  accent: '#8234fe', accent2: '#6686f6', accentText: '#b89cff', coral: '#ff6b57', amber: '#ffc45c', sky: '#3ed6b8', violet: '#ff8fc8', paper: '#f5efe3',
-};
+// The cut's brand (vo_script "brand" → timeline) picks the palette; see brand.js.
+export const BRAND = BRANDS[TL.brand || 'eagerworks'];
+export const BRAND_ID = BRAND.id;
+/** Palette (hex). Scenes use these instead of literals so a brand can re-colour the film. */
+export const C = BRAND.C;
+/** The same palette as "r,g,b" triplets, for rgba(${PAL.acc},a) in style strings. */
+export const PAL = BRAND.P;
 
 // ---------------------------------------------------------------- scene runtime
 const scenes = [];

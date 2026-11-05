@@ -10,6 +10,9 @@ AI capabilities into real products, workflows and measurable outcomes.
 [`linkedin-genai`](out/eagerworks-ai-studio-linkedin-genai.mp4) (1:44, generative and document AI)
 **Creative treatment** (narrative, storyboard, timings, VO script, on-screen text, visual & sound direction, reference mapping):
 [`docs/creative-treatment.md`](docs/creative-treatment.md)
+**FS Studio co-branded versions** (FS Studio brand, Eagerworks as a small partner credit):
+[`fsstudio-ai`](out/fsstudio-ai.mp4) (3:08) · [`fsstudio-ai-linkedin`](out/fsstudio-ai-linkedin.mp4) (1:30, captions).
+Brand analysis, copy changes and build steps: [`docs/fsstudio-treatment.md`](docs/fsstudio-treatment.md)
 
 Everything in the film is generated from code in this repository. Visuals are deterministic
 HTML/Canvas/SVG scenes rendered frame by frame in headless Chromium. The voiceover comes from a
@@ -91,3 +94,11 @@ cd .. && scripts/finalize.sh video/build/frames-linkedin.mkv audio/build/mix-lin
 
 Review stills for a cut with `node render.mjs --stills 12.5 --query cut=linkedin`. The same steps build
 `linkedin-cv` and `linkedin-genai` (swap the cut name).
+
+### Brands
+
+A cut can also set `"brand"` in its script (e.g. `"brand": "fsstudio"`). The film then takes its palette, fonts, logo,
+on-screen copy and URL from `video/src/brand.js` and `video/src/brands/<brand>.css` instead of the Eagerworks defaults.
+`fsstudio` and `fsstudio-linkedin` are built this way; see [`docs/fsstudio-treatment.md`](docs/fsstudio-treatment.md).
+Run `CUT=fsstudio scripts/make_recap.sh` before rendering a branded cut, so its finale wall shows its own frames.
+If the installed Chromium doesn't match the pinned Playwright, point the renderer at it with `CHROMIUM_PATH`.

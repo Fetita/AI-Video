@@ -2,7 +2,7 @@
 // Keypoint order follows the common hand-landmark convention:
 // 0 wrist · 1-4 thumb · 5-8 index · 9-12 middle · 13-16 ring · 17-20 pinky.
 import { v3, add, mul, norm, cross, rotAxis } from './three.js';
-import { rgba, C } from '../engine.js';
+import { rgba, C, PAL } from '../engine.js';
 
 const FINGERS = [
   // base (MCP) in hand-local coords (palm width ≈ 1; +y toward fingers, +z = back of hand), splay angle, segment lengths
@@ -157,7 +157,7 @@ export function drawPose(g, P, { alpha = 1, r = 5, lw = 2.5, p = 1 } = {}) {
   });
   P.forEach((pt, i) => {
     if (i / 21 > p * 1.05) return;
-    g.fillStyle = '#0b0d10';
+    g.fillStyle = `${C.bg2}`;
     g.beginPath(); g.arc(pt.x, pt.y, r + 1.6, 0, Math.PI * 2); g.fill();
     g.fillStyle = i === 0 ? '#ffffff' : FINGER_COLORS[i <= 4 ? 0 : Math.floor((i - 5) / 4) + 1];
     g.beginPath(); g.arc(pt.x, pt.y, r, 0, Math.PI * 2); g.fill();

@@ -1,5 +1,5 @@
 // Shared film UI: chapter label, pipeline stepper, text effects, detection overlays.
-import { h, put, prog, E, clamp, lerp, env, rgba, C, hash, rrect, TIMELINE } from '../engine.js';
+import { h, put, prog, E, clamp, lerp, env, rgba, C, hash, rrect, TIMELINE, PAL, BRAND } from '../engine.js';
 
 // ------------------------------------------------------------------ chapter + stepper HUD
 /**
@@ -41,7 +41,7 @@ export function makeHud(ctx, { num, title, badge = null, steps = [], stepY = 58 
       p.label.style.color = on > 0 ? `rgba(${lerp(108, 243, active)|0},${lerp(113, 243, active)|0},${lerp(121, 239, active)|0},1)` : '';
       p.dot.style.background = on > 0 ? rgba(C.accent, on) : 'transparent';
       p.dot.style.borderColor = on > 0 ? C.accent : '';
-      p.dot.style.boxShadow = active > 0.5 && !done ? `0 0 0 ${(4 * active).toFixed(1)}px rgba(130,52,254,${(0.18 * active).toFixed(3)})` : 'none';
+      p.dot.style.boxShadow = active > 0.5 && !done ? `0 0 0 ${(4 * active).toFixed(1)}px rgba(${PAL.acc},${(0.18 * active).toFixed(3)})` : 'none';
       if (p.link) p.link.firstChild.style.width = `${(E.inOutCubic(on) * 100).toFixed(1)}%`;
     });
   };
@@ -107,7 +107,7 @@ export function placeCaret(caret, spans, { dx = 5, dy = 0 } = {}) {
 export const typed = (text, p) => text.slice(0, Math.round(clamp(p) * text.length));
 
 // ------------------------------------------------------------------ canvas overlays
-export const FONT_UI = 'Manrope, sans-serif';
+export const FONT_UI = `${BRAND.fonts.ui}, sans-serif`;
 
 /** Detection box in the film's style: hairline + bright corners + faint fill. */
 export function box(g, x, y, w, hh, { color = C.accent, a = 1, lw = 1.5, corner = 0.22, fill = 0.06, dash = null, glow = 0 } = {}) {

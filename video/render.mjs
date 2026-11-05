@@ -36,6 +36,8 @@ function serve() {
 }
 
 const BROWSER_ARGS = ['--font-render-hinting=none', '--disable-lcd-text', '--force-color-profile=srgb', '--hide-scrollbars', '--disable-gpu-vsync', '--run-all-compositor-stages-before-draw'];
+// CHROMIUM_PATH lets the renderer use a preinstalled browser when it doesn't match the pinned Playwright.
+const LAUNCH = { args: BROWSER_ARGS, ...(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {}) };
 
 async function openPage(browser, port, only) {
   const page = await browser.newPage({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: 1 });
@@ -63,7 +65,7 @@ async function stills(port) {
   const times = String(opt('stills')).split(',').map(Number);
   const outdir = opt('outdir', path.join(ROOT, 'build', 'stills'));
   fs.mkdirSync(outdir, { recursive: true });
-  const browser = await chromium.launch({ args: BROWSER_ARGS });
+  const browser = await chromium.launch(LAUNCH);
   const page = await openPage(browser, port, opt('only', null));
   for (const t of times) {
     const buf = await frame(page, t);
@@ -82,7 +84,7 @@ function encoder(out, fps) {
 }
 
 async function video(port) {
-  const probe = await chromium.launch({ args: BROWSER_ARGS });
+  const probe = await chromium.launch(LAUNCH);
   const p0 = await openPage(probe, port, opt('only', null));
   const { duration, fps } = await p0.evaluate(() => ({ duration: window.__duration, fps: window.__fps }));
   await probe.close();
@@ -104,7 +106,7 @@ async function video(port) {
     jobs.push({ a, b, seg });
   }
   await Promise.all(jobs.map(async (job) => {
-    const browser = await chromium.launch({ args: BROWSER_ARGS });
+    const browser = await chromium.launch(LAUNCH);
     const page = await openPage(browser, port, opt('only', null));
     const { ff, done } = encoder(job.seg, fps);
     for (let i = job.a; i < job.b; i++) {

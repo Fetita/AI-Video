@@ -1,14 +1,14 @@
 // 05 — Document intelligence · AI auditing
 // Evidence → read → map to frameworks → flag gaps → recommend → readiness (decision support, not legal advice).
-import { addScene, h, svg, put, prog, E, clamp, lerp, env, keys, rgba, C } from '../engine.js';
+import { addScene, h, svg, put, prog, E, clamp, lerp, env, keys, rgba, C, PAL } from '../engine.js';
 import { makeHud } from '../lib/ui.js';
 
 const FILES = [
-  ['PDF', '#ff6b57', 'Quarterly access review.pdf', '2.4 MB'],
+  ['PDF', `${C.coral}`, 'Quarterly access review.pdf', '2.4 MB'],
   ['DOC', '#7cc6ff', 'Offboarding checklist.docx', '310 KB'],
-  ['PNG', '#ff8fc8', 'MFA configuration.png', '1.1 MB'],
+  ['PNG', `${C.violet}`, 'MFA configuration.png', '1.1 MB'],
   ['XLS', '#9fe07a', 'Training completion.xlsx', '96 KB'],
-  ['PDF', '#ff6b57', 'Operations report.pdf', '1.8 MB'],
+  ['PDF', `${C.coral}`, 'Operations report.pdf', '1.8 MB'],
 ];
 const REQS = [
   { title: 'Periodic user access reviews', status: 'Supported', cls: 'ok', src: 0 },
@@ -55,7 +55,7 @@ addScene({
     this.view.append(this.ev);
     // ---------- document viewer (fictional access review)
     this.doc = h('div', { class: 'abs', style: { left: '600px', top: '120px', width: '620px', height: '830px', borderRadius: '12px', background: '#f5f5f2', color: '#1b1d21', padding: '46px 52px', boxShadow: '0 50px 100px -20px rgba(0,0,0,0.75)', overflow: 'hidden' } });
-    const hl = (text, kind) => { const s = h('span', { class: `hl-${kind}`, style: { backgroundImage: `linear-gradient(${kind === 'bad' ? 'rgba(255,107,87,0.28)' : 'rgba(102,134,246,0.38)'}, ${kind === 'bad' ? 'rgba(255,107,87,0.28)' : 'rgba(102,134,246,0.38)'})`, backgroundRepeat: 'no-repeat', backgroundSize: '0% 100%', borderRadius: '3px', padding: '1px 2px' } }, text); return s; };
+    const hl = (text, kind) => { const s = h('span', { class: `hl-${kind}`, style: { backgroundImage: `linear-gradient(${kind === 'bad' ? `rgba(${PAL.coral},0.28)` : `rgba(${PAL.acc2},0.38)`}, ${kind === 'bad' ? `rgba(${PAL.coral},0.28)` : `rgba(${PAL.acc2},0.38)`})`, backgroundRepeat: 'no-repeat', backgroundSize: '0% 100%', borderRadius: '3px', padding: '1px 2px' } }, text); return s; };
     this.hls = [hl('All employee accounts', 'ok'), hl('revoked within 48 hours', 'ok'), hl('enforced for administrators', 'mid'), hl('Contractor accounts were out of scope', 'bad')];
     const p = (...kids) => h('p', { style: { fontSize: '17px', lineHeight: '1.62', color: '#34373d', margin: '0 0 16px' } }, ...kids);
     const sec = (n, t) => h('div', { style: { fontSize: '13px', fontFamily: 'var(--font-ui)', fontWeight: 600, letterSpacing: '0.12em', color: '#7a7e86', margin: '22px 0 8px' } }, `${n}  ${t.toUpperCase()}`);
@@ -71,7 +71,7 @@ addScene({
       h('div', { style: { margin: '6px 0 10px' } }, tr(['User group', 'Accounts', 'Reviewed', 'Approver'], true), tr(['Engineering', '42', '✓', 'Eng. manager']), tr(['Finance', '12', '✓', 'Finance lead']), tr(['Operations', '27', '✓', 'Ops manager'])),
       sec('03', 'Exclusions'), p(this.hls[3], ' for this review cycle.'),
       h('div', { style: { marginTop: '26px', display: 'flex', alignItems: 'center', gap: '12px', fontSize: '14px', color: '#7a7e86' } }, h('span', { style: { fontFamily: 'var(--font-story)', fontSize: '24px', color: '#2a2d33' } }, 'J. Rivera'), '— IT lead, sign-off'));
-    this.scan = h('div', { class: 'abs', style: { left: '0', right: '0', top: '0', height: '120px', background: 'linear-gradient(180deg, rgba(130,52,254,0), rgba(102,134,246,0.22) 70%, rgba(102,134,246,0.9) 100%)', mixBlendMode: 'multiply' } });
+    this.scan = h('div', { class: 'abs', style: { left: '0', right: '0', top: '0', height: '120px', background: `linear-gradient(180deg, rgba(${PAL.acc},0), rgba(${PAL.acc2},0.22) 70%, rgba(${PAL.acc2},0.9) 100%)`, mixBlendMode: 'multiply' } });
     this.doc.append(this.scan);
     this.view.append(this.doc);
 
@@ -88,7 +88,7 @@ addScene({
       body.append(row);
       return { row, badge, ev, r };
     });
-    this.gapNote = h('div', { style: { margin: '10px 6px 4px', padding: '14px 16px', borderRadius: '12px', background: 'rgba(255,107,87,0.08)', border: '1px solid rgba(255,107,87,0.4)', fontSize: '15.5px', lineHeight: 1.5, color: '#ffd9d2' } },
+    this.gapNote = h('div', { style: { margin: '10px 6px 4px', padding: '14px 16px', borderRadius: '12px', background: `rgba(${PAL.coral},0.08)`, border: `1px solid rgba(${PAL.coral},0.4)`, fontSize: '15.5px', lineHeight: 1.5, color: '#ffd9d2' } },
       h('div', { class: 'kicker', style: { color: 'var(--coral)', fontSize: '11px', marginBottom: '6px' } }, 'Gap identified'),
       'Contractor accounts were excluded from the Q3 access review.');
     body.append(this.gapNote);
@@ -96,7 +96,7 @@ addScene({
     this.view.append(this.map);
 
     // ---------- recommendation
-    this.rec = h('div', { class: 'panel', style: { left: '1270px', top: '800px', width: '580px', padding: '20px 24px', borderColor: 'rgba(130,52,254,0.35)' } },
+    this.rec = h('div', { class: 'panel', style: { left: '1270px', top: '800px', width: '580px', padding: '20px 24px', borderColor: `rgba(${PAL.acc},0.35)` } },
       h('div', { style: { display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' } }, h('span', { class: 'badge bad' }, 'Impact · High'), h('span', { class: 'kicker', style: { color: 'var(--accent-text)' } }, 'Recommendation')),
       h('div', { style: { fontSize: '18px', lineHeight: 1.5, marginBottom: '16px' } }, 'Add contractor accounts to the next quarterly review and attach the signed approval log.'),
       h('div', { style: { display: 'flex', gap: '10px' } }, h('span', { class: 'chip ai' }, 'Assign owner'), h('span', { class: 'chip' }, 'Draft evidence request')));
@@ -190,8 +190,8 @@ addScene({
     // gap flagged
     const gapRow = this.reqRows[3].row;
     const flag = env(t, cFlag - 0.05, cKnow, 0.3, 0.4);
-    gapRow.style.background = `rgba(255,107,87,${(0.1 * flag * (0.7 + 0.3 * Math.sin(t * 7))).toFixed(3)})`;
-    gapRow.style.boxShadow = flag > 0.01 ? `inset 3px 0 0 rgba(255,107,87,${flag.toFixed(3)})` : 'none';
+    gapRow.style.background = `rgba(${PAL.coral},${(0.1 * flag * (0.7 + 0.3 * Math.sin(t * 7))).toFixed(3)})`;
+    gapRow.style.boxShadow = flag > 0.01 ? `inset 3px 0 0 rgba(${PAL.coral},${flag.toFixed(3)})` : 'none';
     const gn = prog(t, cFlag + 0.15, 0.5, E.outCubic);
     this.gapNote.style.display = gn > 0 ? 'block' : 'none';
     put(this.gapNote, { y: (1 - gn) * -10, o: gn });

@@ -2,7 +2,7 @@
 // Title card → live monitor playing the apple counter (per-apple IDs and sizes, a count line,
 // and a live dashboard of count, throughput, ripeness and size grade), with a "what it does"
 // column keyed to the VO.
-import { addScene, h, put, prog, E, clamp, lerp, env } from '../engine.js';
+import { addScene, h, put, prog, E, clamp, lerp, env, C, PAL } from '../engine.js';
 import { makeHud } from '../lib/ui.js';
 import { makeClip } from '../lib/clip.js';
 
@@ -32,7 +32,7 @@ addScene({
     this.card = h('div', { class: 'abs', style: { left: '0', top: '0', width: '1920px', height: '1080px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '26px' } });
     this.cardKicker = h('div', { class: 'kicker', style: { color: 'var(--accent-text)', letterSpacing: '0.24em' } }, 'Our own products');
     this.cardHead = h('div', { class: 'display', style: { fontSize: '108px', fontWeight: 600, letterSpacing: '-0.02em', lineHeight: '1' } }, 'Built in-house.');
-    this.cardLine = h('div', { style: { width: '220px', height: '3px', background: 'var(--accent)', boxShadow: '0 0 16px rgba(130,52,254,0.6)', borderRadius: '2px' } });
+    this.cardLine = h('div', { style: { width: '220px', height: '3px', background: 'var(--accent)', boxShadow: `0 0 16px rgba(${PAL.acc},0.6)`, borderRadius: '2px' } });
     this.card.append(this.cardKicker, this.cardHead, this.cardLine);
     R.append(this.card);
 
