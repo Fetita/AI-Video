@@ -1,6 +1,6 @@
-// The impact equation: each chapter's hero moment. Tokens appear as the VO names them
-// (or fly in out of the scene), "= IMPACT" lands at the end of the line, then the whole
-// formula docks into its station on the chain map.
+// The impact indicator: each chapter's hero moment. Tokens appear as the VO names them
+// (or fly in out of the scene), an underline sweeps under the finished formula, then the whole
+// indicator docks into its station on the chain map.
 import { h, svg, prog, E, clamp, lerp, env, TIMELINE } from '../engine.js';
 import { icon } from './icons.js';
 import { findPhrase, charTime } from './vo.js';
@@ -44,17 +44,12 @@ const opSvg = (sym, color) => {
   return s;
 };
 
-const arrow = () => {
-  const s = svg('svg', { viewBox: '0 0 24 24', width: 26, height: 26, fill: 'none', stroke: '#fff', 'stroke-width': 2.6, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', style: 'display:block' });
-  s.append(svg('path', { d: 'M7 17L17 7' }), svg('path', { d: 'M9 7h8v8' }));
-  return s;
-};
 
 /**
  * makeEquation(parent, def, {y, fit, kicker}) → {el, layout(), render(t, {times, from, dock, dockAt, outAt})}
  * `from[i](t)` (optional) returns the screen rect {x, y, w} (center, width) a token flies out of.
  */
-export function makeEquation(parent, def, { y = 540, fit = 1660, kicker = 'Measured impact' } = {}) {
+export function makeEquation(parent, def, { y = 540, fit = 1660, kicker = 'Impact indicator' } = {}) {
   const wrap = h('div', { class: 'abs', style: { left: '0', top: '0', width: '1920px', height: '1080px', zIndex: '40' } });
   const veil = h('div', { class: 'layer', style: { background: 'radial-gradient(ellipse 70% 56% at 50% 50%, rgba(7,8,10,0.93), rgba(7,8,10,0.8) 62%, rgba(7,8,10,0.62))', opacity: '0' } });
   const kick = h('div', { class: 'abs ix-kicker', style: { left: '0', width: '1920px', textAlign: 'center', top: `${y - 112}px`, opacity: '0' } }, kicker);
@@ -66,11 +61,13 @@ export function makeEquation(parent, def, { y = 540, fit = 1660, kicker = 'Measu
     else if (k.t === 'open') el = h('div', { class: 'ix-paren' }, '(');
     else if (k.t === 'close') el = h('div', { class: 'ix-paren' }, ')');
     else if (k.t === 'eq') el = h('div', { class: 'ix-eq' }, opSvg('=', '#ffffff'));
-    else el = h('div', { class: 'ix-result' }, h('span', {}, 'Impact'), arrow(), h('i', { class: 'sweep' }));
     el.style.opacity = '0';
     row.append(el);
-    return { k, el, sweep: k.t === 'result' ? el.lastChild : null };
+    return { k, el };
   });
+  // completion: a violet underline sweeps under the finished indicator (inside the row, so it docks with it)
+  const under = h('i', { style: { position: 'absolute', left: '0', right: '0', bottom: '-20px', height: '3px', borderRadius: '2px', background: 'var(--accent-grad)', boxShadow: '0 0 16px rgba(130,52,254,0.7)', transformOrigin: '0 50%', transform: 'scaleX(0)', display: 'block' } });
+  row.append(under);
   wrap.append(veil, kick, row);
   parent.append(wrap);
 
@@ -135,12 +132,12 @@ export function makeEquation(parent, def, { y = 540, fit = 1660, kicker = 'Measu
           return;
         }
         const q = prog(t, ti - 0.06, 0.42, E.outCubic);
-        const b = it.k.t === 'result' ? Math.min(1.06, E.outBack(clamp((t - ti + 0.06) / 0.5), 2.0)) : lerp(0.84, 1, E.outBack(q, 1.6));
+        const b = lerp(0.84, 1, E.outBack(q, 1.6));
         el.style.opacity = q.toFixed(3);
         el.style.transform = `translateY(${((1 - q) * 18).toFixed(2)}px) scale(${b.toFixed(4)})`;
         el.style.filter = q < 0.98 ? `blur(${((1 - q) * 6).toFixed(2)}px)` : 'none';
-        if (it.sweep) it.sweep.style.transform = `translateX(${(prog(t, ti + 0.25, 0.7, E.inOutSine) * 520).toFixed(1)}px) skewX(-18deg)`;
       });
+      under.style.transform = `scaleX(${prog(t, times[times.length - 1] + 0.2, 0.65, E.inOutCubic).toFixed(4)})`;
     },
   };
 }

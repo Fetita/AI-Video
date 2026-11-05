@@ -1,7 +1,7 @@
 // Styles for the impact film, injected as a <style> element on import (applies before frame 0,
 // unlike a <link>, which loads asynchronously). The base film stylesheet stays untouched.
 const CSS = `
-.ix-kicker { font-family: var(--font-ui); font-weight: 600; font-size: 14px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent-text); white-space: nowrap; }
+.ix-kicker { font-family: var(--font-ui); font-weight: 600; font-size: 16px; letter-spacing: 0.26em; text-transform: uppercase; color: #c9b4ff; white-space: nowrap; }
 .ix-row { position: absolute; left: 0; top: 0; display: inline-flex; align-items: center; gap: 18px; transform-origin: 0 0; white-space: nowrap; }
 .ix-token { display: inline-flex; align-items: center; gap: 14px; height: 72px; padding: 0 28px 0 22px; border-radius: 18px;
   border: 1px solid rgba(255,255,255,0.16); background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0) 60%), #101216;

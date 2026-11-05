@@ -1,4 +1,4 @@
-// Shared chapter furniture for the impact film: the outcome chips (what changes for the grower),
+// Shared chapter furniture for the impact film: the outcome chips (the impact: what changes for the grower),
 // the live-feed frame, the panel/stat helpers and the standard exit into the hand-off line.
 import { h, svg, put, prog, E, clamp, lerp, env, rrect, rgba, C } from '../engine.js';
 import { recHud } from './ui.js';
@@ -18,7 +18,10 @@ const arrowSvg = (up) => {
  * render(t, at, out): chips pop in from `at`, staggered; fade at `out`.
  */
 export function makeOutcome(parent, items, { y = 806 } = {}) {
-  const row = h('div', { class: 'abs', style: { left: '0', width: '1920px', top: `${y - 30}px`, display: 'flex', justifyContent: 'center', gap: '16px', zIndex: '30' } });
+  const row = h('div', { class: 'abs', style: { left: '0', width: '1920px', top: `${y - 30}px`, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '16px', zIndex: '30' } });
+  // the outcomes are the impact (the formula that follows is the indicator that measures it)
+  const lab = h('div', { style: { display: 'flex', alignItems: 'center', height: '60px', padding: '0 24px', borderRadius: '999px', background: 'rgba(130,52,254,0.92)', color: '#ffffff', fontFamily: 'var(--font-ui)', fontWeight: '700', fontSize: '15px', letterSpacing: '0.24em', textTransform: 'uppercase', boxShadow: '0 20px 50px -20px rgba(0,0,0,0.9), 0 0 24px rgba(130,52,254,0.35)' } }, 'Impact');
+  row.append(lab);
   const chips = items.map((it) => {
     const el = h('div', { style: { display: 'flex', alignItems: 'center', gap: '12px', height: '60px', padding: '0 26px 0 18px', borderRadius: '999px', background: 'rgba(14,12,22,0.9)', border: '1px solid rgba(130,52,254,0.55)', color: '#e6dcff', fontFamily: 'var(--font-ui)', fontWeight: '600', fontSize: '24px', letterSpacing: '-0.005em', whiteSpace: 'nowrap', boxShadow: '0 20px 50px -20px rgba(0,0,0,0.9), 0 0 24px rgba(130,52,254,0.18)' } },
       h('span', { style: { width: '34px', height: '34px', borderRadius: '50%', background: 'rgba(130,52,254,0.28)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#cdb8ff' } }, arrowSvg(it.dir !== 'down')),
@@ -32,6 +35,9 @@ export function makeOutcome(parent, items, { y = 806 } = {}) {
     render(t, at, out) {
       const a = 1 - prog(t, out, 0.4, E.inCubic);
       row.style.display = t > at - 0.2 && a > 0.001 ? 'flex' : 'none';
+      const lq = prog(t, at - 0.15, 0.4, E.outCubic);
+      lab.style.opacity = (lq * a).toFixed(3);
+      lab.style.transform = `translateX(${((1 - lq) * -14).toFixed(2)}px)`;
       chips.forEach((el, i) => {
         const q = prog(t, at + i * 0.22, 0.45, E.outCubic);
         const b = lerp(0.85, 1, Math.min(1.04, E.outBack(clamp((t - at - i * 0.22) / 0.5), 1.8)));

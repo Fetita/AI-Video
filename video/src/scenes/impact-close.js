@@ -1,4 +1,4 @@
-// Close — the hand-off line becomes the value chain again: six problems (coral) → six formulas (the
+// Close — the hand-off line becomes the value chain again: six problems (coral) → six indicators (the
 // ledger, each station turning violet as its row lands) → one season; the ledger rows fly onto the logo's
 // three E strokes, the Eagerworks AI Studio lockup builds, "Impact you can measure." and the CTA.
 import { addScene, h, put, prog, E, clamp, lerp, env, makeCanvas, rgba, C, W, H } from '../engine.js';
@@ -11,7 +11,7 @@ import { STATIONS, EQUATIONS } from '../lib/impact-data.js';
 import { icon } from '../lib/icons.js';
 import '../lib/impact-theme.js';
 
-const ROW_H = 66, ROW_W = 1400, LEDGER_Y = 330;
+const ROW_H = 66, ROW_W = 1240, LEDGER_Y = 330;
 
 addScene({
   id: 'impact-close',
@@ -37,14 +37,12 @@ addScene({
       const el = h('div', { class: 'abs', style: { left: `${(1920 - ROW_W) / 2}px`, top: `${LEDGER_Y + i * (ROW_H + 10)}px`, width: `${ROW_W}px`, height: `${ROW_H}px`, display: 'flex', alignItems: 'center', gap: '22px', padding: '0 26px 0 14px', borderRadius: '16px', background: 'rgba(15,17,21,0.92)', border: '1px solid rgba(255,255,255,0.12)', boxShadow: '0 20px 50px -24px rgba(0,0,0,0.9)', transformOrigin: '50% 50%' } },
         h('span', { style: { width: '42px', height: '42px', borderRadius: '50%', background: 'rgba(130,52,254,0.2)', border: '1px solid rgba(130,52,254,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#e6dcff', flex: 'none' } }, icon(st.icon, { size: 24 })),
         h('span', { class: 'kicker', style: { width: '138px', color: 'var(--text2)', fontSize: '13px', flex: 'none' } }, `${String(i + 1).padStart(2, '0')} ${st.label}`),
-        f,
-        h('span', { style: { flex: '1' } }),
-        h('span', { class: 'ix-chip', style: { background: 'var(--accent-grad)', color: '#fff', height: '34px', fontSize: '12px' } }, '= Impact'));
+        f);
       R.append(el);
       return el;
     });
     this.sum = h('div', { class: 'abs', style: { left: '0', width: '1920px', top: `${LEDGER_Y + 6 * (ROW_H + 10) + 18}px`, textAlign: 'center' } },
-      h('span', { class: 'ix-kicker', style: { fontSize: '16px', letterSpacing: '0.3em' } }, 'One season · six measurable impacts'));
+      h('span', { class: 'ix-kicker', style: { fontSize: '16px', letterSpacing: '0.3em' } }, 'One season · six impact indicators'));
     R.append(this.sum);
     // strokes canvas (rows collapse into the E strokes)
     this.lock = makeLockup({ height: 92 });
@@ -55,7 +53,7 @@ addScene({
     this.tagSpans = words(this.tagline, 'Impact you can measure.');
     R.append(this.tagline);
     this.cta = h('div', { class: 'abs', style: { left: '0', width: '1920px', top: '760px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '18px' } });
-    this.ctaBtn = h('div', { style: { display: 'flex', alignItems: 'center', gap: '16px', height: '66px', padding: '0 34px', borderRadius: '999px', background: 'var(--accent-grad)', color: '#ffffff', fontSize: '25px', fontWeight: '600', letterSpacing: '-0.005em', boxShadow: '0 0 40px rgba(130,52,254,0.35)' } }, 'Let’s find your formula', h('span', { style: { fontSize: '26px' } }, '→'));
+    this.ctaBtn = h('div', { style: { display: 'flex', alignItems: 'center', gap: '16px', height: '66px', padding: '0 34px', borderRadius: '999px', background: 'var(--accent-grad)', color: '#ffffff', fontSize: '25px', fontWeight: '600', letterSpacing: '-0.005em', boxShadow: '0 0 40px rgba(130,52,254,0.35)' } }, 'Let’s build what’s next', h('span', { style: { fontSize: '26px' } }, '→'));
     this.url = h('div', { class: 'kicker', style: { color: 'var(--text2)', fontSize: '15px', letterSpacing: '0.22em' } }, 'eagerworks.com');
     this.cta.append(this.ctaBtn, this.url);
     R.append(this.cta);

@@ -11,9 +11,9 @@ AI capabilities into real products, workflows and measurable outcomes.
 **Creative treatment** (narrative, storyboard, timings, VO script, on-screen text, visual & sound direction, reference mapping):
 [`docs/creative-treatment.md`](docs/creative-treatment.md)
 
-**Seed to Shelf**, the AI impact case film: one fresh-produce grower's season in six AI cases, each closing on its
-impact formula. The client is never named.
-[`eagerworks-ai-impact`](out/eagerworks-ai-impact.mp4) (2:40) ·
+**Seed to Shelf**, the AI impact case film: one fresh-produce grower's season in six AI cases, each showing its
+impact and the indicator that measures it. The client is never named.
+[`eagerworks-ai-impact`](out/eagerworks-ai-impact.mp4) (2:44) ·
 [`eagerworks-ai-impact-teaser`](out/eagerworks-ai-impact-teaser.mp4) (1:22, three cases, burned-in captions) ·
 treatment: [`docs/impact-treatment.md`](docs/impact-treatment.md)
 
@@ -102,7 +102,7 @@ Review stills for a cut with `node render.mjs --stills 12.5 --query cut=linkedin
 
 It is built the same way as a cut, but with scenes of its own:
 - Scenes: `impact-open`, `nursery`, `lettuce`, `onions`, `pumpkins`, `labels`, `dashboard`, `impact-close`.
-- Shared modules in `video/src/lib/`: the formula, value chain, proposal card, icons, produce and conveyors.
+- Shared modules in `video/src/lib/`: the impact indicator, value chain, Need → Solution panels, icons, produce and conveyors.
 
 `CUT=impact` builds the film and `CUT=impact-teaser` the teaser. Render each one into its own folder, because
 `render.mjs` writes its segments next to `--out`:

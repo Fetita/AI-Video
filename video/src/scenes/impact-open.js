@@ -1,6 +1,6 @@
 // Open — six small leaks flash by (three named by the VO, three on music hits), snap into a 3×2 grid and
-// collapse into one line; "Impact isn't a promise." → "It's a formula." (promise decodes into formula);
-// the Eagerworks lockup and a ghost formula (what changes × what it's worth = impact); the line becomes
+// collapse into one line; "Impact isn't a promise." → "It's measured." (promise decodes into measured);
+// the Eagerworks lockup and a ghost impact indicator (what changes × what it's worth); the line becomes
 // the value chain, from seed to shelf, and shrinks into the chain map as the first chapter opens.
 import { addScene, h, put, prog, E, clamp, lerp, env, makeCanvas, rgba, C, hash, rrect, W, H, FPS } from '../engine.js';
 import { decode, tag, box } from '../lib/ui.js';
@@ -53,20 +53,21 @@ addScene({
     this.t1b.append(this.u1);
     this.t1.append(this.t1a, this.t1b, h('span', {}, '.'));
     this.t2 = h('div', { class: 'abs display', style: { left: '0', width: '1920px', top: '560px', textAlign: 'center', fontSize: '112px', fontWeight: '600', letterSpacing: '-0.02em', lineHeight: '1', whiteSpace: 'nowrap' } });
-    this.t2a = h('span', {}, 'It’s a ');
-    this.t2b = h('span', { style: { position: 'relative', display: 'inline-block', color: 'var(--accent)' } }, 'formula');
+    this.t2a = h('span', {}, 'It’s ');
+    this.t2b = h('span', { style: { position: 'relative', display: 'inline-block', color: 'var(--accent)' } }, 'measured');
     this.u2 = h('i', { style: { position: 'absolute', left: '-4px', right: '-4px', top: '108%', height: '6px', background: 'var(--accent)', boxShadow: '0 0 18px rgba(130,52,254,0.6)', transformOrigin: '0 50%', display: 'block', borderRadius: '3px' } });
     this.t2b.append(this.u2);
     this.t2.append(this.t2a, this.t2b, h('span', {}, '.'));
     R.append(this.t1, this.t2);
-    // ---- ghost formula: what changes × what it's worth = impact
-    this.ghost = h('div', { class: 'abs', style: { left: '0', width: '1920px', top: '680px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '20px' } });
+    // ---- ghost impact indicator: what changes × what it's worth
+    this.ghost = h('div', { class: 'abs', style: { left: '0', width: '1920px', top: '706px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '20px' } });
     const slot = (txt, ai) => h('div', { style: { display: 'flex', alignItems: 'center', height: '66px', padding: '0 28px', borderRadius: '16px', border: `1.5px dashed ${ai ? 'rgba(160,120,255,0.75)' : 'rgba(255,255,255,0.35)'}`, color: ai ? '#d9caff' : 'var(--text2)', fontFamily: 'var(--font-ui)', fontWeight: '600', fontSize: '26px', minWidth: '210px', justifyContent: 'center' } }, h('span', {}, txt));
     this.gSlots = [slot('What changes', true), slot('What it’s worth', false)];
     const op = (s) => h('div', { style: { fontFamily: 'var(--font-ui)', fontWeight: '300', fontSize: '44px', color: 'var(--text2)' } }, s);
-    this.gRes = h('div', { class: 'ix-result', style: { height: '66px', fontSize: '26px' } }, h('span', {}, 'Impact'));
-    this.gItems = [this.gSlots[0], op('×'), this.gSlots[1], op('='), this.gRes];
+    this.gItems = [this.gSlots[0], op('×'), this.gSlots[1]];
     this.gItems.forEach((x) => this.ghost.append(x));
+    this.gKick = h('div', { class: 'abs ix-kicker', style: { left: '0', width: '1920px', textAlign: 'center', top: '672px', fontSize: '14px' } }, 'Impact indicator');
+    R.append(this.gKick);
     R.append(this.ghost);
     // ---- lockup (static here; the build is saved for the close)
     this.lock = makeLockup({ height: 70 });
@@ -79,7 +80,7 @@ addScene({
     // ---- value chain
     this.chain = makeValueChain(R);
     this.kickChain = h('div', { class: 'abs kicker', style: { left: '0', width: '1920px', textAlign: 'center', top: '400px', fontSize: '16px', letterSpacing: '0.3em', color: 'var(--accent-text)' } }, 'From seed to shelf');
-    this.kickSub = h('div', { class: 'abs', style: { left: '0', width: '1920px', textAlign: 'center', top: '700px', fontSize: '22px', fontWeight: '500', color: 'var(--text2)' } }, 'One grower · one season · six formulas');
+    this.kickSub = h('div', { class: 'abs', style: { left: '0', width: '1920px', textAlign: 'center', top: '700px', fontSize: '22px', fontWeight: '500', color: 'var(--text2)' } }, 'One grower · one season · six indicators');
     R.append(this.kickChain, this.kickSub);
   },
 
@@ -203,7 +204,7 @@ addScene({
     put(this.t2, { y: (1 - f2) * 30 - prog(t, this.cFormula - 0.1, 0.5, E.inOutCubic) * 50, o: f2 * (1 - tOut) });
     const dp = prog(t, this.cFormula - 0.05, 0.6, E.linear);
     const frame = Math.round(T * FPS);
-    this.t2b.firstChild.textContent = dp <= 0 ? 'promise' : dp >= 1 ? 'formula' : decode('promise', 'formula', dp, 11, frame);
+    this.t2b.firstChild.textContent = dp <= 0 ? 'promise' : dp >= 1 ? 'measured' : decode('promise', 'measured', dp, 11, frame);
     this.u2.style.transform = `scaleX(${prog(t, this.cFormula + 0.45, 0.5, E.inOutCubic).toFixed(3)})`;
 
     // ---------------- ghost formula + Eagerworks (x5); in the teaser the formula rides the thesis
@@ -211,6 +212,7 @@ addScene({
     const gOut = prog(t, this.cSeason - 0.6, 0.45, E.inCubic);
     const gY = this.hasX5 ? lerp(0, -40, prog(t, this.cEw - 0.6, 0.6, E.inOutCubic)) : 0;
     put(this.ghost, { y: gY, o: gIn * (1 - gOut) });
+    put(this.gKick, { y: gY, o: prog(t, this.cFormula + 0.6, 0.5) * (1 - gOut) });
     this.gItems.forEach((el, i) => { const q = prog(t, this.cFormula + 0.7 + i * 0.12, 0.4, E.outBack); el.style.opacity = clamp(q * 2).toFixed(3); el.style.transform = `scale(${lerp(0.7, 1, Math.min(1.05, q)).toFixed(3)})`; });
     if (this.hasX5) {
       if (!this.lockW) { const r = this.lock.el.getBoundingClientRect(); if (r.width > 10) this.lockW = r.width; }

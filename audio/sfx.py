@@ -620,13 +620,13 @@ def eq_times(line, toks):
 
 _T = lambda say: ('term', say)
 _O = lambda say: ('op', say)
-EQ = {  # mirrors EQUATIONS in video/src/lib/impact-data.js
-    'nursery': ('n4', [_T('seedlings saved'), _O('times'), _T('the cost'), ('eq', None), ('result', None)]),
-    'lettuce': ('l4', [_T('boxes not wasted'), _O('times'), _T('their cost'), _O('plus'), _T('shortfalls avoided'), _O('times the'), _T('penalty'), ('eq', None), ('result', None)]),
-    'onions': ('u4', [_T('sampling hours saved'), _O('times'), _T('their cost'), _O('plus'), _T('tonnes'), _O('times the'), _T('price difference'), ('eq', None), ('result', None)]),
-    'pumpkins': ('k3', [_T('hours saved'), _O('times'), _T('cost per hour'), _O('plus'), _T('kilos graded right'), _O('times the'), _T('price difference'), ('eq', None), ('result', None)]),
-    'labels': ('b4', [_T('rejections avoided'), _O('times'), ('open', 'times'), _T('the fine'), _O('plus the product'), _T('product'), _O('plus the freight'), _T('freight'), ('close', 'freight'), ('eq', None), ('result', None)]),
-    'dashboard': ('g4', [_T('reporting hours saved'), _O('times'), _T('cost per hour'), ('eq', None), ('result', None)]),
+EQ = {  # mirrors EQUATIONS in video/src/lib/impact-data.js (the six impact indicators)
+    'nursery': ('n4', [_T('seedlings saved'), _O('times'), _T('the cost')]),
+    'lettuce': ('l4', [_T('boxes not wasted'), _O('times'), _T('their cost'), _O('plus'), _T('shortfalls avoided'), _O('times the'), _T('penalty')]),
+    'onions': ('u4', [_T('sampling hours saved'), _O('times'), _T('their cost'), _O('plus'), _T('tonnes'), _O('times the'), _T('price difference')]),
+    'pumpkins': ('k3', [_T('hours saved'), _O('times'), _T('cost per hour'), _O('plus'), _T('kilos graded right'), _O('times the'), _T('price difference')]),
+    'labels': ('b4', [_T('rejections avoided'), _O('times'), ('open', 'times'), _T('the fine'), _O('plus the product'), _T('product'), _O('plus the freight'), _T('freight'), ('close', 'freight')]),
+    'dashboard': ('g4', [_T('reporting hours saved'), _O('times'), _T('cost per hour')]),
 }
 PENT = [1046.5, 1174.7, 1318.5, 1568.0, 1760.0, 2093.0]
 
@@ -642,11 +642,11 @@ def eq_sfx(sid):
         if kind == 'term':
             at(tt, s_bell(PENT[min(n, 5)], 1.0, 0.4), -28, -0.3 + 0.12 * n)
             n += 1
-        elif kind == 'result':
-            at(tt, s_chime(), -26)
-            at(tt, s_thump(), -30)
         else:
-            at(tt, s_tick(2400 if kind == 'eq' else 1900, 0.01), -34)
+            at(tt, s_tick(1900, 0.01), -34)
+    # the indicator is complete: an underline sweeps under it
+    at(times[-1] + 0.35, s_chime(), -27)
+    at(times[-1] + 0.35, s_thump(), -31)
     ds = L[line]['end'] + 0.75
     at(ds, s_suck(0.6, 62), -30)
     at(ds + 0.64, s_lock(), -30, 0.6)

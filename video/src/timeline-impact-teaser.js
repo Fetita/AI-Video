@@ -102,33 +102,33 @@ export default {
    "id": "x4",
    "scene": "impact-open",
    "start": 8.527,
-   "end": 11.044,
+   "end": 10.852,
    "segs": [
     [
      8.557,
-     9.917
+     9.877
     ],
     [
-     10.177,
-     10.937
+     10.117,
+     10.757
     ]
    ],
-   "text": "Impact isn't a promise. It's a formula.",
+   "text": "Impact isn't a promise. It's measured.",
    "caption": false
   },
   "x6": {
    "id": "x6",
    "scene": "impact-open",
-   "start": 11.844,
-   "end": 14.02,
+   "start": 11.652,
+   "end": 13.828,
    "segs": [
     [
-     11.874,
-     12.584
+     11.682,
+     12.392
     ],
     [
-     12.724,
-     13.924
+     12.532,
+     13.732
     ]
    ],
    "text": "Here are three, from one grower's season."
@@ -171,26 +171,30 @@ export default {
    "id": "l4",
    "scene": "lettuce",
    "start": 25.743,
-   "end": 31.396,
+   "end": 31.695,
    "segs": [
     [
      25.773,
-     26.433
+     26.503
     ],
     [
-     26.823,
-     28.903
+     26.893,
+     28.113
     ],
     [
-     29.033,
-     30.303
+     28.243,
+     29.133
     ],
     [
-     30.393,
-     31.323
+     29.283,
+     30.583
+    ],
+    [
+     30.693,
+     31.623
     ]
    ],
-   "text": "The impact: boxes not wasted, times their cost, plus shortfalls avoided, times the penalty.",
+   "text": "The indicator: boxes not wasted, times their cost, plus shortfalls avoided, times the penalty.",
    "caption": false
   },
   "k1": {
@@ -218,26 +222,26 @@ export default {
    "id": "k3",
    "scene": "pumpkins",
    "start": 39.649,
-   "end": 45.75,
+   "end": 45.857,
    "segs": [
     [
      39.679,
-     40.349
+     40.409
     ],
     [
-     40.719,
-     41.519
+     40.799,
+     41.589
     ],
     [
-     41.619,
-     44.139
+     41.719,
+     44.269
     ],
     [
-     44.459,
-     45.699
+     44.569,
+     45.799
     ]
    ],
-   "text": "The impact: hours saved, times cost per hour, plus kilos graded right, times the price difference.",
+   "text": "The indicator: hours saved, times cost per hour, plus kilos graded right, times the price difference.",
    "caption": false
   },
   "b1": {
@@ -290,58 +294,58 @@ export default {
    "id": "b4",
    "scene": "labels",
    "start": 59.286,
-   "end": 64.065,
+   "end": 64.257,
    "segs": [
     [
      59.316,
-     59.986
+     60.046
     ],
     [
-     60.326,
-     61.416
+     60.406,
+     61.506
     ],
     [
-     61.536,
-     63.996
+     61.636,
+     64.176
     ]
    ],
-   "text": "The impact: rejections avoided, times the fine, plus the product, plus the freight.",
+   "text": "The indicator: rejections avoided, times the fine, plus the product, plus the freight.",
    "caption": false
   },
   "z1": {
    "id": "z1",
    "scene": "impact-close",
    "start": 66.6,
-   "end": 69.608,
+   "end": 69.715,
    "segs": [
     [
      66.63,
      67.53
     ],
     [
-     67.67,
-     68.55
+     67.68,
+     68.67
     ],
     [
-     68.77,
-     69.51
+     68.9,
+     69.64
     ]
    ],
-   "text": "Six problems. Six formulas. One season."
+   "text": "Six problems. Six indicators. One season."
   },
   "z2": {
    "id": "z2",
    "scene": "impact-close",
-   "start": 70.308,
-   "end": 74.255,
+   "start": 70.415,
+   "end": 74.362,
    "segs": [
     [
-     70.338,
-     72.328
+     70.445,
+     72.435
     ],
     [
-     72.648,
-     74.188
+     72.755,
+     74.295
     ]
    ],
    "text": "Because AI is only worth building when you can measure what it gives back."
@@ -349,12 +353,12 @@ export default {
   "z3": {
    "id": "z3",
    "scene": "impact-close",
-   "start": 75.355,
-   "end": 76.975,
+   "start": 75.462,
+   "end": 77.082,
    "segs": [
     [
-     75.385,
-     76.855
+     75.492,
+     76.962
     ]
    ],
    "text": "Eagerworks AI Studio.",
@@ -363,15 +367,15 @@ export default {
   "z4": {
    "id": "z4",
    "scene": "impact-close",
-   "start": 77.875,
-   "end": 79.195,
+   "start": 77.982,
+   "end": 79.35,
    "segs": [
     [
-     77.905,
-     79.075
+     78.012,
+     79.252
     ]
    ],
-   "text": "Let's find your formula.",
+   "text": "Let's build what's next.",
    "caption": false
   }
  },

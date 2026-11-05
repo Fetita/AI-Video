@@ -3,7 +3,7 @@ export default {
  "fps": 30,
  "bpm": 100.0,
  "beat": 0.6,
- "duration": 159.6,
+ "duration": 164.4,
  "scenes": [
   {
    "id": "impact-open",
@@ -32,7 +32,7 @@ export default {
   {
    "id": "lettuce",
    "start": 42.0,
-   "end": 62.4,
+   "end": 63.6,
    "lines": [
     "l1",
     "l2",
@@ -42,8 +42,8 @@ export default {
   },
   {
    "id": "onions",
-   "start": 62.4,
-   "end": 82.8,
+   "start": 63.6,
+   "end": 85.2,
    "lines": [
     "u1",
     "u2",
@@ -52,8 +52,8 @@ export default {
   },
   {
    "id": "pumpkins",
-   "start": 82.8,
-   "end": 100.8,
+   "start": 85.2,
+   "end": 104.4,
    "lines": [
     "k1",
     "k2",
@@ -62,8 +62,8 @@ export default {
   },
   {
    "id": "labels",
-   "start": 100.8,
-   "end": 122.4,
+   "start": 104.4,
+   "end": 127.2,
    "lines": [
     "b1",
     "b2",
@@ -73,8 +73,8 @@ export default {
   },
   {
    "id": "dashboard",
-   "start": 122.4,
-   "end": 142.8,
+   "start": 127.2,
+   "end": 147.6,
    "lines": [
     "g1",
     "g2",
@@ -84,8 +84,8 @@ export default {
   },
   {
    "id": "impact-close",
-   "start": 142.8,
-   "end": 159.6,
+   "start": 147.6,
+   "end": 164.4,
    "lines": [
     "z1",
     "z2",
@@ -138,50 +138,54 @@ export default {
    "id": "x4",
    "scene": "impact-open",
    "start": 8.727,
-   "end": 11.244,
+   "end": 11.052,
    "segs": [
     [
      8.757,
-     10.117
+     10.077
     ],
     [
-     10.377,
-     11.137
+     10.317,
+     10.957
     ]
    ],
-   "text": "Impact isn't a promise. It's a formula.",
+   "text": "Impact isn't a promise. It's measured.",
    "caption": false
   },
   "x5": {
    "id": "x5",
    "scene": "impact-open",
-   "start": 12.144,
-   "end": 17.093,
+   "start": 11.952,
+   "end": 17.691,
    "segs": [
     [
-     12.174,
-     12.964
+     11.982,
+     12.812
     ],
     [
-     13.254,
-     17.014
+     13.082,
+     16.142
+    ],
+    [
+     16.432,
+     17.622
     ]
    ],
-   "text": "At Eagerworks, every AI project starts by defining how its impact will be measured."
+   "text": "At Eagerworks, every AI project starts by defining the indicators that will measure its impact."
   },
   "x6": {
    "id": "x6",
    "scene": "impact-open",
-   "start": 17.793,
-   "end": 20.43,
+   "start": 18.391,
+   "end": 21.028,
    "segs": [
     [
-     17.823,
-     19.073
+     18.421,
+     19.671
     ],
     [
-     19.293,
-     20.353
+     19.891,
+     20.951
     ]
    ],
    "text": "Here's one grower's season, from seed to shelf."
@@ -224,43 +228,43 @@ export default {
    "id": "n3",
    "scene": "nursery",
    "start": 30.791,
-   "end": 34.974,
+   "end": 35.783,
    "segs": [
     [
      30.821,
-     32.091
+     31.501
     ],
     [
-     32.451,
-     33.321
+     31.841,
+     34.021
     ],
     [
-     33.411,
-     34.911
+     34.231,
+     35.711
     ]
    ],
-   "text": "More seedlings survive: less replanting, fewer days with an empty field."
+   "text": "The impact: more seedlings survive, less replanting, fewer days with an empty field."
   },
   "n4": {
    "id": "n4",
    "scene": "nursery",
-   "start": 35.674,
-   "end": 39.045,
+   "start": 36.483,
+   "end": 40.088,
    "segs": [
     [
-     35.704,
-     36.374
+     36.513,
+     37.263
     ],
     [
-     36.644,
-     37.574
+     37.593,
+     38.563
     ],
     [
-     37.674,
-     38.964
+     38.683,
+     39.993
     ]
    ],
-   "text": "The impact: seedlings saved, times the cost of each one.",
+   "text": "The indicator: seedlings saved, times the cost of each one.",
    "caption": false
   },
   "l1": {
@@ -301,54 +305,62 @@ export default {
    "id": "l3",
    "scene": "lettuce",
    "start": 51.014,
-   "end": 53.777,
+   "end": 54.577,
    "segs": [
     [
      51.044,
-     52.264
+     51.714
     ],
     [
-     52.554,
-     53.704
+     52.024,
+     54.514
     ]
    ],
-   "text": "Less product thrown away. Fewer short deliveries."
+   "text": "The impact: less product thrown away, and fewer short deliveries."
   },
   "l4": {
    "id": "l4",
    "scene": "lettuce",
-   "start": 54.377,
-   "end": 60.03,
+   "start": 55.177,
+   "end": 61.15,
    "segs": [
     [
-     54.407,
-     55.067
+     55.207,
+     55.927
     ],
     [
-     55.457,
+     56.327,
      57.547
     ],
     [
-     57.667,
-     59.957
+     57.677,
+     58.567
+    ],
+    [
+     58.717,
+     60.027
+    ],
+    [
+     60.147,
+     61.077
     ]
    ],
-   "text": "The impact: boxes not wasted, times their cost, plus shortfalls avoided, times the penalty.",
+   "text": "The indicator: boxes not wasted, times their cost, plus shortfalls avoided, times the penalty.",
    "caption": false
   },
   "u1": {
    "id": "u1",
    "scene": "onions",
-   "start": 63.0,
-   "end": 65.614,
+   "start": 64.2,
+   "end": 66.814,
    "segs": [
     [
-     63.03,
-     63.68
+     64.23,
+     64.88
     ],
     [
-     63.89,
-     65.54
+     65.09,
+     66.74
     ]
    ],
    "text": "At harvest, every field needs its size split."
@@ -356,20 +368,20 @@ export default {
   "u2": {
    "id": "u2",
    "scene": "onions",
-   "start": 66.114,
-   "end": 73.154,
+   "start": 67.314,
+   "end": 74.354,
    "segs": [
     [
-     66.144,
-     68.084
+     67.344,
+     69.284
     ],
     [
-     68.514,
-     71.564
+     69.714,
+     72.764
     ],
     [
-     71.864,
-     73.094
+     73.064,
+     74.294
     ]
    ],
    "text": "Off-the-shelf models missed onions, so a custom model over the windrower counts each one once, and sorts it by size."
@@ -377,50 +389,50 @@ export default {
   "u4": {
    "id": "u4",
    "scene": "onions",
-   "start": 73.854,
-   "end": 80.531,
+   "start": 75.054,
+   "end": 82.179,
    "segs": [
     [
-     73.884,
-     74.544
-    ],
-    [
-     74.904,
-     76.114
+     75.084,
+     75.804
     ],
     [
      76.234,
-     77.124
+     77.514
     ],
     [
-     77.224,
-     79.094
+     77.654,
+     78.544
     ],
     [
-     79.254,
-     80.464
+     78.694,
+     80.654
+    ],
+    [
+     80.904,
+     82.114
     ]
    ],
-   "text": "The impact: sampling hours saved, times their cost, plus tonnes in the right size band, times the price difference.",
+   "text": "The indicator: sampling hours saved, times their cost, plus tonnes in the right size band, times the price difference.",
    "caption": false
   },
   "k1": {
    "id": "k1",
    "scene": "pumpkins",
-   "start": 83.3,
-   "end": 88.271,
+   "start": 85.7,
+   "end": 90.671,
    "segs": [
     [
-     83.33,
-     84.12
+     85.73,
+     86.52
     ],
     [
-     84.31,
-     86.79
+     86.71,
+     89.19
     ],
     [
-     87.14,
-     88.21
+     89.54,
+     90.61
     ]
    ],
    "text": "In the packhouse, every pumpkin is counted and graded for quality, with no hand counts."
@@ -428,63 +440,63 @@ export default {
   "k2": {
    "id": "k2",
    "scene": "pumpkins",
-   "start": 88.771,
-   "end": 91.705,
+   "start": 91.171,
+   "end": 94.926,
    "segs": [
     [
-     88.801,
-     90.571
+     91.201,
+     91.871
     ],
     [
-     90.771,
-     91.631
+     92.201,
+     94.861
     ]
    ],
-   "text": "So each one sells in the right class, at the right price."
+   "text": "The impact: each pumpkin sells in the right class, at the right price."
   },
   "k3": {
    "id": "k3",
    "scene": "pumpkins",
-   "start": 92.405,
-   "end": 98.528,
+   "start": 95.626,
+   "end": 101.898,
    "segs": [
     [
-     92.435,
-     93.105
+     95.656,
+     96.396
     ],
     [
-     93.475,
-     94.275
+     96.776,
+     97.566
     ],
     [
-     94.375,
-     96.895
+     97.696,
+     100.236
     ],
     [
-     97.215,
-     98.455
+     100.586,
+     101.826
     ]
    ],
-   "text": "The impact: hours saved, times cost per hour, plus kilos graded right, times the price difference.",
+   "text": "The indicator: hours saved, times cost per hour, plus kilos graded right, times the price difference.",
    "caption": false
   },
   "b1": {
    "id": "b1",
    "scene": "labels",
-   "start": 101.3,
-   "end": 105.737,
+   "start": 104.9,
+   "end": 109.337,
    "segs": [
     [
-     101.32,
-     102.05
-    ],
-    [
-     102.24,
-     104.79
-    ],
-    [
-     105.08,
+     104.92,
      105.65
+    ],
+    [
+     105.84,
+     108.39
+    ],
+    [
+     108.68,
+     109.25
     ]
    ],
    "text": "At dispatch, one crate at the wrong supermarket means a rejection, and a fine."
@@ -492,24 +504,24 @@ export default {
   "b2": {
    "id": "b2",
    "scene": "labels",
-   "start": 106.337,
-   "end": 111.628,
+   "start": 109.937,
+   "end": 115.228,
    "segs": [
     [
-     106.367,
-     108.007
+     109.967,
+     111.607
     ],
     [
-     108.307,
-     109.107
+     111.907,
+     112.707
     ],
     [
-     109.217,
-     109.767
+     112.817,
+     113.367
     ],
     [
-     110.047,
-     111.567
+     113.647,
+     115.167
     ]
    ],
    "text": "AI recognizes each crate, checks the order, labels it, and holds back any mismatch."
@@ -517,55 +529,55 @@ export default {
   "b3": {
    "id": "b3",
    "scene": "labels",
-   "start": 112.128,
-   "end": 114.935,
+   "start": 115.728,
+   "end": 119.291,
    "segs": [
     [
-     112.158,
-     113.138
+     115.758,
+     116.428
     ],
     [
-     113.338,
-     114.858
+     116.698,
+     119.218
     ]
    ],
-   "text": "Fewer rejections, returns and lost product."
+   "text": "The impact: fewer rejections, returns and lost product."
   },
   "b4": {
    "id": "b4",
    "scene": "labels",
-   "start": 115.535,
-   "end": 120.356,
+   "start": 119.891,
+   "end": 124.883,
    "segs": [
     [
-     115.565,
-     116.235
+     119.921,
+     120.661
     ],
     [
-     116.585,
-     117.695
+     121.031,
+     122.141
     ],
     [
-     117.805,
-     120.295
+     122.261,
+     124.821
     ]
    ],
-   "text": "The impact: rejections avoided, times the fine, plus the product, plus the freight.",
+   "text": "The indicator: rejections avoided, times the fine, plus the product, plus the freight.",
    "caption": false
   },
   "g1": {
    "id": "g1",
    "scene": "dashboard",
-   "start": 123.0,
-   "end": 125.082,
+   "start": 127.8,
+   "end": 129.882,
    "segs": [
     [
-     123.03,
-     123.52
+     127.83,
+     128.32
     ],
     [
-     123.66,
-     125.02
+     128.46,
+     129.82
     ]
    ],
    "text": "Finally, it all lands in one place."
@@ -573,20 +585,20 @@ export default {
   "g2": {
    "id": "g2",
    "scene": "dashboard",
-   "start": 125.582,
-   "end": 132.069,
+   "start": 130.382,
+   "end": 136.869,
    "segs": [
     [
-     125.612,
-     128.212
+     130.412,
+     133.012
     ],
     [
-     128.532,
-     129.722
+     133.332,
+     134.522
     ],
     [
-     130.062,
-     132.002
+     134.862,
+     136.802
     ]
    ],
    "text": "One data foundation powers a live dashboard, self-building reports, and alerts while there's still time to act."
@@ -594,16 +606,16 @@ export default {
   "g3": {
    "id": "g3",
    "scene": "dashboard",
-   "start": 132.669,
-   "end": 135.987,
+   "start": 137.469,
+   "end": 140.787,
    "segs": [
     [
-     132.699,
-     133.959
+     137.499,
+     138.759
     ],
     [
-     134.239,
-     135.899
+     139.039,
+     140.699
     ]
    ],
    "text": "Ask in plain English, and the answer comes from live data."
@@ -611,59 +623,59 @@ export default {
   "g4": {
    "id": "g4",
    "scene": "dashboard",
-   "start": 136.587,
-   "end": 140.171,
+   "start": 141.387,
+   "end": 145.142,
    "segs": [
     [
-     136.617,
-     137.297
+     141.417,
+     142.127
     ],
     [
-     137.577,
-     138.727
+     142.457,
+     143.657
     ],
     [
-     138.887,
-     140.097
+     143.817,
+     145.067
     ]
    ],
-   "text": "The impact: reporting hours saved, times the cost per hour.",
+   "text": "The indicator: reporting hours saved, times the cost per hour.",
    "caption": false
   },
   "z1": {
    "id": "z1",
    "scene": "impact-close",
-   "start": 143.4,
-   "end": 146.408,
+   "start": 148.2,
+   "end": 151.315,
    "segs": [
     [
-     143.43,
-     144.33
+     148.23,
+     149.13
     ],
     [
-     144.47,
-     145.35
+     149.28,
+     150.27
     ],
     [
-     145.57,
-     146.31
+     150.5,
+     151.24
     ]
    ],
-   "text": "Six problems. Six formulas. One season."
+   "text": "Six problems. Six indicators. One season."
   },
   "z2": {
    "id": "z2",
    "scene": "impact-close",
-   "start": 147.208,
-   "end": 151.155,
+   "start": 152.115,
+   "end": 156.062,
    "segs": [
     [
-     147.238,
-     149.228
+     152.145,
+     154.135
     ],
     [
-     149.548,
-     151.088
+     154.455,
+     155.995
     ]
    ],
    "text": "Because AI is only worth building when you can measure what it gives back."
@@ -671,12 +683,12 @@ export default {
   "z3": {
    "id": "z3",
    "scene": "impact-close",
-   "start": 152.355,
-   "end": 153.975,
+   "start": 157.262,
+   "end": 158.882,
    "segs": [
     [
-     152.385,
-     153.855
+     157.292,
+     158.762
     ]
    ],
    "text": "Eagerworks AI Studio.",
@@ -685,15 +697,15 @@ export default {
   "z4": {
    "id": "z4",
    "scene": "impact-close",
-   "start": 154.975,
-   "end": 156.295,
+   "start": 159.882,
+   "end": 161.25,
    "segs": [
     [
-     155.005,
-     156.175
+     159.912,
+     161.152
     ]
    ],
-   "text": "Let's find your formula.",
+   "text": "Let's build what's next.",
    "caption": false
   }
  }

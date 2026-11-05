@@ -1,8 +1,8 @@
 // 03 — Harvest · Onion sizing (proposal).
-// Proposal card with the proposal's proof-of-concept photo (an off-the-shelf model misses onions) →
+// Need → Solution panels, with the proof-of-concept photo (an off-the-shelf model misses onions) →
 // the windrower's rod belt: a custom model gives every onion an ID, counts it once at the line, measures it
 // and sorts it into a size band; the field's size split builds live and lands on the field map →
-// formula: Sampling hours saved × Cost/hour + Tonnes in the right band × Price difference.
+// impact indicator: Sampling hours saved × Cost/hour + Tonnes in the right band × Price difference.
 import { addScene, h, put, prog, E, clamp, lerp, env, makeCanvas, rgba, C, hash, rrect, W, H } from '../engine.js';
 import { makeHud, box, tag } from '../lib/ui.js';
 import { seg } from '../lib/vo.js';
@@ -59,8 +59,8 @@ addScene({
     this.card = makeProposalCard(R, {
       need: 'Know <b>each field’s size split</b> during harvest, to plan sales and logistics.',
       solution: 'A camera over the windrower and <b>a custom model</b> count every onion, measure it and sort it into size bands.',
-      photo: 'assets/proposals/onion-poc.png', caption: 'Proof of concept · off-the-shelf model', marks: POC_MISSED, markLabel: 'Missed onions',
-      h: 760,
+      photo: 'assets/proposals/onion-poc.png', caption: 'Off-the-shelf model', marks: POC_MISSED, markLabel: 'Missed onions',
+      h: 540, solH: 300,
     });
     // live panel: count, manual samples, size split by band
     this.panel = h('div', { class: 'panel', style: { left: '1430px', top: '118px', width: '340px', padding: '18px 22px 20px', background: 'rgba(12,14,17,0.9)', zIndex: '20' } });
@@ -99,7 +99,7 @@ addScene({
     const eqLevel = this.eq.level(t, { times: this.times, dockAt: this.dockAt });
     this.hud(t, { hideSteps: eqLevel > 0.25 });
 
-    // ---------------- proposal card (with the proof-of-concept photo)
+    // ---------------- need → solution (with the proof-of-concept photo)
     this.card.render(t, {
       open: prog(t, 0.05, 1.0, E.linear),
       need: prog(t, 0.7, 1.4, E.linear),

@@ -12,8 +12,8 @@
         {"id": "x1", "at": 1.2, "text": "A seedling that never comes up."},
         {"id": "x2", "gap": 0.45, "text": "A harvest that misses the order."},
         {"id": "x3", "gap": 0.45, "text": "A crate at the wrong store."},
-        {"id": "x4", "gap": 1.7, "text": "Impact isn't a promise. It's a formula.", "tts": "Impact isn't a promise... It's a formula.", "caption": false},
-        {"id": "x5", "gap": 0.9, "text": "At Eagerworks, every AI project starts by defining how its impact will be measured.", "speed": 1.04},
+        {"id": "x4", "gap": 1.7, "text": "Impact isn't a promise. It's measured.", "tts": "Impact isn't a promise... It's measured.", "caption": false},
+        {"id": "x5", "gap": 0.9, "text": "At Eagerworks, every AI project starts by defining the indicators that will measure its impact.", "speed": 1.04},
         {"id": "x6", "gap": 0.7, "text": "Here's one grower's season, from seed to shelf."}
       ]
     },
@@ -25,8 +25,8 @@
       "lines": [
         {"id": "n1", "at": 0.6, "text": "It starts in the nursery."},
         {"id": "n2", "gap": 0.5, "text": "Cameras over the moving trays count and size every seedling, and flag weak trays early."},
-        {"id": "n3", "gap": 0.6, "text": "More seedlings survive: less replanting, fewer days with an empty field.", "tts": "More seedlings survive... less replanting, fewer days with an empty field."},
-        {"id": "n4", "gap": 0.7, "text": "The impact: seedlings saved, times the cost of each one.", "tts": "The impact... seedlings saved, times the cost of each one.", "caption": false}
+        {"id": "n3", "gap": 0.6, "text": "The impact: more seedlings survive, less replanting, fewer days with an empty field.", "tts": "The impact... more seedlings survive, less replanting, fewer days with an empty field."},
+        {"id": "n4", "gap": 0.7, "text": "The indicator: seedlings saved, times the cost of each one.", "tts": "The indicator... seedlings saved, times the cost of each one.", "caption": false}
       ]
     },
     {
@@ -37,8 +37,8 @@
       "lines": [
         {"id": "l1", "at": 0.5, "text": "In the field, a camera on the tractor measures every lettuce."},
         {"id": "l2", "gap": 0.5, "text": "The model forecasts the boxes ready each day, and matches them to the orders."},
-        {"id": "l3", "gap": 0.6, "text": "Less product thrown away. Fewer short deliveries."},
-        {"id": "l4", "gap": 0.6, "text": "The impact: boxes not wasted, times their cost, plus shortfalls avoided, times the penalty.", "tts": "The impact... boxes not wasted, times their cost, plus shortfalls avoided, times the penalty.", "caption": false}
+        {"id": "l3", "gap": 0.6, "text": "The impact: less product thrown away, and fewer short deliveries.", "tts": "The impact... less product thrown away, and fewer short deliveries."},
+        {"id": "l4", "gap": 0.6, "text": "The indicator: boxes not wasted, times their cost, plus shortfalls avoided, times the penalty.", "tts": "The indicator... boxes not wasted, times their cost, plus shortfalls avoided, times the penalty.", "caption": false}
       ]
     },
     {
@@ -49,7 +49,7 @@
       "lines": [
         {"id": "u1", "at": 0.6, "text": "At harvest, every field needs its size split."},
         {"id": "u2", "gap": 0.5, "text": "Off-the-shelf models missed onions, so a custom model over the windrower counts each one once, and sorts it by size.", "tts": "Off-the-shelf models missed onions... so a custom model over the wind rower counts each one once, and sorts it by size."},
-        {"id": "u4", "gap": 0.7, "text": "The impact: sampling hours saved, times their cost, plus tonnes in the right size band, times the price difference.", "tts": "The impact... sampling hours saved, times their cost, plus tonnes in the right size band, times the price difference.", "caption": false}
+        {"id": "u4", "gap": 0.7, "text": "The indicator: sampling hours saved, times their cost, plus tonnes in the right size band, times the price difference.", "tts": "The indicator... sampling hours saved, times their cost, plus tonnes in the right size band, times the price difference.", "caption": false}
       ]
     },
     {
@@ -59,8 +59,8 @@
       "speed": 1.05,
       "lines": [
         {"id": "k1", "at": 0.5, "text": "In the packhouse, every pumpkin is counted and graded for quality, with no hand counts."},
-        {"id": "k2", "gap": 0.5, "text": "So each one sells in the right class, at the right price."},
-        {"id": "k3", "gap": 0.7, "text": "The impact: hours saved, times cost per hour, plus kilos graded right, times the price difference.", "tts": "The impact... hours saved, times cost per hour, plus kilos graded right, times the price difference.", "caption": false}
+        {"id": "k2", "gap": 0.5, "text": "The impact: each pumpkin sells in the right class, at the right price.", "tts": "The impact... each pumpkin sells in the right class, at the right price."},
+        {"id": "k3", "gap": 0.7, "text": "The indicator: hours saved, times cost per hour, plus kilos graded right, times the price difference.", "tts": "The indicator... hours saved, times cost per hour, plus kilos graded right, times the price difference.", "caption": false}
       ]
     },
     {
@@ -71,8 +71,8 @@
       "lines": [
         {"id": "b1", "at": 0.5, "text": "At dispatch, one crate at the wrong supermarket means a rejection, and a fine."},
         {"id": "b2", "gap": 0.6, "text": "AI recognizes each crate, checks the order, labels it, and holds back any mismatch."},
-        {"id": "b3", "gap": 0.5, "text": "Fewer rejections, returns and lost product."},
-        {"id": "b4", "gap": 0.6, "text": "The impact: rejections avoided, times the fine, plus the product, plus the freight.", "tts": "The impact... rejections avoided, times the fine, plus the product, plus the freight.", "caption": false}
+        {"id": "b3", "gap": 0.5, "text": "The impact: fewer rejections, returns and lost product.", "tts": "The impact... fewer rejections, returns and lost product."},
+        {"id": "b4", "gap": 0.6, "text": "The indicator: rejections avoided, times the fine, plus the product, plus the freight.", "tts": "The indicator... rejections avoided, times the fine, plus the product, plus the freight.", "caption": false}
       ]
     },
     {
@@ -84,7 +84,7 @@
         {"id": "g1", "at": 0.6, "text": "Finally, it all lands in one place."},
         {"id": "g2", "gap": 0.5, "text": "One data foundation powers a live dashboard, self-building reports, and alerts while there's still time to act."},
         {"id": "g3", "gap": 0.6, "text": "Ask in plain English, and the answer comes from live data."},
-        {"id": "g4", "gap": 0.6, "text": "The impact: reporting hours saved, times the cost per hour.", "tts": "The impact... reporting hours saved, times the cost per hour.", "caption": false}
+        {"id": "g4", "gap": 0.6, "text": "The indicator: reporting hours saved, times the cost per hour.", "tts": "The indicator... reporting hours saved, times the cost per hour.", "caption": false}
       ]
     },
     {
@@ -93,10 +93,10 @@
       "min": 15.0,
       "speed": 1.0,
       "lines": [
-        {"id": "z1", "at": 0.6, "text": "Six problems. Six formulas. One season.", "tts": "Six problems... Six formulas... One season."},
+        {"id": "z1", "at": 0.6, "text": "Six problems. Six indicators. One season.", "tts": "Six problems... Six indicators... One season."},
         {"id": "z2", "gap": 0.8, "text": "Because AI is only worth building when you can measure what it gives back."},
         {"id": "z3", "gap": 1.2, "text": "Eagerworks AI Studio.", "caption": false},
-        {"id": "z4", "gap": 1.0, "text": "Let's find your formula.", "caption": false}
+        {"id": "z4", "gap": 1.0, "text": "Let's build what's next.", "caption": false}
       ]
     }
   ]

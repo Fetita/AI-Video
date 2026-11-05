@@ -1,6 +1,6 @@
 // 01 — Nursery · Seedling survival (proposal).
-// Proposal card (need → solution) → two lanes of trays roll under a camera gantry: every cell counted
-// and sized, a weak tray flagged early → outcome chips → impact formula: Seedlings saved × Cost per seedling.
+// Need → Solution panels → two lanes of trays roll under a camera gantry: every cell counted and sized,
+// a weak tray flagged early → impact (outcome chips) → impact indicator: Seedlings saved × Cost per seedling.
 import { addScene, h, put, prog, E, clamp, lerp, env, makeCanvas, rgba, C, hash, rrect, W, H } from '../engine.js';
 import { makeHud, box, tag } from '../lib/ui.js';
 import { seg, cueOr } from '../lib/vo.js';
@@ -64,7 +64,7 @@ addScene({
     this.card = makeProposalCard(R, {
       need: 'Know how many seedlings survive in <b>every tray</b>, and catch weak trays early.',
       solution: 'Cameras over moving trays <b>count and size every seedling</b>, cell by cell, with a custom model.',
-      h: 600,
+      h: 300,
     });
     this.panel = makeStatPanel(R, {
       title: 'Tray audit', x: 1430, y: 118, w: 340,
@@ -97,7 +97,7 @@ addScene({
     const eqLevel = this.eq.level(t, { times: this.times, dockAt: this.dockAt });
     this.hud(t, { hideSteps: eqLevel > 0.25 });
 
-    // ---------------- proposal card: opens out of the hand-off line, then dissolves into the live view
+    // ---------------- need → solution: unfolds out of the hand-off line, then dissolves into the live view
     this.card.render(t, {
       open: prog(t, 0.05, 1.0, E.linear),
       need: prog(t, 0.75, 1.3, E.linear),
