@@ -420,6 +420,161 @@ if 'finale' in SC:
     w_arp(t0 + hitF + 2 * BEAT, 'Cmaj9', 8, rate=0.5, bright=0.5, gain=0.25)
 
 
+# ================================================================== IMPACT FILM ("Seed to Shelf")
+# Sections for CUT=impact / impact-teaser. Each block only runs when its scene is in the timeline.
+def lay(t0, nb, prog_, bright=0.5, gain=1.0, bass='8', grit=0.4, arp=0.25, arp_gain=0.36, bass_gain=0.75, arp_pat='up'):
+    """Pads, bass and arps over a chord list [(chord, beats)]; the last chord takes the remainder."""
+    b = 0.0
+    for i, (ch, n_) in enumerate(prog_):
+        n_ = nb - b if i == len(prog_) - 1 else n_
+        if n_ <= 0.5:
+            break
+        w_pad(t0 + b * BEAT, ch, n_, bright=bright, gain=0.75 * gain)
+        if bass:
+            w_bass(t0 + b * BEAT, ch, n_, pattern=bass, grit=grit, gain=bass_gain * gain)
+        if arp:
+            w_arp(t0 + b * BEAT, ch, n_, rate=arp, bright=min(1.0, bright + 0.25), gain=arp_gain * gain, pattern=arp_pat)
+        b += n_
+
+
+def eq_lull(sid, line):
+    """Equation moment: a soft pad swell under the formula (bells live in sfx.py)."""
+    if line not in L:
+        return
+    t0 = L[line]['start'] - 0.4
+    w_pad(t0, 'Cmaj9', (L[line]['end'] - t0) / BEAT + 2, bright=0.8, gain=0.35)
+
+
+if 'impact-open' in SC:
+    t0, nb = section_beats('impact-open')
+    x3e = L['x3']['end']
+    gap = cue('x4') - x3e
+    fl = [x3e + 0.05 + i * min(0.32, (gap - 0.9) / 3) for i in range(3)]
+    hit = fl[2] + 0.3 + 0.32 + 0.3          # the six vignettes collapse into one line
+    hb = (hit - t0) / BEAT
+    w_pad(t0, 'Am9', hb, bright=0.25, gain=0.8)
+    w_drums(t0 + 2 * BEAT, max(1, hb - 2), 'tick', gain=0.85)
+    for tc in [cue('x1') - 0.12, cue('x2') - 0.12, cue('x3') - 0.12]:
+        place(S['fx'], impact(0.35, seed=int(tc * 10)), tc, 0.55)
+    place(S['fx'], riser(1.4, 41), hit - 1.4, 0.5)
+    place(S['fx'], impact(1.0, 43), hit, 0.9)
+    place(S['drums'], pan(_CR, 0), hit, 0.25)
+    cF = cue('x4', 1)
+    nx = cue('x5') if 'x5' in L else cue('x6')
+    w_pad(hit, 'Fmaj9', (nx - hit) / BEAT, bright=0.45, gain=0.85)
+    w_bass(hit, 'Fmaj9', (nx - hit) / BEAT, pattern='4', grit=0.2, gain=0.5)
+    place(S['fx'], impact(0.6, 45), cF - 0.05, 0.55)
+    w_bells(cF + 0.2, [(76, 0), (79, 0.5), (84, 1.0)], gain=0.3)
+    if 'x5' in L:
+        c5 = cue('x5')
+        w_pad(c5 - 0.2, 'Cmaj9', (cue('x6') - c5 + 0.2) / BEAT, bright=0.7, gain=0.95)
+        w_bells(c5, [(72, 0), (76, 0.5), (79, 1.0), (83, 1.5), (84, 2.0)], gain=0.32)
+        w_arp(c5 + 2 * BEAT, 'Cmaj9', (cue('x6') - c5) / BEAT - 2, rate=0.5, bright=0.5, gain=0.26)
+        w_drums(c5, (cue('x6') - c5) / BEAT, 'soft', gain=0.6)
+    c6 = cue('x6')
+    rest = nb - (c6 - t0) / BEAT
+    w_pad(c6, 'G6sus', rest, bright=0.6, gain=0.9)
+    w_bass(c6, 'G6sus', rest, pattern='8', grit=0.3, gain=0.65)
+    w_arp(c6, 'G6sus', rest, rate=0.25, bright=0.6, gain=0.34)
+    w_drums(c6, rest - 1, 'half', gain=0.7)
+    place(S['fx'], riser(1.6, 47), t0 + nb * BEAT - 1.6, 0.45)
+
+if 'nursery' in SC:
+    t0, nb = section_beats('nursery')
+    place(S['fx'], impact(0.45, 51), t0, 0.45)
+    lay(t0, nb, [('Fmaj9', 8), ('Cmaj9', 8), ('Am9', 8), ('G6sus', 8)], bright=0.4, bass='hold', grit=0.1, arp=0.5, arp_gain=0.3, bass_gain=0.4)
+    motif = [(72, 0), (76, 1), (79, 1.5), (81, 2), (79, 3), (76, 3.5)]
+    w_bells(t0 + 4 * BEAT, motif, gain=0.24)
+    w_drums(t0 + 4 * BEAT, nb - 6, 'soft', gain=0.6)
+    eq_lull('nursery', 'n4')
+    place(S['fx'], reverse_swell(1.0, 52), t0 + nb * BEAT - 1.0, 0.5)
+
+if 'lettuce' in SC:
+    t0, nb = section_beats('lettuce')
+    place(S['fx'], impact(0.6, 53), t0, 0.55)
+    lay(t0, nb, [('Am9', 8), ('Fmaj9', 8), ('Cmaj9', 8), ('G6sus', 8)], bright=0.55, bass='8', grit=0.5, arp=0.25, arp_gain=0.4, bass_gain=0.8)
+    w_drums(t0, 8, 'mech', gain=0.8)
+    w_drums(t0 + 8 * BEAT, nb - 10, 'four', gain=0.85)
+    eq_lull('lettuce', 'l4')
+    fill(t0 + nb * BEAT, 0.6)
+
+if 'onions' in SC:
+    t0, nb = section_beats('onions')
+    place(S['fx'], impact(0.8, 55), t0, 0.6)
+    place(S['drums'], pan(_CR, 0), t0, 0.25)
+    lay(t0, nb, [('Am9', 4), ('Fmaj9', 8), ('Dm9', 8), ('G6sus', 8)], bright=0.62, bass='16', grit=0.65, arp=0.25, arp_gain=0.45, bass_gain=0.8, arp_pat='updown')
+    for bb in range(4, int(nb) - 4, 4):
+        place(S['stab'], pan(stab('Fmaj9' if bb < 12 else 'Dm9' if bb < 20 else 'G6sus'), 0.15), t0 + (bb + 3.5) * BEAT, 0.42)
+    w_drums(t0, 4, 'tick', gain=0.9)
+    w_drums(t0 + 4 * BEAT, nb - 6, 'drive', gain=0.9)
+    eq_lull('onions', 'u4')
+    fill(t0 + nb * BEAT, 0.8)
+
+if 'pumpkins' in SC:
+    t0, nb = section_beats('pumpkins')
+    place(S['fx'], impact(0.6, 57), t0, 0.5)
+    lay(t0, nb, [('Fmaj9', 8), ('Am9', 8), ('Cmaj9', 8), ('G6sus', 8)], bright=0.55, bass='8', grit=0.5, arp=0.25, arp_gain=0.38, bass_gain=0.8)
+    w_drums(t0, nb - 2, 'mech', gain=0.85)
+    for bb in range(0, int(nb) - 4, 8):
+        place(S['stab'], pan(stab('Fmaj9' if bb < 8 else 'Am9' if bb < 16 else 'Cmaj9'), -0.15), t0 + (bb + 7.5) * BEAT, 0.35)
+    eq_lull('pumpkins', 'k3')
+    fill(t0 + nb * BEAT, 0.6)
+
+if 'labels' in SC:
+    t0, nb = section_beats('labels')
+    ai = cue('b2') - 0.4                        # the switch from the leak to the fix
+    gb = (ai - t0) / BEAT
+    w_pad(t0, 'Dm9', gb, bright=0.35, gain=0.8)
+    w_bass(t0, 'Dm9', gb, pattern='4', grit=0.3, gain=0.6)
+    w_drums(t0, gb, 'tick', gain=0.8)
+    place(S['fx'], impact(0.7, 59), cue('b1', 1) + 1.45, 0.6)        # REJECTED
+    place(S['fx'], riser(1.2, 61), ai - 1.2, 0.45)
+    place(S['fx'], impact(0.6, 63), ai, 0.5)
+    lay(ai, nb - gb, [('Cmaj9', 8), ('Fmaj9', 8), ('G6sus', 8)], bright=0.6, bass='8', grit=0.45, arp=0.25, arp_gain=0.38, bass_gain=0.78)
+    w_drums(ai, nb - gb - 2, 'mech', gain=0.85)
+    eq_lull('labels', 'b4')
+    fill(t0 + nb * BEAT, 0.6)
+
+if 'dashboard' in SC:
+    t0, nb = section_beats('dashboard')
+    place(S['fx'], impact(0.5, 65), t0, 0.45)
+    lay(t0, nb, [('Fmaj9', 8), ('Cmaj9', 8), ('Am9', 8), ('G6sus', 8)], bright=0.5, bass='8', grit=0.3, arp=0.5, arp_gain=0.32, bass_gain=0.65)
+    w_drums(t0, 4, 'tick', gain=0.8)
+    w_drums(t0 + 4 * BEAT, nb - 6, 'half', gain=0.75)
+    if 'g2' in L:
+        w_bells(cue('g2', 2), [(79, 0), (84, 0.5)], gain=0.22)      # the alert, in time
+    eq_lull('dashboard', 'g4')
+    place(S['fx'], riser(2.0, 67), t0 + nb * BEAT - 2.0, 0.5)
+    place(S['fx'], reverse_swell(1.2, 68), t0 + nb * BEAT - 1.2, 0.7)
+
+if 'impact-close' in SC:
+    t0, nb = section_beats('impact-close')
+    place(S['fx'], impact(0.8, 71), t0, 0.6)
+    place(S['drums'], pan(_CR, 0), t0, 0.3)
+    c1 = [cue('z1', 0), cue('z1', 1), cue('z1', 2)]
+    w_pad(t0, 'Fmaj9', 8, bright=0.7, gain=0.7)
+    w_bass(t0, 'Fmaj9', 8, pattern='8', grit=0.55, gain=0.8)
+    w_arp(t0, 'Fmaj9', 8, rate=0.25, bright=0.9, gain=0.42, pattern='updown')
+    w_drums(t0, 8, 'four', gain=0.95)
+    for tc in c1:
+        place(S['fx'], impact(0.45, int(tc * 7)), tc - 0.04, 0.45)
+    hitF = cue('z3') + 0.5                   # the logo fills
+    pre = (hitF - (t0 + 8 * BEAT)) / BEAT
+    if pre > 0.5:
+        w_pad(t0 + 8 * BEAT, 'G6sus', pre, bright=0.85, gain=0.72)
+    place(S['fx'], riser(3 * BEAT + 0.3, 73), hitF - 3 * BEAT - 0.3, 0.7)
+    place(S['fx'], reverse_swell(1.5, 74), hitF - 1.5, 0.85)
+    place(S['fx'], impact(1.5, 75), hitF, 1.0)
+    place(S['drums'], pan(_CR, 0), hitF, 0.42)
+    restF = nb - (hitF - t0) / BEAT
+    w_pad(hitF, 'Cmaj9', 8, bright=0.8, gain=1.0)
+    w_pad(hitF + 8 * BEAT, 'Cmaj9', max(1, restF - 8 + 4), bright=0.5, gain=0.85)
+    w_bass(hitF, 'Cmaj9', 8, pattern='hold', grit=0.1, gain=0.55)
+    w_bells(hitF, [(72, 0), (76, 0.5), (79, 1.0), (83, 1.5), (84, 2.0), (88, 3.0)], gain=0.38)
+    w_bells(cue('z4') - 0.1, [(84, 0), (91, 0.25)], gain=0.33)
+    w_arp(hitF + 2 * BEAT, 'Cmaj9', 8, rate=0.5, bright=0.5, gain=0.24)
+
+
 # ------------------------------------------------------------------ sidechain + mixdown
 t = t_of(N)
 duck = np.ones(N)
@@ -444,10 +599,11 @@ LEVELS = {'drums': 0.62, 'bass': 0.3, 'pad': 0.85, 'arp': 0.52, 'bell': 0.28, 'f
 mix = sum(S[k] * LEVELS[k] for k in S)
 # section dynamics: let the story breathe, peak at vision/agri
 SEC_GAIN = {'hook': 1.0, 'intro': 0.78, 'search': 0.84, 'story': 0.72, 'vision': 1.0, 'agri': 0.94, 'docs': 0.84, 'inhouse': 0.88, 'promise': 0.8, 'finale': 1.0}
+SEC_GAIN.update({'impact-open': 1.0, 'nursery': 0.8, 'lettuce': 0.9, 'onions': 0.96, 'pumpkins': 0.92, 'labels': 0.9, 'dashboard': 0.84, 'impact-close': 1.0})
 gcurve = np.ones(N)
 for sc in TL['scenes']:
-    a, b2 = int(sc['start'] * SR), int(sc['end'] * SR) if sc['id'] != 'finale' else N
-    gcurve[a:b2] = SEC_GAIN[sc['id']]
+    a, b2 = int(sc['start'] * SR), int(sc['end'] * SR) if sc is not TL['scenes'][-1] else N
+    gcurve[a:b2] = SEC_GAIN.get(sc['id'], 0.9)
 k = n_of(0.6)
 gcurve = np.convolve(np.pad(gcurve, (k, k), mode='edge'), np.ones(k) / k, mode='same')[k:-k]
 mix *= gcurve[:, None]

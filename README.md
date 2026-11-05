@@ -11,6 +11,12 @@ AI capabilities into real products, workflows and measurable outcomes.
 **Creative treatment** (narrative, storyboard, timings, VO script, on-screen text, visual & sound direction, reference mapping):
 [`docs/creative-treatment.md`](docs/creative-treatment.md)
 
+**Seed to Shelf**, the AI impact case film: one fresh-produce grower's season in six AI cases, each closing on its
+impact formula. The client is never named.
+[`eagerworks-ai-impact`](out/eagerworks-ai-impact.mp4) (2:40) ·
+[`eagerworks-ai-impact-teaser`](out/eagerworks-ai-impact-teaser.mp4) (1:22, three cases, burned-in captions) ·
+treatment: [`docs/impact-treatment.md`](docs/impact-treatment.md)
+
 Everything in the film is generated from code in this repository. Visuals are deterministic
 HTML/Canvas/SVG scenes rendered frame by frame in headless Chromium. The voiceover comes from a
 local open-weight TTS model, and the music and sound design are synthesized with numpy.
@@ -91,3 +97,27 @@ cd .. && scripts/finalize.sh video/build/frames-linkedin.mkv audio/build/mix-lin
 
 Review stills for a cut with `node render.mjs --stills 12.5 --query cut=linkedin`. The same steps build
 `linkedin-cv` and `linkedin-genai` (swap the cut name).
+
+### The impact film (Seed to Shelf)
+
+It is built the same way as a cut, but with scenes of its own:
+- Scenes: `impact-open`, `nursery`, `lettuce`, `onions`, `pumpkins`, `labels`, `dashboard`, `impact-close`.
+- Shared modules in `video/src/lib/`: the formula, value chain, proposal card, icons, produce and conveyors.
+
+`CUT=impact` builds the film and `CUT=impact-teaser` the teaser. Render each one into its own folder, because
+`render.mjs` writes its segments next to `--out`:
+
+```bash
+cd audio && export CUT=impact
+python3 tts.py && python3 build_timeline.py && python3 music.py && python3 sfx.py && python3 mix.py
+cd ../video && node render.mjs --video --workers 4 --query cut=impact --out build/impact/frames.mkv
+cd .. && scripts/finalize.sh video/build/impact/frames.mkv audio/build/mix-impact.wav out/eagerworks-ai-impact.mp4
+```
+
+Playwright: if `video/node_modules` is missing, linking a preinstalled Playwright also works:
+
+```bash
+ln -s "$(dirname "$(node -p "require.resolve('playwright')")")" video/node_modules/playwright
+```
+
+`npm install` does the same job, but it also needs that version's browser download.

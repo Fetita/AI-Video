@@ -512,6 +512,369 @@ if 'finale' in SC:
     at(cCta - 0.1, s_pop(900, 1400, 0.1), -25)
 
 
+# ================================================================== IMPACT FILM ("Seed to Shelf")
+# Sections for CUT=impact / impact-teaser; each only runs when its scene is in the timeline.
+import re as _re
+
+
+def s_stamp():
+    n = n_of(0.5)
+    t = t_of(n)
+    thump = np.sin(2 * np.pi * (60 + 50 * np.exp(-t / 0.015)) * t) * np.exp(-t / 0.09)
+    clack = filt(noise(n, 31), 'bp', 1800, 1.5) * np.exp(-t / 0.01)
+    paper = filt(noise(n, 32), 'hp', 2500) * adsr(n, 0.005, 0.08, 0.2, 0.1) * 0.4
+    return norm(thump + 0.6 * clack + paper)
+
+
+def s_printer(dur=0.55):
+    n = n_of(dur)
+    t = t_of(n)
+    buzz = np.sign(np.sin(2 * np.pi * 420 * t)) * (0.5 + 0.5 * np.sign(np.sin(2 * np.pi * 38 * t)))
+    x = filt(buzz, 'bp', 1400, 2) * 0.6 + filt(noise(n, 33), 'bp', 3000, 1) * 0.3
+    return norm(x * adsr(n, 0.01, 0.05, 0.9, 0.06))
+
+
+def s_tamp():
+    n = n_of(0.25)
+    t = t_of(n)
+    air = filt(noise(n, 34), 'lp', 1800) * np.exp(-t / 0.05)
+    knock = np.sin(2 * np.pi * (180 + 120 * np.exp(-t / 0.01)) * t) * np.exp(-t / 0.03)
+    return norm(0.7 * air + knock)
+
+
+def s_rods(dur=6.0):
+    n = n_of(dur)
+    t = t_of(n)
+    x = np.zeros(n)
+    for k in np.arange(0, dur, 30 / 165):
+        s0 = n_of(k)
+        e = min(n, s0 + n_of(0.03))
+        x[s0:e] += np.exp(-t_of(e - s0) / 0.006)
+    x = filt(x * noise(n, 35), 'bp', 1600, 1.5) + 0.3 * filt(noise(n, 36), 'lp', 400)
+    return norm(x * adsr(n, 0.3, 0.2, 1.0, 0.5))
+
+
+# --- the formula's token times, mirroring video/src/lib/vo.js + equation.js (same anchors, same rules)
+def _anchors(lid):
+    l = L[lid]
+    text, segs = l['text'], l['segs']
+    T = len(text)
+    dur = [b - a for a, b in segs]
+    V = sum(dur) or 1
+    B = [m.end() for m in _re.finditer(r'[,;:.!?…]+\s+', text) if 0 < m.end() < T]
+    res, acc, frm = [0], 0.0, 0
+    for j in range(len(segs) - 1):
+        acc += dur[j]
+        F = acc / V
+        best, bd = -1, 1e9
+        for i in range(frm, len(B)):
+            if len(B) - 1 - i < len(segs) - 2 - j:
+                break
+            d = abs(B[i] / T - F)
+            if d < bd:
+                bd, best = d, i
+        if best < 0:
+            res.append(int(F * T + 0.5))
+        else:
+            res.append(B[best])
+            frm = best + 1
+    res.append(T)
+    return res
+
+
+def _char_time(lid, c):
+    l = L[lid]
+    A, segs = _anchors(lid), l['segs']
+    for j in range(len(segs)):
+        if c < A[j + 1] or j == len(segs) - 1:
+            a, b = segs[j]
+            u = max(0.0, min(1.0, (c - A[j]) / max(1, A[j + 1] - A[j])))
+            return a + u * (b - a)
+    return l['end']
+
+
+def eq_times(line, toks):
+    l = L[line]
+    text = l['text'].lower()
+    times, cursor, prev = [], 0, l['start']
+    for kind, say in toks:
+        tt = None
+        if say:
+            idx = text.find(say.lower(), cursor)
+            if idx >= 0:
+                tt = _char_time(line, idx)
+                cursor = idx + 1
+        if kind == 'close':
+            tt = max(tt if tt is not None else prev, prev) + 0.32
+        if kind == 'eq':
+            tt = prev + 0.34
+        if kind == 'result':
+            tt = max(prev + 0.3, l['end'] - 0.12)
+        if tt is None:
+            tt = prev + 0.25
+        tt = max(tt, prev + (0.12 if kind == 'term' else 0.08))
+        times.append(tt)
+        prev = tt
+    return times
+
+
+_T = lambda say: ('term', say)
+_O = lambda say: ('op', say)
+EQ = {  # mirrors EQUATIONS in video/src/lib/impact-data.js
+    'nursery': ('n4', [_T('seedlings saved'), _O('times'), _T('the cost'), ('eq', None), ('result', None)]),
+    'lettuce': ('l4', [_T('boxes not wasted'), _O('times'), _T('their cost'), _O('plus'), _T('shortfalls avoided'), _O('times the'), _T('penalty'), ('eq', None), ('result', None)]),
+    'onions': ('u4', [_T('sampling hours saved'), _O('times'), _T('their cost'), _O('plus'), _T('tonnes'), _O('times the'), _T('price difference'), ('eq', None), ('result', None)]),
+    'pumpkins': ('k3', [_T('hours saved'), _O('times'), _T('cost per hour'), _O('plus'), _T('kilos graded right'), _O('times the'), _T('price difference'), ('eq', None), ('result', None)]),
+    'labels': ('b4', [_T('rejections avoided'), _O('times'), ('open', 'times'), _T('the fine'), _O('plus the product'), _T('product'), _O('plus the freight'), _T('freight'), ('close', 'freight'), ('eq', None), ('result', None)]),
+    'dashboard': ('g4', [_T('reporting hours saved'), _O('times'), _T('cost per hour'), ('eq', None), ('result', None)]),
+}
+PENT = [1046.5, 1174.7, 1318.5, 1568.0, 1760.0, 2093.0]
+
+
+def eq_sfx(sid):
+    line, toks = EQ[sid]
+    if line not in L:
+        return
+    times = eq_times(line, toks)
+    at(times[0] - 0.6, s_whoosh(0.6, 2500, 700, 61), -34)
+    n = 0
+    for (kind, _), tt in zip(toks, times):
+        if kind == 'term':
+            at(tt, s_bell(PENT[min(n, 5)], 1.0, 0.4), -28, -0.3 + 0.12 * n)
+            n += 1
+        elif kind == 'result':
+            at(tt, s_chime(), -26)
+            at(tt, s_thump(), -30)
+        else:
+            at(tt, s_tick(2400 if kind == 'eq' else 1900, 0.01), -34)
+    ds = L[line]['end'] + 0.75
+    at(ds, s_suck(0.6, 62), -30)
+    at(ds + 0.64, s_lock(), -30, 0.6)
+
+
+def exit_line(sid):
+    at(SC[sid]['end'] - 0.65, s_rise(0.55, 500, 1100), -38)
+
+
+def card_sfx(s0, sol_at):
+    at(s0 + 0.1, s_whoosh(0.7, 500, 2200, 63), -30)
+    at(s0 + 0.5, s_paper(0.4, 64), -32)
+    at(s0 + 0.75, s_pop(700, 1000), -34)
+    at(sol_at, s_pop(800, 1150), -34)
+
+
+def chips_sfx(t0, n):
+    for i in range(n):
+        at(t0 + i * 0.22, s_pop(800 + i * 80, 1150 + i * 80), -30, -0.4 + i * 0.4)
+
+
+if 'impact-open' in SC:
+    s0 = SC['impact-open']['start']
+    D = SC['impact-open']['end'] - s0
+    c1, c2, c3 = cue('x1'), cue('x2'), cue('x3')
+    x3e = L['x3']['end']
+    cNot, cF = cue('x4', 0), cue('x4', 1)
+    gap = cNot - x3e
+    fl = [x3e + 0.05 + i * min(0.32, (gap - 0.9) / 3) for i in range(3)]
+    gridAt = fl[2] + 0.3
+    colAt = gridAt + 0.32
+    at(s0 + 0.25, s_rise(0.7, 400, 900), -34)
+    at(c1 - 0.12, s_whoosh(0.4, 900, 2600, 65), -32)
+    at(c1 + 0.5, s_alert(), -30)
+    at(c2 - 0.12, s_data(0.8, 66, 24), -34)
+    at(c2 + 0.6, s_alert(), -30, 0.3)
+    at(c2 + 0.8, s_marker(), -32)
+    at(c3 - 0.1, s_whoosh(0.6, 400, 1600, 67), -30)
+    at(c3 + 0.8, s_stamp(), -22)
+    for i, tt in enumerate(fl):
+        at(tt, s_tick(1800 + 300 * i, 0.012), -28)
+        at(tt, s_pixel(0.2), -36)
+    for i in range(6):
+        at(gridAt - 0.2 + i * 0.03, s_pop(700 + i * 90, 1000 + i * 90, 0.06), -34, -0.6 + i * 0.24)
+    at(colAt, s_suck(0.35, 68), -26)
+    at(colAt + 0.3, s_thump(), -22)
+    at(cNot, s_whoosh(0.7, 900, 2600, 69), -32)
+    at(cF - 0.05, s_glitch(0.5, 70), -30)
+    for i in range(5):
+        at(cF + 0.7 + i * 0.12, s_pop(660 * 2 ** (i * 2 / 12), 990 * 2 ** (i * 2 / 12), 0.08), -32)
+    if 'x5' in L:
+        c5, cM = cue('x5', 0), cue('x5', 1)
+        at(c5 - 0.25, s_chime(), -30)
+        at(cM + 2.4, s_marker(), -32)
+    c6, cS = cue('x6', 0), cue('x6', 1)
+    at(c6 - 0.25, s_rise(0.7, 350, 900), -34)
+    for i in range(6):
+        at(c6 + 0.2 + i * 0.14, s_pop(700 + i * 60, 1000 + i * 60), -30, -0.7 + i * 0.28)
+    at(cS - 0.1, s_sparkle(1.0, 71, 6), -36)
+    at(cS + 1.0, s_lock(), -32)
+    at(s0 + D - 1.55, s_whoosh(0.9, 2000, 500, 72), -30)
+    exit_line('impact-open')
+
+if 'nursery' in SC:
+    s0 = SC['nursery']['start']
+    cN2, cCount, cFlag = cue('n2', 0), cue('n2', 1), cue('n2', 2)
+    live = cN2 + 1.25
+    dock = L['n4']['end'] + 0.75
+    card_sfx(s0, cN2 - 0.15)
+    at(live - 0.05, s_suck(0.4, 73), -30)
+    at(live, s_rec(), -32)
+    at(live, s_servo(dock - live), -40)
+    at(live, s_belt(dock - live), -42)
+    at(cCount - 0.3, s_scan(1.2, 74), -32)
+    for i in range(3):
+        at(cCount + i * 0.35, s_lock(), -32, -0.3 + i * 0.3)
+    at(cFlag, s_alert(), -26)
+    chips_sfx(cue('n3') - 0.1 if 'n3' in L else L['n4']['start'] - 3.3, 3)
+    eq_sfx('nursery')
+    exit_line('nursery')
+
+if 'lettuce' in SC:
+    s0 = SC['lettuce']['start']
+    cCam, cFc, cMatch = cue('l1', 1), cue('l2', 0), cue('l2', 1)
+    cPush = cCam + 0.55
+    at(s0, s_engine(cPush + 1.0 - s0), -34)
+    at(cCam, s_lock(), -28)
+    at(cPush, s_whoosh(0.9, 400, 2400, 75), -28)
+    for i in range(3):
+        at(cPush + 0.75 + i * 0.3, s_lock(), -32, -0.4 + i * 0.4)
+    at(cPush + 0.9, s_data(1.2, 76, 24), -36)
+    at(cFc + 0.45, s_whoosh(0.6, 1800, 600, 77), -32)
+    at(cFc + 0.9, s_rise(1.2, 400, 900), -36)
+    at(cFc + 0.9, s_data(2.0, 78, 18), -38)
+    for i in range(7):
+        at(cMatch - 0.1 + i * 0.05, s_marker(0.08), -34, -0.6 + i * 0.2)
+    at(cMatch + 0.3, s_alert(), -30)
+    for k in range(14):
+        at(cMatch + 0.8 + 2.6 * (k / 14) * 0.62 + 0.25, s_tick(1600 + k * 60, 0.01), -34, -0.5 + (k % 5) * 0.25)
+    chips_sfx(cue('l3') - 0.1 if 'l3' in L else L['l4']['start'] - 2.7, 2)
+    eq_sfx('lettuce')
+    exit_line('lettuce')
+
+if 'onions' in SC:
+    s0 = SC['onions']['start']
+    cSplit, cMiss, cSort = cue('u1', 1), cue('u2', 0), cue('u2', 2)
+    live = L['u2']['segs'][0][1] - 0.05
+    dock = L['u4']['end'] + 0.75
+    card_sfx(s0, cSplit - 0.1)
+    at(cMiss + 0.1, s_alert(), -28)
+    for i in range(6):
+        at(cMiss + 0.1 + i * 1.1 / 8, s_marker(0.09), -32, -0.4 + i * 0.16)
+    at(live, s_suck(0.4, 79), -30)
+    at(live + 0.05, s_rec(), -32)
+    at(live, s_rods(dock - live), -36)
+    at(live, s_belt(dock - live), -44)
+    tt = live + 0.6
+    while tt < dock - 0.6:
+        at(tt, s_count(), -36, 0.3)
+        tt += 0.48
+    for i in range(4):
+        at(cSort - 0.2 + i * 0.08, s_pop(700 + i * 120, 1000 + i * 120), -30)
+    for i in range(6):
+        at(cSort + 0.6 + i * 0.11, s_pixel(0.2), -34)
+    chips_sfx(cSort + 0.5, 1)
+    eq_sfx('onions')
+    exit_line('onions')
+
+if 'pumpkins' in SC:
+    s0 = SC['pumpkins']['start']
+    D = SC['pumpkins']['end'] - s0
+    cCount = cue('k1', 1)
+    cGrade = cCount + 1.2
+    dock = L['k3']['end'] + 0.75
+    at(s0 + 0.05, s_whoosh(0.7, 600, 2000, 81), -30)
+    at(s0 + 0.4, s_click(), -30)
+    at(s0, s_belt(dock - s0 + 0.5), -38)
+    for k in range(40):
+        tc = s0 - 0.08 + 0.6 * k
+        if s0 + 0.8 < tc < dock - 0.3:
+            at(tc, s_count(), -30, 0.3)
+        tg = s0 + 1.28 + 0.6 * k
+        if cGrade < tg < dock - 0.3:
+            at(tg, s_pop(1000, 1400), -36, 0.5)
+    at(cGrade - 0.3, s_scan(1.0, 82), -32)
+    at(cGrade + 0.6, s_click(), -32)
+    at(cGrade + 0.6, s_servo(0.8), -36)
+    chips_sfx(cue('k2') - 0.1 if 'k2' in L else L['k3']['start'] - 2.5, 3)
+    eq_sfx('pumpkins')
+    exit_line('pumpkins')
+
+if 'labels' in SC:
+    s0 = SC['labels']['start']
+    cWrong, cFine = cue('b1', 1), cue('b1', 2)
+    cAI, cCheck, cHold = cue('b2', 0), cue('b2', 1), cue('b2', 3)
+    ai = cAI - 0.4
+    dock = L['b4']['end'] + 0.75
+    at(s0, s_belt(ai - s0 + 0.3), -42)
+    at(cWrong + 1.45, s_stamp(), -22)
+    for i in range(3):
+        at(cFine + i * 0.18, s_pop(700 + i * 80, 900 + i * 80), -30)
+    at(ai, s_whoosh(0.8, 500, 2600, 83), -28)
+    at(ai, s_belt(dock - ai), -38)
+    hold_k = round((cHold + 0.2 - 1180 / 230 - (ai - 3.2)) / 1.25)
+    for k in range(16):
+        t0k = ai - 3.2 + 1.25 * k
+        tcam, tchk, tlab = t0k + 700 / 230, t0k + 870 / 230, t0k + 1180 / 230
+        if cAI - 0.1 < tcam < dock - 0.5:
+            at(tcam, s_lock(), -32, -0.2)
+        if cCheck - 0.2 < tchk < dock - 0.5:
+            at(tchk, s_marker(0.09), -34, 0.1)
+        if k == hold_k:
+            at(tlab, s_alert(), -26, 0.3)
+            at(tlab + 0.1, s_servo(0.8), -34)
+        elif ai < tlab < dock - 0.5:
+            at(tlab - 0.35, s_printer(), -32, 0.4)
+            at(tlab, s_tamp(), -28, 0.4)
+    chips_sfx(cue('b3') - 0.1 if 'b3' in L else L['b4']['start'] - 2.3, 3)
+    eq_sfx('labels')
+    exit_line('labels')
+
+if 'dashboard' in SC:
+    s0 = SC['dashboard']['start']
+    cLand, cDash, cRep, cAlert = cue('g1', 1), cue('g2', 0), cue('g2', 1), cue('g2', 2)
+    cAsk, cAns = cue('g3', 0), cue('g3', 1)
+    for i in range(5):
+        at(s0 + 0.15 + i * 0.1, s_pop(800 + i * 70, 1100 + i * 70), -32, -0.6 + i * 0.3)
+    at(s0 + 0.4, s_data(2.5, 84, 20), -36)
+    at(cLand - 0.2, s_suck(0.5, 85), -30)
+    at(cLand + 0.5, s_thump(), -28)
+    at(cDash + 0.2, s_whoosh(1.0, 400, 2000, 86), -28)
+    at(cDash + 0.4, s_paper(0.4, 87), -30)
+    for i in range(5):
+        at(cDash + 0.7 + i * 0.1, s_pop(900 + i * 60, 1250 + i * 60, 0.07), -34)
+    at(cDash + 0.9, s_data(1.5, 88, 16), -38)
+    for i in range(3):
+        at(cRep - 0.1 + i * 0.16, s_paper(0.3, 89 + i), -28, 0.4)
+    at(cRep + 0.5, s_pop(1000, 1400), -30, 0.5)
+    at(cAlert, s_alert(), -24, 0.4)
+    at(cAsk - 0.3, s_whoosh(0.5, 2200, 800, 92), -32)
+    at(cAsk, s_typing(1.2, 93, 12), -30)
+    at(cAns - 0.1, s_chime(), -33)
+    at(cAns, s_data(1.0, 94, 20), -38)
+    for i in range(3):
+        at(cAns + 0.9 + i * 0.15, s_tick(1700 + i * 200, 0.012), -34)
+    eq_sfx('dashboard')
+    exit_line('dashboard')
+
+if 'impact-close' in SC:
+    s0 = SC['impact-close']['start']
+    cSix, cForm, cOne = cue('z1', 0), cue('z1', 1), cue('z1', 2)
+    cName, cCta = cue('z3', 0), cue('z4', 0)
+    at(s0 + 0.05, s_rise(0.6, 400, 1000), -34)
+    for i in range(6):
+        at(cSix - 0.25 + i * 0.07, s_pop(650 + i * 50, 900 + i * 50, 0.07), -31, -0.7 + i * 0.28)
+    for i in range(6):
+        ra = cForm + 0.45 + i * 0.14
+        at(ra, s_pop(660 * 2 ** (i * 2 / 12), 990 * 2 ** (i * 2 / 12), 0.1), -29, -0.5 + i * 0.2)
+    at(cOne, s_sparkle(1.2, 95, 8), -34)
+    at(cName - 1.25, s_suck(0.95, 96), -22)
+    for i in range(3):
+        at(cName - 0.45 + i * 0.13, s_tick(1760 + i * 220, 0.02), -29)
+    at(cName - 0.25, s_rise(0.7, 500, 1000), -33)
+    tagAt = (cName + 1.6 + cCta) / 2 - 0.4
+    at(tagAt, s_sparkle(1.6, 97, 8), -34)
+    at(cCta - 0.1, s_pop(900, 1400, 0.1), -25)
+
+
 OUT = reverb(OUT, wet=0.12, dur=1.4, tone=7000)
 sf.write(os.path.join(HERE, 'build', f'sfx{SUF}.wav'), OUT.astype(np.float32), SR)
 print('sfx peak', round(20 * np.log10(np.max(np.abs(OUT)) + 1e-12), 1), 'dBFS')
