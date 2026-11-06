@@ -9,7 +9,7 @@
       "min": 20.0,
       "speed": 1.0,
       "lines": [
-        {"id": "x1", "at": 1.2, "text": "A seedling that never comes up."},
+        {"id": "x1", "at": 2.1, "text": "A seedling that never comes up."},
         {"id": "x2", "gap": 0.45, "text": "A harvest that misses the order."},
         {"id": "x3", "gap": 0.45, "text": "A crate at the wrong store."},
         {"id": "x4", "gap": 1.7, "text": "Impact isn't a promise. It's a result.", "tts": "Impact isn't a promise... It's a result.", "caption": false},

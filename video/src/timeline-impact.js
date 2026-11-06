@@ -94,12 +94,12 @@ export default {
   "x1": {
    "id": "x1",
    "scene": "impact-open",
-   "start": 1.2,
-   "end": 2.887,
+   "start": 2.1,
+   "end": 3.787,
    "segs": [
     [
-     1.23,
-     2.81
+     2.13,
+     3.71
     ]
    ],
    "text": "A seedling that never comes up."
@@ -107,12 +107,12 @@ export default {
   "x2": {
    "id": "x2",
    "scene": "impact-open",
-   "start": 3.337,
-   "end": 5.147,
+   "start": 4.237,
+   "end": 6.047,
    "segs": [
     [
-     3.357,
-     5.027
+     4.257,
+     5.927
     ]
    ],
    "text": "A harvest that misses the order."
@@ -120,12 +120,12 @@ export default {
   "x3": {
    "id": "x3",
    "scene": "impact-open",
-   "start": 5.597,
-   "end": 7.027,
+   "start": 6.497,
+   "end": 7.927,
    "segs": [
     [
-     5.627,
-     6.907
+     6.527,
+     7.807
     ]
    ],
    "text": "A crate at the wrong store."
@@ -133,16 +133,16 @@ export default {
   "x4": {
    "id": "x4",
    "scene": "impact-open",
-   "start": 8.727,
-   "end": 11.138,
+   "start": 9.627,
+   "end": 12.038,
    "segs": [
     [
-     8.757,
-     10.067
+     9.657,
+     10.967
     ],
     [
-     10.327,
-     11.047
+     11.227,
+     11.947
     ]
    ],
    "text": "Impact isn't a promise. It's a result.",
@@ -151,28 +151,28 @@ export default {
   "x5": {
    "id": "x5",
    "scene": "impact-open",
-   "start": 12.038,
-   "end": 19.313,
+   "start": 12.938,
+   "end": 20.213,
    "segs": [
     [
-     12.068,
-     12.888
+     12.968,
+     13.788
     ],
     [
-     13.038,
-     16.068
-    ],
-    [
-     16.598,
-     17.288
+     13.938,
+     16.968
     ],
     [
      17.498,
-     18.158
+     18.188
     ],
     [
-     18.368,
-     19.238
+     18.398,
+     19.058
+    ],
+    [
+     19.268,
+     20.138
     ]
    ],
    "text": "At Eagerworks, every AI project starts with the result it has to deliver: less waste, more output, better decisions."
@@ -180,16 +180,16 @@ export default {
   "x6": {
    "id": "x6",
    "scene": "impact-open",
-   "start": 20.013,
-   "end": 22.65,
+   "start": 20.913,
+   "end": 23.55,
    "segs": [
     [
-     20.043,
-     21.293
+     20.943,
+     22.193
     ],
     [
-     21.513,
-     22.573
+     22.413,
+     23.473
     ]
    ],
    "text": "Here's one grower's season, from seed to shelf."

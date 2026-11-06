@@ -62,12 +62,12 @@ export default {
   "x1": {
    "id": "x1",
    "scene": "impact-open",
-   "start": 1.2,
-   "end": 2.887,
+   "start": 2.1,
+   "end": 3.787,
    "segs": [
     [
-     1.23,
-     2.81
+     2.13,
+     3.71
     ]
    ],
    "text": "A seedling that never comes up."
@@ -75,12 +75,12 @@ export default {
   "x2": {
    "id": "x2",
    "scene": "impact-open",
-   "start": 3.287,
-   "end": 5.097,
+   "start": 4.187,
+   "end": 5.997,
    "segs": [
     [
-     3.307,
-     4.977
+     4.207,
+     5.877
     ]
    ],
    "text": "A harvest that misses the order."
@@ -88,12 +88,12 @@ export default {
   "x3": {
    "id": "x3",
    "scene": "impact-open",
-   "start": 5.497,
-   "end": 6.927,
+   "start": 6.397,
+   "end": 7.827,
    "segs": [
     [
-     5.527,
-     6.807
+     6.427,
+     7.707
     ]
    ],
    "text": "A crate at the wrong store."
@@ -101,16 +101,16 @@ export default {
   "x4": {
    "id": "x4",
    "scene": "impact-open",
-   "start": 8.527,
-   "end": 10.938,
+   "start": 9.427,
+   "end": 11.838,
    "segs": [
     [
-     8.557,
-     9.867
+     9.457,
+     10.767
     ],
     [
-     10.127,
-     10.847
+     11.027,
+     11.747
     ]
    ],
    "text": "Impact isn't a promise. It's a result.",
@@ -119,16 +119,16 @@ export default {
   "x6": {
    "id": "x6",
    "scene": "impact-open",
-   "start": 11.738,
-   "end": 13.914,
+   "start": 12.638,
+   "end": 14.814,
    "segs": [
     [
-     11.768,
-     12.478
+     12.668,
+     13.378
     ],
     [
-     12.618,
-     13.818
+     13.518,
+     14.718
     ]
    ],
    "text": "Here are three, from one grower's season."

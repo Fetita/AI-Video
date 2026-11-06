@@ -1,4 +1,4 @@
-// Open — six small leaks flash by (three named by the VO, three on music hits), snap into a 3×2 grid and
+// Open — the Eagerworks icon builds and clears; six small leaks flash by (three named by the VO, three on music hits), snap into a 3×2 grid and
 // collapse into one line; "Impact isn't a promise." → "It's a result." (promise decodes into result);
 // the Eagerworks lockup and the three results every project aims at (less waste, more output, better
 // decisions), filling in as the VO names them; the line becomes
@@ -7,6 +7,7 @@ import { addScene, h, put, prog, E, clamp, lerp, env, makeCanvas, rgba, C, hash,
 import { decode, tag, box } from '../lib/ui.js';
 import { has, seg, lineStart, lineEnd, findPhrase, charTime } from '../lib/vo.js';
 import { makeLockup } from '../lib/logo.js';
+import { VIEWBOX, ICON_VIEWBOX } from '../lib/logo-data.js';
 import { CHAIN, MAP, BIG, drawLine, neighbors, makeValueChain } from '../lib/chain.js';
 import { STATIONS, stationIndex } from '../lib/impact-data.js';
 import { exitLine } from '../lib/chapter.js';
@@ -72,6 +73,13 @@ addScene({
     R.append(this.gKick);
     R.append(this.ghost);
     // ---- lockup (static here; the build is saved for the close)
+    // ---- intro: the Eagerworks icon alone (no wordmark) builds on a black frame and clears before the first leak
+    const IH = 132;
+    this.icon = makeLockup({ height: IH, studio: false });
+    this.icon.el.style.position = 'relative';
+    this.iconW = IH * (ICON_VIEWBOX[2] / VIEWBOX[3]);
+    this.iconWrap = h('div', { class: 'abs', style: { left: '0', top: '0', transformOrigin: `${(this.iconW / 2).toFixed(1)}px ${IH / 2}px`, zIndex: '5' } }, this.icon.el);
+    R.append(this.iconWrap);
     this.lock = makeLockup({ height: 70 });
     this.lock.set({ strokes: 1, outline: 1, fill: 1, letters: 1, studio: 1 });
     this.lock.el.style.position = 'relative';
@@ -165,9 +173,17 @@ addScene({
     const grid = prog(t, this.gridAt - 0.2, 0.3, E.outCubic);
     const collapse = prog(t, this.collapseAt, 0.3, E.inCubic);
 
-    // ---------------- opening signal line
-    const lp = prog(t, 0.25, 0.7, E.inOutCubic), lo = prog(t, 0.95, 0.25);
-    if (lp > 0 && lo < 1) drawLine(g, 960 - 450 * lp * (1 - lo), 960 + 450 * lp * (1 - lo), CHAIN.y, { a: 1 - lo });
+    // ---------------- intro: the icon builds (strokes → outline → fill), glows, then clears for the first leak
+    const iOut = prog(t, this.c1 - 0.55, 0.4, E.inCubic);
+    if (iOut < 1) {
+      this.icon.set({
+        strokes: prog(t, 0.15, 0.55), outline: prog(t, 0.35, 0.7), fill: prog(t, 0.95, 0.5),
+        letters: 0, studio: 0, glow: env(t, 1.1, this.c1 - 0.4, 0.3, 0.4),
+      });
+      const sc = lerp(0.94, 1, prog(t, 0.1, 1.6, E.outCubic)) * lerp(1, 1.08, iOut);
+      put(this.iconWrap, { x: 960 - this.iconW / 2, y: 540 - this.icon.height / 2, s: sc, o: 1 - iOut });
+      this.iconWrap.style.display = 'block';
+    } else this.iconWrap.style.display = 'none';
 
     // ---------------- vignettes: solo → 3×2 grid → one line
     const solo = [

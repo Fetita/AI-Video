@@ -676,7 +676,13 @@ if 'impact-open' in SC:
     fl = [x3e + 0.05 + i * min(0.32, (gap - 0.9) / 3) for i in range(3)]
     gridAt = fl[2] + 0.3
     colAt = gridAt + 0.32
-    at(s0 + 0.25, s_rise(0.7, 400, 900), -34)
+    # intro: the Eagerworks icon builds (three strokes, the outline, the fill) and clears before the first leak
+    for i in range(3):
+        at(s0 + 0.15 + i * 0.1, s_tick(1760 + i * 220, 0.02), -30)
+    at(s0 + 0.4, s_rise(0.6, 500, 1000), -35)
+    at(s0 + 1.0, s_pop(800, 1150), -32)
+    at(s0 + 1.15, s_chime(), -31)
+    at(c1 - 0.55, s_whoosh(0.5, 1800, 600, 64), -35)
     at(c1 - 0.12, s_whoosh(0.4, 900, 2600, 65), -32)
     at(c1 + 0.5, s_alert(), -30)
     at(c2 - 0.12, s_data(0.8, 66, 24), -34)
