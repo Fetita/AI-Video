@@ -437,8 +437,8 @@ def lay(t0, nb, prog_, bright=0.5, gain=1.0, bass='8', grit=0.4, arp=0.25, arp_g
         b += n_
 
 
-def eq_lull(sid, line):
-    """Equation moment: a soft pad swell under the formula (bells live in sfx.py)."""
+def gain_lull(sid, line):
+    """Gain card: a soft pad swell under it (bells live in sfx.py)."""
     if line not in L:
         return
     t0 = L[line]['start'] - 0.4
@@ -486,7 +486,7 @@ if 'nursery' in SC:
     motif = [(72, 0), (76, 1), (79, 1.5), (81, 2), (79, 3), (76, 3.5)]
     w_bells(t0 + 4 * BEAT, motif, gain=0.24)
     w_drums(t0 + 4 * BEAT, nb - 6, 'soft', gain=0.6)
-    eq_lull('nursery', 'n4')
+    gain_lull('nursery', 'n3')
     place(S['fx'], reverse_swell(1.0, 52), t0 + nb * BEAT - 1.0, 0.5)
 
 if 'lettuce' in SC:
@@ -495,7 +495,7 @@ if 'lettuce' in SC:
     lay(t0, nb, [('Am9', 8), ('Fmaj9', 8), ('Cmaj9', 8), ('G6sus', 8)], bright=0.55, bass='8', grit=0.5, arp=0.25, arp_gain=0.4, bass_gain=0.8)
     w_drums(t0, 8, 'mech', gain=0.8)
     w_drums(t0 + 8 * BEAT, nb - 10, 'four', gain=0.85)
-    eq_lull('lettuce', 'l4')
+    gain_lull('lettuce', 'l3')
     fill(t0 + nb * BEAT, 0.6)
 
 if 'onions' in SC:
@@ -507,7 +507,7 @@ if 'onions' in SC:
         place(S['stab'], pan(stab('Fmaj9' if bb < 12 else 'Dm9' if bb < 20 else 'G6sus'), 0.15), t0 + (bb + 3.5) * BEAT, 0.42)
     w_drums(t0, 4, 'tick', gain=0.9)
     w_drums(t0 + 4 * BEAT, nb - 6, 'drive', gain=0.9)
-    eq_lull('onions', 'u4')
+    gain_lull('onions', 'u3')
     fill(t0 + nb * BEAT, 0.8)
 
 if 'pumpkins' in SC:
@@ -517,7 +517,7 @@ if 'pumpkins' in SC:
     w_drums(t0, nb - 2, 'mech', gain=0.85)
     for bb in range(0, int(nb) - 4, 8):
         place(S['stab'], pan(stab('Fmaj9' if bb < 8 else 'Am9' if bb < 16 else 'Cmaj9'), -0.15), t0 + (bb + 7.5) * BEAT, 0.35)
-    eq_lull('pumpkins', 'k3')
+    gain_lull('pumpkins', 'k2')
     fill(t0 + nb * BEAT, 0.6)
 
 if 'labels' in SC:
@@ -532,7 +532,7 @@ if 'labels' in SC:
     place(S['fx'], impact(0.6, 63), ai, 0.5)
     lay(ai, nb - gb, [('Cmaj9', 8), ('Fmaj9', 8), ('G6sus', 8)], bright=0.6, bass='8', grit=0.45, arp=0.25, arp_gain=0.38, bass_gain=0.78)
     w_drums(ai, nb - gb - 2, 'mech', gain=0.85)
-    eq_lull('labels', 'b4')
+    gain_lull('labels', 'b3')
     fill(t0 + nb * BEAT, 0.6)
 
 if 'dashboard' in SC:
@@ -543,7 +543,7 @@ if 'dashboard' in SC:
     w_drums(t0 + 4 * BEAT, nb - 6, 'half', gain=0.75)
     if 'g2' in L:
         w_bells(cue('g2', 2), [(79, 0), (84, 0.5)], gain=0.22)      # the alert, in time
-    eq_lull('dashboard', 'g4')
+    gain_lull('dashboard', 'g4')
     place(S['fx'], riser(2.0, 67), t0 + nb * BEAT - 2.0, 0.5)
     place(S['fx'], reverse_swell(1.2, 68), t0 + nb * BEAT - 1.2, 0.7)
 

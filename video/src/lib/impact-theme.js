@@ -2,24 +2,23 @@
 // unlike a <link>, which loads asynchronously). The base film stylesheet stays untouched.
 const CSS = `
 .ix-kicker { font-family: var(--font-ui); font-weight: 600; font-size: 16px; letter-spacing: 0.26em; text-transform: uppercase; color: #c9b4ff; white-space: nowrap; }
-.ix-row { position: absolute; left: 0; top: 0; display: inline-flex; align-items: center; gap: 18px; transform-origin: 0 0; white-space: nowrap; }
-.ix-token { display: inline-flex; align-items: center; gap: 14px; height: 72px; padding: 0 28px 0 22px; border-radius: 18px;
-  border: 1px solid rgba(255,255,255,0.16); background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0) 60%), #101216;
-  box-shadow: 0 24px 60px -24px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.06);
-  font-family: var(--font-ui); font-weight: 600; font-size: 28px; letter-spacing: -0.005em; color: var(--text); transform-origin: 50% 50%; }
-.ix-token.ai { border-color: rgba(130,52,254,0.62); background: linear-gradient(180deg, rgba(130,52,254,0.22), rgba(130,52,254,0.07)), #110f1a;
-  box-shadow: 0 0 34px rgba(130,52,254,0.2), 0 24px 60px -24px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.08); }
-.ix-token.ai svg { color: #c4adff; }
-.ix-token.base svg { color: var(--text2); }
-.ix-token.leak { border-color: rgba(255,107,87,0.6); background: linear-gradient(180deg, rgba(255,107,87,0.18), rgba(255,107,87,0.05)), #17100f; }
-.ix-token.leak svg { color: var(--coral); }
-.ix-op { width: 40px; height: 40px; transform-origin: 50% 50%; }
-.ix-paren { font-family: var(--font-display); font-weight: 200; font-size: 104px; line-height: 1; color: var(--text3); margin-top: -10px; transform-origin: 50% 50%; }
-.ix-eq { width: 40px; height: 40px; transform-origin: 50% 50%; }
-.ix-result { display: inline-flex; align-items: center; gap: 14px; height: 78px; padding: 0 36px 0 38px; border-radius: 999px; background: var(--accent-grad);
-  font-family: var(--font-display); font-stretch: 118%; font-weight: 600; font-size: 30px; letter-spacing: 0.08em; text-transform: uppercase; color: #fff;
-  box-shadow: 0 0 54px rgba(130,52,254,0.45), inset 0 1px 0 rgba(255,255,255,0.25); position: relative; overflow: hidden; transform-origin: 50% 50%; }
-.ix-result .sweep { position: absolute; top: 0; bottom: 0; width: 120px; left: -160px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent); transform: skewX(-18deg); }
+.gx-card { position: absolute; left: 0; top: 0; display: inline-flex; flex-direction: column; align-items: center; transform-origin: 0 0; white-space: nowrap; }
+.gx-kicker { display: inline-flex; align-items: center; gap: 12px; font-family: var(--font-ui); font-weight: 700; font-size: 17px; letter-spacing: 0.26em; text-transform: uppercase; color: #c9b4ff; }
+.gx-ico { width: 40px; height: 40px; border-radius: 50%; background: rgba(130,52,254,0.22); border: 1px solid rgba(130,52,254,0.6); display: flex; align-items: center; justify-content: center; color: #e6dcff; }
+.gx-head { position: relative; margin-top: 26px; font-family: var(--font-display); font-stretch: 118%; font-weight: 600; font-size: 74px; letter-spacing: -0.015em; line-height: 1.05; color: #f3f3ef; transform-origin: 50% 50%; }
+.gx-under { position: absolute; left: 0; right: 0; bottom: -16px; height: 4px; border-radius: 2px; background: var(--accent-grad); box-shadow: 0 0 16px rgba(130,52,254,0.7); transform-origin: 0 50%; transform: scaleX(0); display: block; }
+.gx-chips { display: flex; justify-content: center; align-items: center; gap: 16px; margin-top: 52px; }
+.gx-chip { display: flex; align-items: center; gap: 12px; height: 60px; padding: 0 26px 0 18px; border-radius: 999px; background: rgba(14,12,22,0.9); border: 1px solid rgba(130,52,254,0.55);
+  color: #e6dcff; font-family: var(--font-ui); font-weight: 600; font-size: 24px; letter-spacing: -0.005em; white-space: nowrap; transform-origin: 50% 50%;
+  box-shadow: 0 20px 50px -20px rgba(0,0,0,0.9), 0 0 24px rgba(130,52,254,0.18); }
+.gx-arrow { width: 34px; height: 34px; border-radius: 50%; background: rgba(130,52,254,0.28); display: flex; align-items: center; justify-content: center; color: #cdb8ff; }
+.gx-stat { display: flex; align-items: center; gap: 28px; margin-top: 40px; padding: 18px 34px 18px 30px; border-radius: 22px; transform-origin: 50% 50%;
+  background: linear-gradient(180deg, rgba(130,52,254,0.16), rgba(130,52,254,0.05)), #0f0d16; border: 1px solid rgba(130,52,254,0.45);
+  box-shadow: 0 0 40px rgba(130,52,254,0.16), 0 24px 60px -24px rgba(0,0,0,0.85); }
+.gx-stat-v { font-family: var(--font-display); font-stretch: 118%; font-weight: 600; font-size: 76px; line-height: 1; letter-spacing: -0.02em; color: #d9caff; text-align: center; }
+.gx-stat-k { display: flex; flex-direction: column; gap: 8px; max-width: 470px; white-space: normal; text-align: left; }
+.gx-stat-k > span:first-child { font-family: var(--font-ui); font-weight: 500; font-size: 23px; line-height: 1.3; color: var(--text2); }
+.gx-note { font-family: var(--font-ui); font-weight: 600; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text3); }
 .ix-card { position: absolute; overflow: hidden; border-radius: 22px; background: #020304; border: 1px solid rgba(255,255,255,0.09);
   box-shadow: 0 50px 120px -40px rgba(0,0,0,0.9); }
 .ix-card .glow { position: absolute; right: -260px; bottom: -320px; width: 1100px; height: 900px; border-radius: 50%;

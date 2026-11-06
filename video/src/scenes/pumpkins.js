@@ -2,14 +2,14 @@
 // The hand-off line opens into the two rails of the pumpkin packing line (the AI Studio film's conveyor):
 // every pumpkin gets an ID and is counted at the line, then a quality scan grades it (Class I / Class II /
 // Out-grade, with the defect and an estimated weight) and the belt splits into three lanes by class →
-// formula: Hours saved × Cost/hour + Kg graded right × Price difference.
+// gain: every pumpkin sells in its real class.
 import { addScene, h, put, prog, E, clamp, lerp, env, makeCanvas, rgba, C, hash, rrect, W, H } from '../engine.js';
 import { makeHud, box, tag } from '../lib/ui.js';
-import { seg, cueOr } from '../lib/vo.js';
-import { EQUATIONS, stationIndex } from '../lib/impact-data.js';
-import { makeEquation, eqTimes, dockStart } from '../lib/equation.js';
+import { seg } from '../lib/vo.js';
+import { GAINS, stationIndex } from '../lib/impact-data.js';
+import { makeGain, gainTimes, dockStart } from '../lib/gain.js';
 import { mapDot, drawLine, CHAIN } from '../lib/chain.js';
-import { makeOutcome, withFeed, exitLine, FEED, fmt } from '../lib/chapter.js';
+import { withFeed, exitLine, FEED, fmt } from '../lib/chapter.js';
 import { pumpkinSprite } from '../lib/field.js';
 import { drawDefect } from '../lib/produce.js';
 import { beltTexture, drawRail, drawBelt } from '../lib/conveyor.js';
@@ -40,13 +40,12 @@ addScene({
     this.g = this.cv.ctx;
     this.sprites = [['orange', 1], ['deep', 2], ['orange', 3], ['pale', 4], ['orange', 5], ['deep', 7], ['orange', 8]].map(([kd, s]) => pumpkinSprite(kd, s));
     this.belt = beltTexture();
-    const def = EQUATIONS.pumpkins;
-    this.times = eqTimes(ctx, def);
+    const def = GAINS.pumpkins;
+    this.times = gainTimes(ctx, def);
     this.dockAt = dockStart(def) - ctx.start;
     this.dock = mapDot(stationIndex('pumpkins'));
     this.cCount = seg(ctx, 'k1', 1);
     this.cNoHand = seg(ctx, 'k1', 2);
-    this.cOut = cueOr(ctx, 'k2', () => this.times[0] - 2.4);
     this.cGrade = this.cCount + 1.2;
     this.hud = makeHud(ctx, {
       num: '04', title: 'Packhouse · Count & quality', badge: 'Computer vision',
@@ -65,20 +64,15 @@ addScene({
     this.sHand = stat('Hand counts');
     this.panel.append(h('div', { style: { fontSize: '16px', fontWeight: '600', width: '120px', lineHeight: '1.3' } }, 'Packing line', h('br'), h('span', { class: 'kicker', style: { fontSize: '10.5px', color: 'var(--coral)' } }, '● Live')), this.sCount.el, ...this.sK.map((s) => s.el), this.sHand.el);
     R.append(this.panel);
-    this.outcome = makeOutcome(R, [
-      { text: 'Right class', dir: 'up' },
-      { text: 'Right price', dir: 'up' },
-      { text: 'No hand counting', dir: 'down' },
-    ]);
-    this.eq = makeEquation(R, def);
+    this.gain = makeGain(R, def);
   },
 
   render(t, ctx) {
     const g = this.g;
     g.clearRect(0, 0, W, H);
     const D = ctx.dur;
-    const eqLevel = this.eq.level(t, { times: this.times, dockAt: this.dockAt });
-    this.hud(t, { hideSteps: eqLevel > 0.25 });
+    const gainLevel = this.gain.level(t, { times: this.times, dockAt: this.dockAt });
+    this.hud(t, { hideSteps: gainLevel > 0.25 });
     const fade = 1 - prog(t, this.dockAt - 0.7, 1.0, E.inOutSine);
     const open = prog(t, 0.05, 0.75, E.inOutCubic);      // the line splits into the two rails
     let counted = 0;
@@ -175,10 +169,9 @@ addScene({
     this.sK.forEach((s, i) => setv(s, fmt([5210, 1460, 380][i] + kg[i])));
     setv(this.sHand, '0');
 
-    this.outcome.render(t, this.cOut - 0.1, this.times[0] - 0.5);
-    this.eq.render(t, {
+    this.gain.render(t, {
       times: this.times, dockAt: this.dockAt, dock: this.dock,
-      from: { 0: () => ({ x: 1380, y: 186, w: 120 }), 4: () => ({ x: 860, y: 186, w: 140 }) },
+      from: { 1: () => ({ x: 860, y: 186, w: 140 }), 2: () => ({ x: 1380, y: 186, w: 120 }) },
     });
     exitLine(g, t, D);
   },

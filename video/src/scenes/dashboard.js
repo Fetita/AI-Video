@@ -2,12 +2,12 @@
 // Every station's data streams into one data foundation → a paper-style live dashboard rises out of it
 // (KPIs, field map cell by cell, size distribution, size split by field, stock vs demand) → reports build
 // themselves → an alert arrives in time → a plain-English question gets an answer from live data →
-// formula: Reporting hours saved × Cost/hour.
+// gain: hours of reporting become minutes.
 import { addScene, h, put, prog, E, clamp, lerp, env, makeCanvas, rgba, C, hash, rrect, W, H, makeNoise } from '../engine.js';
 import { makeHud, words, revealWords, typed } from '../lib/ui.js';
 import { seg } from '../lib/vo.js';
-import { EQUATIONS, STATIONS, stationIndex } from '../lib/impact-data.js';
-import { makeEquation, eqTimes, dockStart } from '../lib/equation.js';
+import { GAINS, STATIONS, stationIndex } from '../lib/impact-data.js';
+import { makeGain, gainTimes, dockStart } from '../lib/gain.js';
 import { mapDot, drawLine, CHAIN } from '../lib/chain.js';
 import { exitLine } from '../lib/chapter.js';
 import { icon, drawIcon } from '../lib/icons.js';
@@ -28,8 +28,8 @@ addScene({
     const R = ctx.root;
     this.cv = makeCanvas(R);
     this.g = this.cv.ctx;
-    const def = EQUATIONS.dashboard;
-    this.times = eqTimes(ctx, def);
+    const def = GAINS.dashboard;
+    this.times = gainTimes(ctx, def);
     this.dockAt = dockStart(def) - ctx.start;
     this.dock = mapDot(stationIndex('dashboard'));
     this.cLand = seg(ctx, 'g1', 1);
@@ -105,7 +105,7 @@ addScene({
     this.bars.append(this.target, h('div', { class: 'kicker', style: { position: 'absolute', left: `${98 + 0.86 * 454 - 40}px`, top: '-26px', fontSize: '10.5px' } }, 'Target'));
     this.chat.append(this.qBubble, this.aBubble, this.bars);
     R.append(this.chat);
-    this.eq = makeEquation(R, def);
+    this.gain = makeGain(R, def);
     this.lastQ = '';
   },
 
@@ -191,8 +191,8 @@ addScene({
     const g = this.g;
     g.clearRect(0, 0, W, H);
     const D = ctx.dur;
-    const eqLevel = this.eq.level(t, { times: this.times, dockAt: this.dockAt });
-    this.hud(t, { hideSteps: eqLevel > 0.25 });
+    const gainLevel = this.gain.level(t, { times: this.times, dockAt: this.dockAt });
+    this.hud(t, { hideSteps: gainLevel > 0.25 });
     const gone = prog(t, this.dockAt - 0.7, 1.0, E.inOutSine);
 
     // ---------------- stations stream into the line, which becomes the data foundation
@@ -252,9 +252,9 @@ addScene({
     this.aBubble.style.opacity = t > this.cAns - 0.2 ? '1' : '0';
     this.barEls.forEach((b, i) => { const q = prog(t, this.cAns + 0.9 + i * 0.15, 0.6, E.outCubic); b.style.width = `${(q * [62, 68, 73][i]).toFixed(1)}%`; });
 
-    // ---------------- formula
+    // ---------------- gain → dock (the report pages fly into the first chip)
     const pagesSrc = () => ({ x: 1420, y: 480, w: 240 });
-    this.eq.render(t, { times: this.times, dockAt: this.dockAt, dock: this.dock, from: { 0: pagesSrc } });
+    this.gain.render(t, { times: this.times, dockAt: this.dockAt, dock: this.dock, from: { 1: pagesSrc } });
     exitLine(g, t, D);
   },
 });

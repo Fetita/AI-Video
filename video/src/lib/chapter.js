@@ -1,52 +1,11 @@
-// Shared chapter furniture for the impact film: the outcome chips (the impact: what changes for the grower),
-// the live-feed frame, the panel/stat helpers and the standard exit into the hand-off line.
-import { h, svg, put, prog, E, clamp, lerp, env, rrect, rgba, C } from '../engine.js';
+// Shared chapter furniture for the impact film: the live-feed frame, the panel/stat helpers and the
+// standard exit into the hand-off line.
+import { h, put, prog, E, clamp, lerp, env, rrect, rgba, C } from '../engine.js';
 import { recHud } from './ui.js';
 import { drawLine, CHAIN } from './chain.js';
 import './impact-theme.js';
 
 export const FEED = { x: 150, y: 118, w: 1620, h: 826 };
-
-const arrowSvg = (up) => {
-  const s = svg('svg', { viewBox: '0 0 24 24', width: 22, height: 22, fill: 'none', stroke: 'currentColor', 'stroke-width': 2.4, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', style: 'display:block;flex:none' });
-  s.append(svg('path', { d: up ? 'M12 19V5' : 'M12 5v14' }), svg('path', { d: up ? 'M6 11l6-6 6 6' : 'M6 13l6 6 6-6' }));
-  return s;
-};
-
-/**
- * Outcome chips: [{text, dir: 'up'|'down'}]. A row centered at y (kept above the caption box).
- * render(t, at, out): chips pop in from `at`, staggered; fade at `out`.
- */
-export function makeOutcome(parent, items, { y = 806 } = {}) {
-  const row = h('div', { class: 'abs', style: { left: '0', width: '1920px', top: `${y - 30}px`, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '16px', zIndex: '30' } });
-  // the outcomes are the impact (the formula that follows is the indicator that measures it)
-  const lab = h('div', { style: { display: 'flex', alignItems: 'center', height: '60px', padding: '0 24px', borderRadius: '999px', background: 'rgba(130,52,254,0.92)', color: '#ffffff', fontFamily: 'var(--font-ui)', fontWeight: '700', fontSize: '15px', letterSpacing: '0.24em', textTransform: 'uppercase', boxShadow: '0 20px 50px -20px rgba(0,0,0,0.9), 0 0 24px rgba(130,52,254,0.35)' } }, 'Impact');
-  row.append(lab);
-  const chips = items.map((it) => {
-    const el = h('div', { style: { display: 'flex', alignItems: 'center', gap: '12px', height: '60px', padding: '0 26px 0 18px', borderRadius: '999px', background: 'rgba(14,12,22,0.9)', border: '1px solid rgba(130,52,254,0.55)', color: '#e6dcff', fontFamily: 'var(--font-ui)', fontWeight: '600', fontSize: '24px', letterSpacing: '-0.005em', whiteSpace: 'nowrap', boxShadow: '0 20px 50px -20px rgba(0,0,0,0.9), 0 0 24px rgba(130,52,254,0.18)' } },
-      h('span', { style: { width: '34px', height: '34px', borderRadius: '50%', background: 'rgba(130,52,254,0.28)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#cdb8ff' } }, arrowSvg(it.dir !== 'down')),
-      h('span', {}, it.text));
-    row.append(el);
-    return el;
-  });
-  parent.append(row);
-  return {
-    el: row,
-    render(t, at, out) {
-      const a = 1 - prog(t, out, 0.4, E.inCubic);
-      row.style.display = t > at - 0.2 && a > 0.001 ? 'flex' : 'none';
-      const lq = prog(t, at - 0.15, 0.4, E.outCubic);
-      lab.style.opacity = (lq * a).toFixed(3);
-      lab.style.transform = `translateX(${((1 - lq) * -14).toFixed(2)}px)`;
-      chips.forEach((el, i) => {
-        const q = prog(t, at + i * 0.22, 0.45, E.outCubic);
-        const b = lerp(0.85, 1, Math.min(1.04, E.outBack(clamp((t - at - i * 0.22) / 0.5), 1.8)));
-        el.style.opacity = (q * a).toFixed(3);
-        el.style.transform = `translateY(${((1 - q) * 16).toFixed(2)}px) scale(${b.toFixed(4)})`;
-      });
-    },
-  };
-}
 
 /** Clip a canvas drawing to a rounded rect (the camera feed), run fn, then stroke the border. */
 export function withFeed(g, rect, fn, { a = 1, label = null, t = 0, radius = 18 } = {}) {

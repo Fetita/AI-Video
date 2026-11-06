@@ -2,14 +2,14 @@
 // First the leak, without AI: a crate carrying the wrong label reaches the wrong store and is REJECTED
 // (fine + product + freight). Then with AI: a camera gantry recognizes every crate, checks it against the
 // order, the applicator prints and applies the right label, each crate routes to its store dock and the
-// one mismatch is held back → formula: Rejections avoided × (Fine + Product + Freight).
+// one mismatch is held back → gain: right crate, right store, first time.
 import { addScene, h, put, prog, E, clamp, lerp, env, makeCanvas, rgba, C, hash, rrect, W, H } from '../engine.js';
 import { makeHud, box, tag } from '../lib/ui.js';
-import { seg, cueOr } from '../lib/vo.js';
-import { EQUATIONS, stationIndex } from '../lib/impact-data.js';
-import { makeEquation, eqTimes, dockStart } from '../lib/equation.js';
+import { seg } from '../lib/vo.js';
+import { GAINS, stationIndex } from '../lib/impact-data.js';
+import { makeGain, gainTimes, dockStart } from '../lib/gain.js';
 import { mapDot, drawLine, CHAIN } from '../lib/chain.js';
-import { makeOutcome, exitLine, fmt } from '../lib/chapter.js';
+import { exitLine, fmt } from '../lib/chapter.js';
 import { crateSprite } from '../lib/produce.js';
 import { drawRollers } from '../lib/conveyor.js';
 import { drawIcon } from '../lib/icons.js';
@@ -49,8 +49,8 @@ addScene({
     this.cv = makeCanvas(R);
     this.g = this.cv.ctx;
     this.crates = { iceberg: [crateSprite('iceberg', 61), crateSprite('iceberg', 62)], romaine: [crateSprite('romaine', 63), crateSprite('romaine', 64)] };
-    const def = EQUATIONS.labels;
-    this.times = eqTimes(ctx, def);
+    const def = GAINS.labels;
+    this.times = gainTimes(ctx, def);
     this.dockAt = dockStart(def) - ctx.start;
     this.dock = mapDot(stationIndex('labels'));
     this.cWrong = seg(ctx, 'b1', 1);
@@ -59,7 +59,6 @@ addScene({
     this.cCheck = seg(ctx, 'b2', 1);
     this.cLabel = seg(ctx, 'b2', 2);
     this.cHold = seg(ctx, 'b2', 3);
-    this.cOut = cueOr(ctx, 'b3', () => this.times[0] - 2.2);
     this.cReject = this.cWrong + 1.45;
     this.aiAt = this.cAI - 0.4;
     // crates in the AI pass: index k, spawn time, product, store; one mismatch reaches the hold pusher on cue
@@ -79,7 +78,7 @@ addScene({
         { label: 'Route', at: this.cHold },
       ],
     });
-    // the cost of one rejection (stays as a reference card; the formula's bracket flies out of it)
+    // the cost of one rejection (stays as a reference card; its chips fly into the gain card)
     this.cost = h('div', { class: 'panel', style: { left: '150px', top: '128px', padding: '16px 20px', background: 'rgba(20,10,9,0.9)', borderColor: 'rgba(255,107,87,0.45)', zIndex: '20' } },
       h('div', { class: 'kicker', style: { fontSize: '11px', color: 'var(--coral)', marginBottom: '12px' } }, 'One rejection costs'),
       h('div', { style: { display: 'flex', gap: '10px', alignItems: 'center' } }, ...['Fine', 'Product', 'Freight'].map((x, i) => h('span', { class: 'ix-chip', style: { background: 'rgba(255,107,87,0.16)', color: '#ffb3a8', border: '1px solid rgba(255,107,87,0.45)' } }, x))));
@@ -93,12 +92,7 @@ addScene({
     this.sRej = st('Rejections');
     this.stats.append(h('div', { style: { fontSize: '16px', fontWeight: '600', width: '110px', lineHeight: '1.3' } }, 'Dispatch', h('br'), h('span', { class: 'kicker', style: { fontSize: '10.5px', color: 'var(--coral)' } }, '● Live')), this.sLab.el, this.sChk.el, this.sHeld.el, this.sRej.el);
     R.append(this.stats);
-    this.outcome = makeOutcome(R, [
-      { text: 'Fewer rejections', dir: 'down' },
-      { text: 'Fewer returns', dir: 'down' },
-      { text: 'Less product lost', dir: 'down' },
-    ], { y: 806 });
-    this.eq = makeEquation(R, def);
+    this.gain = makeGain(R, def);
   },
 
   drawStage(g, t, a, ghost) {
@@ -145,8 +139,8 @@ addScene({
     const g = this.g;
     g.clearRect(0, 0, W, H);
     const D = ctx.dur;
-    const eqLevel = this.eq.level(t, { times: this.times, dockAt: this.dockAt });
-    this.hud(t, { hideSteps: eqLevel > 0.25 });
+    const gainLevel = this.gain.level(t, { times: this.times, dockAt: this.dockAt });
+    this.hud(t, { hideSteps: gainLevel > 0.25 });
 
     // ================= A: without AI (ghost): the wrong crate reaches the wrong store
     const ghostA = env(t, 0.0, this.aiAt + 0.2, 0.5, 0.6);
@@ -174,7 +168,7 @@ addScene({
       tag(g, 150, 250, 'WITHOUT AI', { bg: 'rgba(255,255,255,0.1)', fg: 'rgba(255,255,255,0.8)', a: ghostA * prog(t, 0.3, 0.4), size: 12, track: 0.18 });
       if (t >= 0) drawLine(g, CHAIN.x0, CHAIN.x1, CHAIN.y, { a: 1 - prog(t, 0.05, 0.5) });
     }
-    // cost card: appears with "…and a fine", stays as the reference until the formula takes its chips
+    // cost card: appears with "…and a fine", stays as the reference until the gain card takes its chips
     const costA = env(t, this.cFine - 0.1, this.dockAt - 0.2, 0.35, 0.5);
     put(this.cost, { y: (1 - prog(t, this.cFine - 0.1, 0.45, E.outCubic)) * 14, o: costA });
     this.costChips.forEach((c, i) => { const q = prog(t, this.cFine + i * 0.18, 0.35, E.outBack); c.style.opacity = clamp(q * 2).toFixed(3); c.style.transform = `scale(${lerp(0.7, 1, Math.min(1.06, q)).toFixed(3)})`; });
@@ -251,11 +245,10 @@ addScene({
     const setv = (s, v) => { if (s.last !== v) { s.v.textContent = v; s.last = v; } };
     setv(this.sLab, fmt(3120 + labeled)); setv(this.sChk, fmt(3121 + checked)); setv(this.sHeld, t > this.cHold + 0.6 ? '1' : '0'); setv(this.sRej, '0');
 
-    this.outcome.render(t, this.cOut - 0.1, this.times[0] - 0.5);
     const chipSrc = (i) => () => ({ x: 150 + 20 + 44 + i * 108, y: 128 + 62, w: 90 });
-    this.eq.render(t, {
+    this.gain.render(t, {
       times: this.times, dockAt: this.dockAt, dock: this.dock,
-      from: { 0: () => ({ x: HOLD_X, y: Y + 230, w: 260 }), 3: chipSrc(0), 5: chipSrc(1), 7: chipSrc(2) },
+      from: { 1: chipSrc(0), 2: chipSrc(1), 3: chipSrc(2) },
     });
     exitLine(g, t, D);
   },

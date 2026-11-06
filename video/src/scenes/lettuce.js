@@ -2,14 +2,14 @@
 // The hand-off line becomes the horizon: the line-art tractor (from the AI Studio film) scans the crop;
 // push into its camera → every head measured → the feed shrinks to an inset and its plants stream into a
 // day-by-day harvest forecast; orders appear, surplus (waste) and shortfall (penalty) shrink as the plan
-// matches supply to orders → formula: Boxes not wasted × Cost/box + Shortfalls avoided × Penalty.
+// matches supply to orders → gain: harvest cut to the order.
 import { addScene, h, put, prog, E, clamp, lerp, env, makeCanvas, rgba, C, hash, rrect, W, H } from '../engine.js';
 import { makeHud, box, tag, recHud } from '../lib/ui.js';
-import { seg, cueOr } from '../lib/vo.js';
-import { EQUATIONS, stationIndex } from '../lib/impact-data.js';
-import { makeEquation, eqTimes, dockStart } from '../lib/equation.js';
+import { seg } from '../lib/vo.js';
+import { GAINS, stationIndex } from '../lib/impact-data.js';
+import { makeGain, gainTimes, dockStart } from '../lib/gain.js';
 import { mapDot, drawLine, CHAIN } from '../lib/chain.js';
-import { makeOutcome, withFeed, lerpRect, exitLine, FEED } from '../lib/chapter.js';
+import { withFeed, lerpRect, exitLine, FEED } from '../lib/chapter.js';
 import { plantSprite, soilTile, SPEED, ROWS, ROW_X0, ROW_DX } from '../lib/field.js';
 import { drawTractor } from '../lib/tractor.js';
 
@@ -30,14 +30,13 @@ addScene({
     this.g = this.cv.ctx;
     this.heads = Array.from({ length: 10 }, (_, i) => plantSprite(1200 + i, 160));
     this.soil = soilTile(FEED.w, 1200);
-    const def = EQUATIONS.lettuce;
-    this.times = eqTimes(ctx, def);
+    const def = GAINS.lettuce;
+    this.times = gainTimes(ctx, def);
     this.dockAt = dockStart(def) - ctx.start;
     this.dock = mapDot(stationIndex('lettuce'));
     this.cCam = seg(ctx, 'l1', 1);
     this.cFc = seg(ctx, 'l2', 0);
     this.cMatch = seg(ctx, 'l2', 1);
-    this.cOut = cueOr(ctx, 'l3', () => this.times[0] - 2.6);
     this.cPush = this.cCam + 0.55;
     this.hud = makeHud(ctx, {
       num: '02', title: 'Field · Harvest forecast', badge: 'Vision + forecasting',
@@ -65,19 +64,15 @@ addScene({
     this.chart.append(this.legend);
     this.dayEls = DAYS.map((d, i) => { const el = h('div', { class: 'kicker', style: { position: 'absolute', top: `${CH.h + 116}px`, left: `${40 + (i + 0.5) * (CH.w / 7) - 40}px`, width: '80px', textAlign: 'center', fontSize: '12px' } }, d); this.chart.append(el); return el; });
     R.append(this.chart);
-    this.outcome = makeOutcome(R, [
-      { text: 'Less product thrown away', dir: 'down' },
-      { text: 'Fewer short deliveries', dir: 'down' },
-    ]);
-    this.eq = makeEquation(R, def);
+    this.gain = makeGain(R, def);
   },
 
   render(t, ctx) {
     const g = this.g;
     g.clearRect(0, 0, W, H);
     const D = ctx.dur;
-    const eqLevel = this.eq.level(t, { times: this.times, dockAt: this.dockAt });
-    this.hud(t, { hideSteps: eqLevel > 0.25 });
+    const gainLevel = this.gain.level(t, { times: this.times, dockAt: this.dockAt });
+    this.hud(t, { hideSteps: gainLevel > 0.25 });
     const cPush = this.cPush;
 
     // ================= A: horizon + tractor (the hand-off line becomes the horizon)
@@ -118,7 +113,7 @@ addScene({
     }
 
     // ================= B: top-down feed of mature heads, measured; shrinks to an inset for the forecast
-    const feedA = prog(t, cPush + 0.7, 0.35) * (1 - prog(t, this.cOut + 0.6, 0.6));
+    const feedA = prog(t, cPush + 0.7, 0.35) * (1 - prog(t, this.times[0] + 0.6, 0.6));
     const toInset = prog(t, this.cFc + 0.45, 0.9, E.inOutCubic);
     const fr = lerpRect(FEED, INSET, toInset);
     const scroll = t * SPEED * 0.8;
@@ -241,11 +236,10 @@ addScene({
     }
     this.surplusAt = surplusAt; this.shortAt = shortAt;
 
-    // ================= outcome → formula → dock
-    this.outcome.render(t, this.cOut - 0.1, this.times[0] - 0.55);
+    // ================= gain → dock (the coral surplus and shortfall fly into their chips)
     const surplusSrc = () => ({ x: CH.x + 3.5 * (CH.w / 7), y: CH.y + CH.h * 0.18, w: 160 });
     const shortSrc = () => ({ x: CH.x + 0.5 * (CH.w / 7), y: CH.y + CH.h * 0.5, w: 160 });
-    this.eq.render(t, { times: this.times, dockAt: this.dockAt, dock: this.dock, from: { 0: surplusSrc, 4: shortSrc } });
+    this.gain.render(t, { times: this.times, dockAt: this.dockAt, dock: this.dock, from: { 1: surplusSrc, 2: shortSrc } });
     exitLine(g, t, D);
   },
 });

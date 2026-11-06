@@ -554,7 +554,7 @@ def s_rods(dur=6.0):
     return norm(x * adsr(n, 0.3, 0.2, 1.0, 0.5))
 
 
-# --- the formula's token times, mirroring video/src/lib/vo.js + equation.js (same anchors, same rules)
+# --- the gain card's item times, mirroring video/src/lib/vo.js + gain.js (same anchors, same rules)
 def _anchors(lid):
     l = L[lid]
     text, segs = l['text'], l['segs']
@@ -593,61 +593,64 @@ def _char_time(lid, c):
     return l['end']
 
 
-def eq_times(line, toks):
+def gain_times(line, says, stat_say):
+    """[headline, *chips, stat?] times; `stat_say` is None without a stat, '' for a stat with no anchor."""
     l = L[line]
     text = l['text'].lower()
-    times, cursor, prev = [], 0, l['start']
-    for kind, say in toks:
+    times = [l['start'] - 0.2]
+    cursor, prev = 0, times[0]
+    items = [(say, 0.35) for say in says] + ([(stat_say, 0.45)] if stat_say is not None else [])
+    for say, fallback in items:
         tt = None
         if say:
             idx = text.find(say.lower(), cursor)
             if idx >= 0:
                 tt = _char_time(line, idx)
                 cursor = idx + 1
-        if kind == 'close':
-            tt = max(tt if tt is not None else prev, prev) + 0.32
-        if kind == 'eq':
-            tt = prev + 0.34
-        if kind == 'result':
-            tt = max(prev + 0.3, l['end'] - 0.12)
         if tt is None:
-            tt = prev + 0.25
-        tt = max(tt, prev + (0.12 if kind == 'term' else 0.08))
+            tt = prev + fallback
+        tt = max(tt, prev + 0.2)
         times.append(tt)
         prev = tt
     return times
 
 
-_T = lambda say: ('term', say)
-_O = lambda say: ('op', say)
-EQ = {  # mirrors EQUATIONS in video/src/lib/impact-data.js (the six impact indicators)
-    'nursery': ('n4', [_T('seedlings saved'), _O('times'), _T('the cost')]),
-    'lettuce': ('l4', [_T('boxes not wasted'), _O('times'), _T('their cost'), _O('plus'), _T('shortfalls avoided'), _O('times the'), _T('penalty')]),
-    'onions': ('u4', [_T('sampling hours saved'), _O('times'), _T('their cost'), _O('plus'), _T('tonnes'), _O('times the'), _T('price difference')]),
-    'pumpkins': ('k3', [_T('hours saved'), _O('times'), _T('cost per hour'), _O('plus'), _T('kilos graded right'), _O('times the'), _T('price difference')]),
-    'labels': ('b4', [_T('rejections avoided'), _O('times'), ('open', 'times'), _T('the fine'), _O('plus the product'), _T('product'), _O('plus the freight'), _T('freight'), ('close', 'freight')]),
-    'dashboard': ('g4', [_T('reporting hours saved'), _O('times'), _T('cost per hour')]),
+GAIN = {  # mirrors GAINS in video/src/lib/impact-data.js: (line, chip anchors, stat anchor or None)
+    'nursery': ('n3', ['more of every tray', 'less replanting', 'on schedule'], None),
+    'lettuce': ('l3', ['thrown away', 'complete'], ''),
+    'onions': ('u3', ['sampling by hand', 'planned', 'sold'], ''),
+    'pumpkins': ('k2', ['class it earned', 'stops counting'], ''),
+    'labels': ('b3', ['no fines', 'no returns', 'no product lost'], 'fifteen hundred'),
+    'dashboard': ('g4', ['minutes', 'live data'], ''),
 }
 PENT = [1046.5, 1174.7, 1318.5, 1568.0, 1760.0, 2093.0]
+DOCK_DELAY = 1.2  # gain.js
 
 
-def eq_sfx(sid):
-    line, toks = EQ[sid]
+def gain_dock(sid):
+    return L[GAIN[sid][0]]['end'] + DOCK_DELAY
+
+
+def gain_sfx(sid):
+    line, says, stat_say = GAIN[sid]
     if line not in L:
         return
-    times = eq_times(line, toks)
+    times = gain_times(line, says, stat_say)
     at(times[0] - 0.6, s_whoosh(0.6, 2500, 700, 61), -34)
-    n = 0
-    for (kind, _), tt in zip(toks, times):
-        if kind == 'term':
-            at(tt, s_bell(PENT[min(n, 5)], 1.0, 0.4), -28, -0.3 + 0.12 * n)
-            n += 1
-        else:
-            at(tt, s_tick(1900, 0.01), -34)
-    # the indicator is complete: an underline sweeps under it
-    at(times[-1] + 0.35, s_chime(), -27)
-    at(times[-1] + 0.35, s_thump(), -31)
-    ds = L[line]['end'] + 0.75
+    at(times[0] + 0.1, s_pop(700, 1000), -32)                    # kicker + headline
+    for n, tt in enumerate(times[1:1 + len(says)]):              # one bell per chip
+        at(tt, s_bell(PENT[min(n, 5)], 1.0, 0.4), -28, -0.3 + 0.2 * n)
+    if stat_say is not None:                                     # the stat counts up
+        ts = times[-1]
+        at(ts, s_data(0.9, 98, 22), -34)
+        at(ts, s_bell(PENT[min(len(says), 5)], 1.0, 0.4), -28, 0.3)
+        done = ts + 0.9
+    else:
+        done = times[-1] + 0.35
+    # the card is complete: an underline sweeps under the headline
+    at(done, s_chime(), -27)
+    at(done, s_thump(), -31)
+    ds = gain_dock(sid)
     at(ds, s_suck(0.6, 62), -30)
     at(ds + 0.64, s_lock(), -30, 0.6)
 
@@ -661,11 +664,6 @@ def card_sfx(s0, sol_at):
     at(s0 + 0.5, s_paper(0.4, 64), -32)
     at(s0 + 0.75, s_pop(700, 1000), -34)
     at(sol_at, s_pop(800, 1150), -34)
-
-
-def chips_sfx(t0, n):
-    for i in range(n):
-        at(t0 + i * 0.22, s_pop(800 + i * 80, 1150 + i * 80), -30, -0.4 + i * 0.4)
 
 
 if 'impact-open' in SC:
@@ -695,12 +693,14 @@ if 'impact-open' in SC:
     at(colAt + 0.3, s_thump(), -22)
     at(cNot, s_whoosh(0.7, 900, 2600, 69), -32)
     at(cF - 0.05, s_glitch(0.5, 70), -30)
-    for i in range(5):
+    for i in range(3):
         at(cF + 0.7 + i * 0.12, s_pop(660 * 2 ** (i * 2 / 12), 990 * 2 ** (i * 2 / 12), 0.08), -32)
     if 'x5' in L:
         c5, cM = cue('x5', 0), cue('x5', 1)
         at(c5 - 0.25, s_chime(), -30)
-        at(cM + 2.4, s_marker(), -32)
+        for say in ('less waste', 'more output', 'better decisions'):   # each result turns solid
+            idx = L['x5']['text'].lower().find(say)
+            at(_char_time('x5', idx) if idx >= 0 else cM + 2.4, s_marker(), -32)
     c6, cS = cue('x6', 0), cue('x6', 1)
     at(c6 - 0.25, s_rise(0.7, 350, 900), -34)
     for i in range(6):
@@ -714,7 +714,7 @@ if 'nursery' in SC:
     s0 = SC['nursery']['start']
     cN2, cCount, cFlag = cue('n2', 0), cue('n2', 1), cue('n2', 2)
     live = cN2 + 1.25
-    dock = L['n4']['end'] + 0.75
+    dock = gain_dock('nursery')
     card_sfx(s0, cN2 - 0.15)
     at(live - 0.05, s_suck(0.4, 73), -30)
     at(live, s_rec(), -32)
@@ -724,8 +724,7 @@ if 'nursery' in SC:
     for i in range(3):
         at(cCount + i * 0.35, s_lock(), -32, -0.3 + i * 0.3)
     at(cFlag, s_alert(), -26)
-    chips_sfx(cue('n3') - 0.1 if 'n3' in L else L['n4']['start'] - 3.3, 3)
-    eq_sfx('nursery')
+    gain_sfx('nursery')
     exit_line('nursery')
 
 if 'lettuce' in SC:
@@ -746,15 +745,14 @@ if 'lettuce' in SC:
     at(cMatch + 0.3, s_alert(), -30)
     for k in range(14):
         at(cMatch + 0.8 + 2.6 * (k / 14) * 0.62 + 0.25, s_tick(1600 + k * 60, 0.01), -34, -0.5 + (k % 5) * 0.25)
-    chips_sfx(cue('l3') - 0.1 if 'l3' in L else L['l4']['start'] - 2.7, 2)
-    eq_sfx('lettuce')
+    gain_sfx('lettuce')
     exit_line('lettuce')
 
 if 'onions' in SC:
     s0 = SC['onions']['start']
     cSplit, cMiss, cSort = cue('u1', 1), cue('u2', 0), cue('u2', 2)
     live = L['u2']['segs'][0][1] - 0.05
-    dock = L['u4']['end'] + 0.75
+    dock = gain_dock('onions')
     card_sfx(s0, cSplit - 0.1)
     at(cMiss + 0.1, s_alert(), -28)
     for i in range(6):
@@ -771,8 +769,7 @@ if 'onions' in SC:
         at(cSort - 0.2 + i * 0.08, s_pop(700 + i * 120, 1000 + i * 120), -30)
     for i in range(6):
         at(cSort + 0.6 + i * 0.11, s_pixel(0.2), -34)
-    chips_sfx(cSort + 0.5, 1)
-    eq_sfx('onions')
+    gain_sfx('onions')
     exit_line('onions')
 
 if 'pumpkins' in SC:
@@ -780,7 +777,7 @@ if 'pumpkins' in SC:
     D = SC['pumpkins']['end'] - s0
     cCount = cue('k1', 1)
     cGrade = cCount + 1.2
-    dock = L['k3']['end'] + 0.75
+    dock = gain_dock('pumpkins')
     at(s0 + 0.05, s_whoosh(0.7, 600, 2000, 81), -30)
     at(s0 + 0.4, s_click(), -30)
     at(s0, s_belt(dock - s0 + 0.5), -38)
@@ -794,8 +791,7 @@ if 'pumpkins' in SC:
     at(cGrade - 0.3, s_scan(1.0, 82), -32)
     at(cGrade + 0.6, s_click(), -32)
     at(cGrade + 0.6, s_servo(0.8), -36)
-    chips_sfx(cue('k2') - 0.1 if 'k2' in L else L['k3']['start'] - 2.5, 3)
-    eq_sfx('pumpkins')
+    gain_sfx('pumpkins')
     exit_line('pumpkins')
 
 if 'labels' in SC:
@@ -803,7 +799,7 @@ if 'labels' in SC:
     cWrong, cFine = cue('b1', 1), cue('b1', 2)
     cAI, cCheck, cHold = cue('b2', 0), cue('b2', 1), cue('b2', 3)
     ai = cAI - 0.4
-    dock = L['b4']['end'] + 0.75
+    dock = gain_dock('labels')
     at(s0, s_belt(ai - s0 + 0.3), -42)
     at(cWrong + 1.45, s_stamp(), -22)
     for i in range(3):
@@ -824,8 +820,7 @@ if 'labels' in SC:
         elif ai < tlab < dock - 0.5:
             at(tlab - 0.35, s_printer(), -32, 0.4)
             at(tlab, s_tamp(), -28, 0.4)
-    chips_sfx(cue('b3') - 0.1 if 'b3' in L else L['b4']['start'] - 2.3, 3)
-    eq_sfx('labels')
+    gain_sfx('labels')
     exit_line('labels')
 
 if 'dashboard' in SC:
@@ -852,18 +847,18 @@ if 'dashboard' in SC:
     at(cAns, s_data(1.0, 94, 20), -38)
     for i in range(3):
         at(cAns + 0.9 + i * 0.15, s_tick(1700 + i * 200, 0.012), -34)
-    eq_sfx('dashboard')
+    gain_sfx('dashboard')
     exit_line('dashboard')
 
 if 'impact-close' in SC:
     s0 = SC['impact-close']['start']
-    cSix, cForm, cOne = cue('z1', 0), cue('z1', 1), cue('z1', 2)
+    cSix, cRes, cOne = cue('z1', 0), cue('z1', 1), cue('z1', 2)
     cName, cCta = cue('z3', 0), cue('z4', 0)
     at(s0 + 0.05, s_rise(0.6, 400, 1000), -34)
     for i in range(6):
         at(cSix - 0.25 + i * 0.07, s_pop(650 + i * 50, 900 + i * 50, 0.07), -31, -0.7 + i * 0.28)
     for i in range(6):
-        ra = cForm + 0.45 + i * 0.14
+        ra = cRes + 0.45 + i * 0.14
         at(ra, s_pop(660 * 2 ** (i * 2 / 12), 990 * 2 ** (i * 2 / 12), 0.1), -29, -0.5 + i * 0.2)
     at(cOne, s_sparkle(1.2, 95, 8), -34)
     at(cName - 1.25, s_suck(0.95, 96), -22)

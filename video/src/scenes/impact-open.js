@@ -1,10 +1,11 @@
 // Open — six small leaks flash by (three named by the VO, three on music hits), snap into a 3×2 grid and
-// collapse into one line; "Impact isn't a promise." → "It's measured." (promise decodes into measured);
-// the Eagerworks lockup and a ghost impact indicator (what changes × what it's worth); the line becomes
+// collapse into one line; "Impact isn't a promise." → "It's a result." (promise decodes into result);
+// the Eagerworks lockup and the three results every project aims at (less waste, more output, better
+// decisions), filling in as the VO names them; the line becomes
 // the value chain, from seed to shelf, and shrinks into the chain map as the first chapter opens.
 import { addScene, h, put, prog, E, clamp, lerp, env, makeCanvas, rgba, C, hash, rrect, W, H, FPS } from '../engine.js';
 import { decode, tag, box } from '../lib/ui.js';
-import { has, seg, lineStart, lineEnd } from '../lib/vo.js';
+import { has, seg, lineStart, lineEnd, findPhrase, charTime } from '../lib/vo.js';
 import { makeLockup } from '../lib/logo.js';
 import { CHAIN, MAP, BIG, drawLine, neighbors, makeValueChain } from '../lib/chain.js';
 import { STATIONS, stationIndex } from '../lib/impact-data.js';
@@ -32,10 +33,12 @@ addScene({
     // cues
     this.c1 = seg(ctx, 'x1', 0); this.c2 = seg(ctx, 'x2', 0); this.c3 = seg(ctx, 'x3', 0);
     this.e3 = lineEnd(ctx, 'x3');
-    this.cNot = seg(ctx, 'x4', 0); this.cFormula = seg(ctx, 'x4', 1);
+    this.cNot = seg(ctx, 'x4', 0); this.cResult = seg(ctx, 'x4', 1);
     this.hasX5 = has('x5');
     this.cEw = this.hasX5 ? seg(ctx, 'x5', 0) : null;
     this.cMeasure = this.hasX5 ? seg(ctx, 'x5', 1) : null;
+    // the three results fill in as x5 names them
+    this.cRes = this.hasX5 ? ['less waste', 'more output', 'better decisions'].map((p) => { const i = findPhrase('x5', p); return i >= 0 ? charTime(ctx, 'x5', i) : this.cMeasure + 2.4; }) : null;
     this.cSeason = seg(ctx, 'x6', 0); this.cShelf = seg(ctx, 'x6', 1);
     const gap = this.cNot - this.e3;
     this.fl = [0, 1, 2].map((i) => this.e3 + 0.05 + i * Math.min(0.32, (gap - 0.9) / 3));
@@ -53,20 +56,19 @@ addScene({
     this.t1b.append(this.u1);
     this.t1.append(this.t1a, this.t1b, h('span', {}, '.'));
     this.t2 = h('div', { class: 'abs display', style: { left: '0', width: '1920px', top: '560px', textAlign: 'center', fontSize: '112px', fontWeight: '600', letterSpacing: '-0.02em', lineHeight: '1', whiteSpace: 'nowrap' } });
-    this.t2a = h('span', {}, 'It’s ');
-    this.t2b = h('span', { style: { position: 'relative', display: 'inline-block', color: 'var(--accent)' } }, 'measured');
+    this.t2a = h('span', {}, 'It’s a ');
+    this.t2b = h('span', { style: { position: 'relative', display: 'inline-block', color: 'var(--accent)' } }, 'result');
     this.u2 = h('i', { style: { position: 'absolute', left: '-4px', right: '-4px', top: '108%', height: '6px', background: 'var(--accent)', boxShadow: '0 0 18px rgba(130,52,254,0.6)', transformOrigin: '0 50%', display: 'block', borderRadius: '3px' } });
     this.t2b.append(this.u2);
     this.t2.append(this.t2a, this.t2b, h('span', {}, '.'));
     R.append(this.t1, this.t2);
-    // ---- ghost impact indicator: what changes × what it's worth
+    // ---- the three results every project aims at
     this.ghost = h('div', { class: 'abs', style: { left: '0', width: '1920px', top: '706px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '20px' } });
-    const slot = (txt, ai) => h('div', { style: { display: 'flex', alignItems: 'center', height: '66px', padding: '0 28px', borderRadius: '16px', border: `1.5px dashed ${ai ? 'rgba(160,120,255,0.75)' : 'rgba(255,255,255,0.35)'}`, color: ai ? '#d9caff' : 'var(--text2)', fontFamily: 'var(--font-ui)', fontWeight: '600', fontSize: '26px', minWidth: '210px', justifyContent: 'center' } }, h('span', {}, txt));
-    this.gSlots = [slot('What changes', true), slot('What it’s worth', false)];
-    const op = (s) => h('div', { style: { fontFamily: 'var(--font-ui)', fontWeight: '300', fontSize: '44px', color: 'var(--text2)' } }, s);
-    this.gItems = [this.gSlots[0], op('×'), this.gSlots[1]];
+    const slot = (txt, ico) => h('div', { style: { display: 'flex', alignItems: 'center', gap: '12px', height: '66px', padding: '0 30px 0 22px', borderRadius: '16px', border: '1.5px dashed rgba(160,120,255,0.75)', color: '#d9caff', fontFamily: 'var(--font-ui)', fontWeight: '600', fontSize: '26px', minWidth: '210px', justifyContent: 'center' } }, icon(ico, { size: 26, stroke: 1.9 }), h('span', {}, txt));
+    this.gSlots = [slot('Less waste', 'leaf'), slot('More output', 'box'), slot('Better decisions', 'dashboard')];
+    this.gItems = this.gSlots;
     this.gItems.forEach((x) => this.ghost.append(x));
-    this.gKick = h('div', { class: 'abs ix-kicker', style: { left: '0', width: '1920px', textAlign: 'center', top: '672px', fontSize: '14px' } }, 'Impact indicator');
+    this.gKick = h('div', { class: 'abs ix-kicker', style: { left: '0', width: '1920px', textAlign: 'center', top: '672px', fontSize: '14px' } }, 'What AI has to deliver');
     R.append(this.gKick);
     R.append(this.ghost);
     // ---- lockup (static here; the build is saved for the close)
@@ -75,12 +77,12 @@ addScene({
     this.lock.el.style.position = 'relative';
     this.lockWrap = h('div', { class: 'abs', style: { left: '0', top: '0' } }, this.lock.el);
     R.append(this.lockWrap);
-    this.kickEw = h('div', { class: 'abs kicker', style: { left: '0', width: '1920px', textAlign: 'center', top: '548px', fontSize: '15px', letterSpacing: '0.24em', color: 'var(--text2)' } }, 'Every AI project starts with how impact is measured');
+    this.kickEw = h('div', { class: 'abs kicker', style: { left: '0', width: '1920px', textAlign: 'center', top: '548px', fontSize: '15px', letterSpacing: '0.24em', color: 'var(--text2)' } }, 'Every AI project starts with the result it must deliver');
     R.append(this.kickEw);
     // ---- value chain
     this.chain = makeValueChain(R);
     this.kickChain = h('div', { class: 'abs kicker', style: { left: '0', width: '1920px', textAlign: 'center', top: '400px', fontSize: '16px', letterSpacing: '0.3em', color: 'var(--accent-text)' } }, 'From seed to shelf');
-    this.kickSub = h('div', { class: 'abs', style: { left: '0', width: '1920px', textAlign: 'center', top: '700px', fontSize: '22px', fontWeight: '500', color: 'var(--text2)' } }, 'One grower · one season · six indicators');
+    this.kickSub = h('div', { class: 'abs', style: { left: '0', width: '1920px', textAlign: 'center', top: '700px', fontSize: '22px', fontWeight: '500', color: 'var(--text2)' } }, 'One grower · one season · six results');
     R.append(this.kickChain, this.kickSub);
   },
 
@@ -198,31 +200,30 @@ addScene({
     const tIn = prog(t, this.cNot + 0.02, 0.5, E.outCubic);
     const tOut = prog(t, (this.hasX5 ? this.cEw : this.cSeason) - 0.7, 0.5, E.inCubic);
     this.t1.style.clipPath = `inset(${((1 - tIn) * 50).toFixed(2)}% -10% ${((1 - tIn) * 50 - tIn * 40).toFixed(2)}% -10%)`;
-    put(this.t1, { y: -prog(t, this.cFormula - 0.1, 0.5, E.inOutCubic) * 50, o: tIn * (1 - tOut) * lerp(1, 0.45, prog(t, this.cFormula, 0.5)) });
+    put(this.t1, { y: -prog(t, this.cResult - 0.1, 0.5, E.inOutCubic) * 50, o: tIn * (1 - tOut) * lerp(1, 0.45, prog(t, this.cResult, 0.5)) });
     this.u1.style.transform = `scaleX(${prog(t, this.cNot + 0.4, 0.45, E.inOutCubic).toFixed(3)})`;
-    const f2 = prog(t, this.cFormula - 0.1, 0.45, E.outCubic);
-    put(this.t2, { y: (1 - f2) * 30 - prog(t, this.cFormula - 0.1, 0.5, E.inOutCubic) * 50, o: f2 * (1 - tOut) });
-    const dp = prog(t, this.cFormula - 0.05, 0.6, E.linear);
+    const f2 = prog(t, this.cResult - 0.1, 0.45, E.outCubic);
+    put(this.t2, { y: (1 - f2) * 30 - prog(t, this.cResult - 0.1, 0.5, E.inOutCubic) * 50, o: f2 * (1 - tOut) });
+    const dp = prog(t, this.cResult - 0.05, 0.6, E.linear);
     const frame = Math.round(T * FPS);
-    this.t2b.firstChild.textContent = dp <= 0 ? 'promise' : dp >= 1 ? 'measured' : decode('promise', 'measured', dp, 11, frame);
-    this.u2.style.transform = `scaleX(${prog(t, this.cFormula + 0.45, 0.5, E.inOutCubic).toFixed(3)})`;
+    this.t2b.firstChild.textContent = dp <= 0 ? 'promise' : dp >= 1 ? 'result' : decode('promise', 'result', dp, 11, frame);
+    this.u2.style.transform = `scaleX(${prog(t, this.cResult + 0.45, 0.5, E.inOutCubic).toFixed(3)})`;
 
-    // ---------------- ghost formula + Eagerworks (x5); in the teaser the formula rides the thesis
-    const gIn = prog(t, this.cFormula + 0.7, 0.5, E.outCubic);
+    // ---------------- the three results + Eagerworks (x5); in the teaser the results ride the thesis
+    const gIn = prog(t, this.cResult + 0.7, 0.5, E.outCubic);
     const gOut = prog(t, this.cSeason - 0.6, 0.45, E.inCubic);
     const gY = this.hasX5 ? lerp(0, -40, prog(t, this.cEw - 0.6, 0.6, E.inOutCubic)) : 0;
     put(this.ghost, { y: gY, o: gIn * (1 - gOut) });
-    put(this.gKick, { y: gY, o: prog(t, this.cFormula + 0.6, 0.5) * (1 - gOut) });
-    this.gItems.forEach((el, i) => { const q = prog(t, this.cFormula + 0.7 + i * 0.12, 0.4, E.outBack); el.style.opacity = clamp(q * 2).toFixed(3); el.style.transform = `scale(${lerp(0.7, 1, Math.min(1.05, q)).toFixed(3)})`; });
+    put(this.gKick, { y: gY, o: prog(t, this.cResult + 0.6, 0.5) * (1 - gOut) });
+    this.gItems.forEach((el, i) => { const q = prog(t, this.cResult + 0.7 + i * 0.12, 0.4, E.outBack); el.style.opacity = clamp(q * 2).toFixed(3); el.style.transform = `scale(${lerp(0.7, 1, Math.min(1.05, q)).toFixed(3)})`; });
     if (this.hasX5) {
       if (!this.lockW) { const r = this.lock.el.getBoundingClientRect(); if (r.width > 10) this.lockW = r.width; }
       const lw = this.lockW || 900;
       const la = prog(t, this.cEw - 0.25, 0.5, E.outCubic) * (1 - gOut);
       put(this.lockWrap, { x: (1920 - lw) / 2, y: 410 + (1 - la) * 16, o: la });
       put(this.kickEw, { o: prog(t, this.cMeasure + 1.6, 0.5) * (1 - gOut), y: (1 - prog(t, this.cMeasure + 1.6, 0.5, E.outCubic)) * 10 });
-      // the slots fill in as the VO says "measured"
-      const fillP = prog(t, this.cMeasure + 2.4, 0.5);
-      this.gSlots.forEach((s) => { s.style.borderStyle = fillP > 0.5 ? 'solid' : 'dashed'; s.style.background = fillP > 0.5 ? 'rgba(255,255,255,0.04)' : 'transparent'; });
+      // each result turns solid as the VO names it
+      this.gSlots.forEach((s, i) => { const on = t > this.cRes[i] - 0.05; s.style.borderStyle = on ? 'solid' : 'dashed'; s.style.background = on ? 'rgba(130,52,254,0.16)' : 'transparent'; s.style.boxShadow = on ? '0 0 26px rgba(130,52,254,0.3)' : 'none'; });
     } else { put(this.lockWrap, { o: 0 }); put(this.kickEw, { o: 0 }); }
 
     // ---------------- value chain: the line returns and becomes six stations

@@ -3,7 +3,7 @@ export default {
  "fps": 30,
  "bpm": 100.0,
  "beat": 0.6,
- "duration": 81.6,
+ "duration": 90.0,
  "scenes": [
   {
    "id": "impact-open",
@@ -24,7 +24,7 @@ export default {
    "lines": [
     "l1",
     "l2",
-    "l4"
+    "l3"
    ]
   },
   {
@@ -33,23 +33,23 @@ export default {
    "end": 48.0,
    "lines": [
     "k1",
-    "k3"
+    "k2"
    ]
   },
   {
    "id": "labels",
    "start": 48.0,
-   "end": 66.0,
+   "end": 72.0,
    "lines": [
     "b1",
     "b2",
-    "b4"
+    "b3"
    ]
   },
   {
    "id": "impact-close",
-   "start": 66.0,
-   "end": 81.6,
+   "start": 72.0,
+   "end": 90.0,
    "lines": [
     "z1",
     "z2",
@@ -102,33 +102,33 @@ export default {
    "id": "x4",
    "scene": "impact-open",
    "start": 8.527,
-   "end": 10.852,
+   "end": 10.938,
    "segs": [
     [
      8.557,
-     9.877
+     9.867
     ],
     [
-     10.117,
-     10.757
+     10.127,
+     10.847
     ]
    ],
-   "text": "Impact isn't a promise. It's measured.",
+   "text": "Impact isn't a promise. It's a result.",
    "caption": false
   },
   "x6": {
    "id": "x6",
    "scene": "impact-open",
-   "start": 11.652,
-   "end": 13.828,
+   "start": 11.738,
+   "end": 13.914,
    "segs": [
     [
-     11.682,
-     12.392
+     11.768,
+     12.478
     ],
     [
-     12.532,
-     13.732
+     12.618,
+     13.818
     ]
    ],
    "text": "Here are three, from one grower's season."
@@ -167,34 +167,26 @@ export default {
    ],
    "text": "The model forecasts the boxes ready each day, and matches them to the orders."
   },
-  "l4": {
-   "id": "l4",
+  "l3": {
+   "id": "l3",
    "scene": "lettuce",
-   "start": 25.743,
-   "end": 31.695,
+   "start": 25.693,
+   "end": 31.154,
    "segs": [
     [
-     25.773,
-     26.503
+     25.723,
+     27.373
     ],
     [
-     26.893,
-     28.113
+     27.793,
+     29.003
     ],
     [
-     28.243,
-     29.133
-    ],
-    [
-     29.283,
-     30.583
-    ],
-    [
-     30.693,
-     31.623
+     29.253,
+     31.093
     ]
    ],
-   "text": "The indicator: boxes not wasted, times their cost, plus shortfalls avoided, times the penalty.",
+   "text": "So the harvest is cut to the order: less lettuce thrown away, and every delivery arrives complete.",
    "caption": false
   },
   "k1": {
@@ -218,30 +210,26 @@ export default {
    ],
    "text": "In the packhouse, every pumpkin is counted and graded for quality, with no hand counts."
   },
-  "k3": {
-   "id": "k3",
+  "k2": {
+   "id": "k2",
    "scene": "pumpkins",
-   "start": 39.649,
-   "end": 45.857,
+   "start": 39.599,
+   "end": 44.88,
    "segs": [
     [
-     39.679,
-     40.409
+     39.629,
+     41.689
     ],
     [
-     40.799,
-     41.589
+     42.059,
+     43.439
     ],
     [
-     41.719,
-     44.269
-    ],
-    [
-     44.569,
-     45.799
+     43.659,
+     44.789
     ]
    ],
-   "text": "The indicator: hours saved, times cost per hour, plus kilos graded right, times the price difference.",
+   "text": "Every pumpkin sells in the class it earned, and the team stops counting, and starts running the line.",
    "caption": false
   },
   "b1": {
@@ -290,75 +278,95 @@ export default {
    ],
    "text": "AI recognizes each crate, checks the order, labels it, and holds back any mismatch."
   },
-  "b4": {
-   "id": "b4",
+  "b3": {
+   "id": "b3",
    "scene": "labels",
-   "start": 59.286,
-   "end": 64.257,
+   "start": 59.236,
+   "end": 69.807,
    "segs": [
     [
-     59.316,
-     60.046
+     59.266,
+     61.136
     ],
     [
-     60.406,
-     61.506
+     61.306,
+     62.016
     ],
     [
-     61.636,
-     64.176
+     62.536,
+     63.346
+    ],
+    [
+     63.476,
+     64.316
+    ],
+    [
+     64.466,
+     65.596
+    ],
+    [
+     66.076,
+     69.746
     ]
    ],
-   "text": "The indicator: rejections avoided, times the fine, plus the product, plus the freight.",
+   "text": "The right crate reaches the right store, the first time. No fines, no returns, no product lost. Every rejection avoided keeps around fifteen hundred dollars in the business.",
    "caption": false
   },
   "z1": {
    "id": "z1",
    "scene": "impact-close",
-   "start": 66.6,
-   "end": 69.715,
+   "start": 72.6,
+   "end": 75.449,
    "segs": [
     [
-     66.63,
-     67.53
+     72.63,
+     73.49
     ],
     [
-     67.68,
-     68.67
+     73.63,
+     74.43
     ],
     [
-     68.9,
-     69.64
+     74.6,
+     75.35
     ]
    ],
-   "text": "Six problems. Six indicators. One season."
+   "text": "Six problems. Six results. One season."
   },
   "z2": {
    "id": "z2",
    "scene": "impact-close",
-   "start": 70.415,
-   "end": 74.362,
+   "start": 76.149,
+   "end": 82.562,
    "segs": [
     [
-     70.445,
-     72.435
+     76.179,
+     76.839
     ],
     [
-     72.755,
-     74.295
+     77.039,
+     77.859
+    ],
+    [
+     78.029,
+     79.169
+    ],
+    [
+     79.689,
+     82.479
     ]
    ],
-   "text": "Because AI is only worth building when you can measure what it gives back."
+   "text": "Less waste, better prices, and faster decisions. That's how AI makes a whole industry more productive."
   },
   "z3": {
    "id": "z3",
    "scene": "impact-close",
-   "start": 75.462,
-   "end": 77.082,
+   "start": 83.662,
+   "end": 85.282,
    "segs": [
     [
-     75.492,
-     76.962
+     83.692,
+     85.162
     ]
    ],
    "text": "Eagerworks AI Studio.",
@@ -367,12 +375,12 @@ export default {
   "z4": {
    "id": "z4",
    "scene": "impact-close",
-   "start": 77.982,
-   "end": 79.35,
+   "start": 86.182,
+   "end": 87.55,
    "segs": [
     [
-     78.012,
-     79.252
+     86.212,
+     87.452
     ]
    ],
    "text": "Let's build what's next.",

@@ -1,14 +1,14 @@
 // 01 — Nursery · Seedling survival (proposal).
 // Need → Solution panels → two lanes of trays roll under a camera gantry: every cell counted and sized,
-// a weak tray flagged early → impact (outcome chips) → impact indicator: Seedlings saved × Cost per seedling.
+// a weak tray flagged early → the gain: more of every tray reaches the field.
 import { addScene, h, put, prog, E, clamp, lerp, env, makeCanvas, rgba, C, hash, rrect, W, H } from '../engine.js';
 import { makeHud, box, tag } from '../lib/ui.js';
-import { seg, cueOr } from '../lib/vo.js';
-import { EQUATIONS, stationIndex } from '../lib/impact-data.js';
-import { makeEquation, eqTimes, dockStart } from '../lib/equation.js';
+import { seg } from '../lib/vo.js';
+import { GAINS, stationIndex } from '../lib/impact-data.js';
+import { makeGain, gainTimes, dockStart } from '../lib/gain.js';
 import { mapDot } from '../lib/chain.js';
 import { makeProposalCard } from '../lib/proposal.js';
-import { makeOutcome, withFeed, lerpRect, exitLine, makeStatPanel, fmt } from '../lib/chapter.js';
+import { withFeed, lerpRect, exitLine, makeStatPanel, fmt } from '../lib/chapter.js';
 import { seedlingSprite, traySprite } from '../lib/produce.js';
 
 const COLS = 10, ROWS = 5, CELL = 60;
@@ -43,9 +43,8 @@ addScene({
     this.cN2 = seg(ctx, 'n2', 0);
     this.cCount = seg(ctx, 'n2', 1);
     this.cFlag = seg(ctx, 'n2', 2);
-    const def = EQUATIONS.nursery;
-    this.times = eqTimes(ctx, def);
-    this.cOut = cueOr(ctx, 'n3', () => this.times[0] - 3.2);
+    const def = GAINS.nursery;
+    this.times = gainTimes(ctx, def);
     this.dockAt = dockStart(def) - ctx.start;
     this.dock = mapDot(stationIndex('nursery'));
     this.liveAt = this.cN2 + 1.25;
@@ -82,20 +81,15 @@ addScene({
         h('span', { class: 'badge bad', style: { background: '#2a1411' } }, 'Early intervention')),
       h('div', { style: { fontSize: '15px', color: 'var(--text2)', marginTop: '10px', lineHeight: '1.45' } }, 'Weak cells caught before transplant.'));
     R.append(this.flagCard);
-    this.outcome = makeOutcome(R, [
-      { text: 'More seedlings survive', dir: 'up' },
-      { text: 'Less replanting', dir: 'down' },
-      { text: 'Fewer empty-field days', dir: 'down' },
-    ]);
-    this.eq = makeEquation(R, def);
+    this.gain = makeGain(R, def);
   },
 
   render(t, ctx) {
     const g = this.g;
     g.clearRect(0, 0, W, H);
     const D = ctx.dur;
-    const eqLevel = this.eq.level(t, { times: this.times, dockAt: this.dockAt });
-    this.hud(t, { hideSteps: eqLevel > 0.25 });
+    const gainLevel = this.gain.level(t, { times: this.times, dockAt: this.dockAt });
+    this.hud(t, { hideSteps: gainLevel > 0.25 });
 
     // ---------------- need → solution: unfolds out of the hand-off line, then dissolves into the live view
     this.card.render(t, {
@@ -195,13 +189,12 @@ addScene({
     this.panel.show(t, this.cCount - 0.1, this.dockAt - 0.3);
     put(this.flagCard, { x: (1 - prog(t, this.cFlag + 0.1, 0.5, E.outCubic)) * 30, o: colA(this.cFlag + 0.1) });
 
-    // ---------------- outcome → formula → dock
-    this.outcome.render(t, this.cOut - 0.1, this.times[0] - 0.55);
-    this.eq.render(t, {
+    // ---------------- gain → dock
+    this.gain.render(t, {
       times: this.times,
       dockAt: this.dockAt,
       dock: this.dock,
-      from: { 0: () => ({ x: 1430 + 170, y: 118 + 56 + 22, w: 300 }) },
+      from: { 1: () => ({ x: 1430 + 170, y: 118 + 56 + 22, w: 300 }) },
     });
     exitLine(g, t, D);
   },

@@ -2,7 +2,7 @@
   "voice": "af_heart",
   "speed": 1.0,
   "captions": true,
-  "comment": "Seed to Shelf teaser: short open \u2192 field \u2192 packhouse \u2192 dispatch \u2192 close, with burned-in captions. Same scene modules as vo_script.impact.json (the outcome lines l3/b3, k2 and the open's x5 are dropped; the scenes fall back to on-screen text). Build with CUT=impact-teaser.",
+  "comment": "Seed to Shelf teaser: short open → field → packhouse → dispatch → close, with burned-in captions. Same scene modules as vo_script.impact.json (the open's x5 is dropped). Build with CUT=impact-teaser.",
   "chapters": {"lettuce": "01", "pumpkins": "02", "labels": "03"},
   "scenes": [
     {
@@ -14,40 +14,40 @@
         {"id": "x1", "at": 1.2, "text": "A seedling that never comes up."},
         {"id": "x2", "gap": 0.4, "text": "A harvest that misses the order."},
         {"id": "x3", "gap": 0.4, "text": "A crate at the wrong store."},
-        {"id": "x4", "gap": 1.6, "text": "Impact isn't a promise. It's measured.", "tts": "Impact isn't a promise... It's measured.", "caption": false},
+        {"id": "x4", "gap": 1.6, "text": "Impact isn't a promise. It's a result.", "tts": "Impact isn't a promise... It's a result.", "caption": false},
         {"id": "x6", "gap": 0.8, "text": "Here are three, from one grower's season."}
       ]
     },
     {
       "id": "lettuce",
-      "tail": 2.3,
+      "tail": 2.8,
       "min": 15.0,
       "speed": 1.06,
       "lines": [
         {"id": "l1", "at": 0.5, "text": "In the field, a camera on the tractor measures every lettuce."},
         {"id": "l2", "gap": 0.45, "text": "The model forecasts the boxes ready each day, and matches them to the orders."},
-        {"id": "l4", "gap": 0.6, "text": "The indicator: boxes not wasted, times their cost, plus shortfalls avoided, times the penalty.", "tts": "The indicator... boxes not wasted, times their cost, plus shortfalls avoided, times the penalty.", "caption": false}
+        {"id": "l3", "gap": 0.55, "text": "So the harvest is cut to the order: less lettuce thrown away, and every delivery arrives complete.", "caption": false}
       ]
     },
     {
       "id": "pumpkins",
-      "tail": 2.3,
+      "tail": 2.8,
       "min": 15.0,
       "speed": 1.06,
       "lines": [
         {"id": "k1", "at": 0.5, "text": "In the packhouse, every pumpkin is counted and graded for quality, with no hand counts."},
-        {"id": "k3", "gap": 0.6, "text": "The indicator: hours saved, times cost per hour, plus kilos graded right, times the price difference.", "tts": "The indicator... hours saved, times cost per hour, plus kilos graded right, times the price difference.", "caption": false}
+        {"id": "k2", "gap": 0.55, "text": "Every pumpkin sells in the class it earned, and the team stops counting, and starts running the line.", "caption": false}
       ]
     },
     {
       "id": "labels",
-      "tail": 2.3,
+      "tail": 2.8,
       "min": 15.0,
       "speed": 1.06,
       "lines": [
         {"id": "b1", "at": 0.5, "text": "At dispatch, one crate at the wrong supermarket means a rejection, and a fine."},
         {"id": "b2", "gap": 0.5, "text": "AI recognizes each crate, checks the order, labels it, and holds back any mismatch."},
-        {"id": "b4", "gap": 0.6, "text": "The indicator: rejections avoided, times the fine, plus the product, plus the freight.", "tts": "The indicator... rejections avoided, times the fine, plus the product, plus the freight.", "caption": false}
+        {"id": "b3", "gap": 0.55, "text": "The right crate reaches the right store, the first time. No fines, no returns, no product lost. Every rejection avoided keeps around fifteen hundred dollars in the business.", "caption": false}
       ]
     },
     {
@@ -56,8 +56,8 @@
       "min": 14.0,
       "speed": 1.0,
       "lines": [
-        {"id": "z1", "at": 0.6, "text": "Six problems. Six indicators. One season.", "tts": "Six problems... Six indicators... One season."},
-        {"id": "z2", "gap": 0.7, "text": "Because AI is only worth building when you can measure what it gives back."},
+        {"id": "z1", "at": 0.6, "text": "Six problems. Six results. One season.", "tts": "Six problems... Six results... One season."},
+        {"id": "z2", "gap": 0.7, "text": "Less waste, better prices, and faster decisions. That's how AI makes a whole industry more productive."},
         {"id": "z3", "gap": 1.1, "text": "Eagerworks AI Studio.", "caption": false},
         {"id": "z4", "gap": 0.9, "text": "Let's build what's next.", "caption": false}
       ]

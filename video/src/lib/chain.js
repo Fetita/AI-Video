@@ -3,8 +3,8 @@
 // map (top right) that tracks the season. Coral = a leak not fixed yet; violet = fixed.
 import { addGlobal, h, put, prog, E, clamp, lerp, env, makeCanvas, rgba, C, TIMELINE } from '../engine.js';
 import { icon, drawIcon } from './icons.js';
-import { STATIONS, EQUATIONS, stationIndex } from './impact-data.js';
-import { dockStart, DOCK_DUR } from './equation.js';
+import { STATIONS, GAINS, stationIndex } from './impact-data.js';
+import { dockStart, DOCK_DUR } from './gain.js';
 import './impact-theme.js';
 
 /** The one standard hand-off line between chapters. */
@@ -29,9 +29,9 @@ export function neighbors(ctx) {
   return { prev: ids[i - 1] || null, next: ids[i + 1] || null };
 }
 
-/** Chapter progress: absolute time a station's formula has docked (its dot turns violet). */
+/** Chapter progress: absolute time a station's gain card has docked (its dot turns violet). */
 export function stationDone(sceneId) {
-  const def = EQUATIONS[sceneId];
+  const def = GAINS[sceneId];
   return def ? dockStart(def) + DOCK_DUR * 0.8 : Infinity;
 }
 

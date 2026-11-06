@@ -1,5 +1,5 @@
-// Seed to Shelf: the value chain and the six impact indicators (the formulas that measure each case's
-// impact), shared by the chapters, the top-right chain map and the closing ledger. Symbolic: no numbers.
+// Seed to Shelf: the value chain and what the grower gains at each station, shared by the chapters,
+// the top-right chain map and the closing ledger.
 
 export const STATIONS = [
   { id: 'nursery', label: 'Nursery', icon: 'tray' },
@@ -11,45 +11,52 @@ export const STATIONS = [
 ];
 export const stationIndex = (sceneId) => STATIONS.findIndex((s) => s.id === sceneId);
 
-// Token kinds: term (a quantity, `tone` ai = what the AI changes, base = a unit value),
-// op (× / +) and open / close (parentheses).
-// `say` is the phrase in the VO line that brings the token on screen.
-const T = (label, icon, tone, say) => ({ t: 'term', label, icon, tone, say });
-const X = (say) => ({ t: 'op', sym: '×', say });
-const P = (say) => ({ t: 'op', sym: '+', say });
+// Each station closes on one gain card: a kicker (the kind of gain), a headline, chips that pop as the VO
+// names them (`say` is the phrase in the gain line), and in some stations a stat.
+// Stats: `note` 'Illustrative estimate' marks example money figures (USD, not client data); stats without
+// a note are rounded, anonymous figures from the grower's own season.
+const C = (text, say, dir = 'up') => ({ text, say, dir });
 
-export const EQUATIONS = {
+export const GAINS = {
   nursery: {
-    line: 'n4',
-    tokens: [T('Seedlings saved', 'seedling', 'ai', 'seedlings saved'), X('times'), T('Cost per seedling', 'coins', 'base', 'the cost')],
+    line: 'n3', icon: 'seedling', kicker: 'Higher yield',
+    headline: 'More of every tray reaches the field',
+    chips: [C('More seedlings survive', 'more of every tray'), C('Less replanting', 'less replanting', 'down'), C('Planting on schedule', 'on schedule')],
   },
   lettuce: {
-    line: 'l4',
-    tokens: [T('Boxes not wasted', 'box', 'ai', 'boxes not wasted'), X('times'), T('Cost / box', 'coins', 'base', 'their cost'),
-      P('plus'), T('Shortfalls avoided', 'truck', 'ai', 'shortfalls avoided'), X('times the'), T('Penalty', 'ticket', 'base', 'penalty')],
+    line: 'l3', icon: 'box', kicker: 'Less waste',
+    headline: 'Harvest cut to the order',
+    chips: [C('Less lettuce thrown away', 'thrown away', 'down'), C('Every delivery complete', 'complete')],
+    stat: { pre: '≈ $', to: 25, post: 'K', label: 'a season in lettuce no longer thrown away', note: 'Illustrative estimate' },
   },
   onions: {
-    line: 'u4',
-    tokens: [T('Sampling hours saved', 'clock', 'ai', 'sampling hours saved'), X('times'), T('Cost / hour', 'coins', 'base', 'their cost'),
-      P('plus'), T('Tonnes in the right band', 'scale', 'ai', 'tonnes'), X('times the'), T('Price difference', 'tag', 'base', 'price difference')],
+    line: 'u3', icon: 'scale', kicker: 'Better planning',
+    headline: 'Every field planned on its real sizes',
+    chips: [C('No hand sampling', 'sampling by hand', 'down'), C('Harvest planned on real sizes', 'planned'), C('Sold by size band', 'sold')],
+    stat: { pre: '~', to: 45, post: '%', label: 'of the crop’s tonnage sells by count: the size split is the price' },
   },
   pumpkins: {
-    line: 'k3',
-    tokens: [T('Hours saved', 'clock', 'ai', 'hours saved'), X('times'), T('Cost / hour', 'coins', 'base', 'cost per hour'),
-      P('plus'), T('Kg graded right', 'scale', 'ai', 'kilos graded right'), X('times the'), T('Price difference', 'tag', 'base', 'price difference')],
+    line: 'k2', icon: 'tag', kicker: 'Better margins',
+    headline: 'Every pumpkin sells in its real class',
+    chips: [C('Right class, right price', 'class it earned'), C('No hand counts', 'stops counting', 'down')],
+    stat: { pre: '+$', to: 60, post: ' / t', label: 'sold in the right class instead of a lower one', note: 'Illustrative estimate' },
   },
   labels: {
-    line: 'b4',
-    tokens: [T('Rejections avoided', 'shield', 'ai', 'rejections avoided'), X('times'), { t: 'open', say: 'times' }, T('Fine', 'ticket', 'base', 'the fine'),
-      P('plus the product'), T('Product', 'leaf', 'base', 'product'), P('plus the freight'), T('Freight', 'truck', 'base', 'freight'), { t: 'close', say: 'freight' }],
+    line: 'b3', icon: 'shield', kicker: 'Reliable deliveries',
+    headline: 'Right crate, right store, first time',
+    chips: [C('No fines', 'no fines', 'down'), C('No returns', 'no returns', 'down'), C('No product lost', 'no product lost', 'down')],
+    stat: { pre: '≈ $', to: 1500, post: '', label: 'kept per rejected load avoided: fine, product and freight', note: 'Illustrative estimate', say: 'fifteen hundred' },
   },
   dashboard: {
-    line: 'g4',
-    tokens: [T('Reporting hours saved', 'report', 'ai', 'reporting hours saved'), X('times'), T('Cost / hour', 'coins', 'base', 'cost per hour')],
+    line: 'g4', icon: 'report', kicker: 'Faster decisions',
+    headline: 'Hours of reporting, now minutes',
+    chips: [C('Reports in minutes', 'minutes'), C('Decisions on live data', 'live data')],
+    stat: { pre: '', to: 100, post: '%', label: 'of the weekly forecast covered, planned weeks ahead' },
   },
 };
 
-/** Compact text form for the closing ledger. */
-export function formulaText(sceneId) {
-  return EQUATIONS[sceneId].tokens.map((k) => (k.t === 'term' ? k.label : k.t === 'op' ? k.sym : k.t === 'open' ? '(' : k.t === 'close' ? ')' : '')).filter(Boolean).join(' ');
+/** Stat text at count-up progress p (0..1). */
+export function statText(st, p = 1) {
+  const v = Math.round(st.to * Math.max(0, Math.min(1, p)));
+  return `${st.pre}${v.toLocaleString('en-US')}${st.post}`;
 }

@@ -2,15 +2,15 @@
 // Need → Solution panels, with the proof-of-concept photo (an off-the-shelf model misses onions) →
 // the windrower's rod belt: a custom model gives every onion an ID, counts it once at the line, measures it
 // and sorts it into a size band; the field's size split builds live and lands on the field map →
-// impact indicator: Sampling hours saved × Cost/hour + Tonnes in the right band × Price difference.
+// gain: every field planned on its real sizes.
 import { addScene, h, put, prog, E, clamp, lerp, env, makeCanvas, rgba, C, hash, rrect, W, H } from '../engine.js';
 import { makeHud, box, tag } from '../lib/ui.js';
 import { seg } from '../lib/vo.js';
-import { EQUATIONS, stationIndex } from '../lib/impact-data.js';
-import { makeEquation, eqTimes, dockStart } from '../lib/equation.js';
+import { GAINS, stationIndex } from '../lib/impact-data.js';
+import { makeGain, gainTimes, dockStart } from '../lib/gain.js';
 import { mapDot } from '../lib/chain.js';
 import { makeProposalCard } from '../lib/proposal.js';
-import { makeOutcome, withFeed, lerpRect, exitLine, fmt } from '../lib/chapter.js';
+import { withFeed, lerpRect, exitLine, fmt } from '../lib/chapter.js';
 import { onionSprite, foliageSprite } from '../lib/produce.js';
 import { drawRodBelt } from '../lib/conveyor.js';
 import { BANDS } from '../lib/impact-theme.js';
@@ -38,8 +38,8 @@ addScene({
     this.g = this.cv.ctx;
     this.sprites = Array.from({ length: 12 }, (_, i) => onionSprite(700 + i, 160));
     this.leaves = Array.from({ length: 5 }, (_, i) => foliageSprite(800 + i, 260, 180));
-    const def = EQUATIONS.onions;
-    this.times = eqTimes(ctx, def);
+    const def = GAINS.onions;
+    this.times = gainTimes(ctx, def);
     this.dockAt = dockStart(def) - ctx.start;
     this.dock = mapDot(stationIndex('onions'));
     this.cSplit = seg(ctx, 'u1', 1);
@@ -87,8 +87,7 @@ addScene({
     R.append(this.mapPanel);
     this.mapCv = makeCanvas(this.mapPanel, 300, 270, '');
     Object.assign(this.mapCv.c.style, { position: 'absolute', left: '20px', top: '92px', width: '300px', height: '270px' });
-    this.outcome = makeOutcome(R, [{ text: 'Harvest & sales planned on real sizes', dir: 'up' }]);
-    this.eq = makeEquation(R, def);
+    this.gain = makeGain(R, def);
     this.lastCount = '';
   },
 
@@ -96,8 +95,8 @@ addScene({
     const g = this.g;
     g.clearRect(0, 0, W, H);
     const D = ctx.dur;
-    const eqLevel = this.eq.level(t, { times: this.times, dockAt: this.dockAt });
-    this.hud(t, { hideSteps: eqLevel > 0.25 });
+    const gainLevel = this.gain.level(t, { times: this.times, dockAt: this.dockAt });
+    this.hud(t, { hideSteps: gainLevel > 0.25 });
 
     // ---------------- need → solution (with the proof-of-concept photo)
     this.card.render(t, {
@@ -209,11 +208,10 @@ addScene({
       if (lq > 0) tag(mg, 128, 108, 'FIELD 12 · LIFTING', { bg: C.accent, a: lq, size: 10, anchor: 'bl' });
     }
 
-    // ---------------- outcome → formula → dock
-    this.outcome.render(t, this.cSort + 0.5, this.times[0] - 0.45);
-    this.eq.render(t, {
+    // ---------------- gain → dock
+    this.gain.render(t, {
       times: this.times, dockAt: this.dockAt, dock: this.dock,
-      from: { 0: () => ({ x: 1600, y: 118 + 108, w: 300 }), 4: () => ({ x: 1600, y: 118 + 270, w: 300 }) },
+      from: { 1: () => ({ x: 1600, y: 118 + 108, w: 300 }), 3: () => ({ x: 1600, y: 118 + 270, w: 300 }) },
     });
     exitLine(g, t, D);
   },

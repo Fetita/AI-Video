@@ -1,17 +1,18 @@
-// Close — the hand-off line becomes the value chain again: six problems (coral) → six indicators (the
-// ledger, each station turning violet as its row lands) → one season; the ledger rows fly onto the logo's
-// three E strokes, the Eagerworks AI Studio lockup builds, "Impact you can measure." and the CTA.
+// Close — the hand-off line becomes the value chain again: six problems (coral) → six results (the ledger:
+// what the grower gains at each station, each station turning violet as its row lands) → one season; the
+// ledger rows fly onto the logo's three E strokes, the Eagerworks AI Studio lockup builds, "Impact you can
+// see, from seed to shelf." and the CTA.
 import { addScene, h, put, prog, E, clamp, lerp, env, makeCanvas, rgba, C, W, H } from '../engine.js';
 import { words, revealWords } from '../lib/ui.js';
 import { seg } from '../lib/vo.js';
 import { makeLockup } from '../lib/logo.js';
 import { STROKES, VIEWBOX, ICON_VIEWBOX } from '../lib/logo-data.js';
 import { CHAIN, BIG, drawLine, makeValueChain } from '../lib/chain.js';
-import { STATIONS, EQUATIONS } from '../lib/impact-data.js';
+import { STATIONS, GAINS, statText } from '../lib/impact-data.js';
 import { icon } from '../lib/icons.js';
 import '../lib/impact-theme.js';
 
-const ROW_H = 66, ROW_W = 1240, LEDGER_Y = 330;
+const ROW_H = 66, ROW_W = 1320, LEDGER_Y = 330;
 
 addScene({
   id: 'impact-close',
@@ -21,19 +22,17 @@ addScene({
     const R = ctx.root;
     this.cv = makeCanvas(R);
     this.g = this.cv.ctx;
-    this.cSix = seg(ctx, 'z1', 0); this.cForm = seg(ctx, 'z1', 1); this.cOne = seg(ctx, 'z1', 2);
+    this.cSix = seg(ctx, 'z1', 0); this.cResults = seg(ctx, 'z1', 1); this.cOne = seg(ctx, 'z1', 2);
     this.cWorth = seg(ctx, 'z2', 0); this.cMeasure = seg(ctx, 'z2', 1);
     this.cName = seg(ctx, 'z3', 0); this.cCta = seg(ctx, 'z4', 0);
     this.chain = makeValueChain(R);
     // ledger rows
     this.rows = STATIONS.map((st, i) => {
-      const toks = EQUATIONS[st.id].tokens;
-      const f = h('div', { style: { display: 'flex', alignItems: 'center', gap: '12px', fontFamily: 'var(--font-ui)', fontWeight: '600', fontSize: '22px', whiteSpace: 'nowrap' } });
-      toks.forEach((k) => {
-        if (k.t === 'term') f.append(h('span', { style: { color: k.tone === 'ai' ? '#cdb8ff' : '#f3f3ef' } }, k.label));
-        else if (k.t === 'op') f.append(h('span', { style: { color: 'var(--text3)', fontWeight: '400' } }, k.sym));
-        else if (k.t === 'open' || k.t === 'close') f.append(h('span', { style: { color: 'var(--text3)', fontWeight: '300', fontSize: '30px' } }, k.t === 'open' ? '(' : ')'));
-      });
+      const gn = GAINS[st.id];
+      const f = h('div', { style: { display: 'flex', alignItems: 'center', gap: '22px', flex: '1', minWidth: '0', fontFamily: 'var(--font-ui)', whiteSpace: 'nowrap' } },
+        h('span', { style: { width: '230px', flex: 'none', fontWeight: '700', fontSize: '14px', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#c9b4ff' } }, gn.kicker),
+        h('span', { style: { fontWeight: '600', fontSize: '23px', color: '#f3f3ef' } }, gn.headline),
+        gn.stat ? h('span', { class: 'tnum', style: { marginLeft: 'auto', fontFamily: 'var(--font-display)', fontStretch: '118%', fontWeight: '600', fontSize: '26px', color: '#d9caff' } }, statText(gn.stat) + (gn.stat.note ? '*' : '')) : null);
       const el = h('div', { class: 'abs', style: { left: `${(1920 - ROW_W) / 2}px`, top: `${LEDGER_Y + i * (ROW_H + 10)}px`, width: `${ROW_W}px`, height: `${ROW_H}px`, display: 'flex', alignItems: 'center', gap: '22px', padding: '0 26px 0 14px', borderRadius: '16px', background: 'rgba(15,17,21,0.92)', border: '1px solid rgba(255,255,255,0.12)', boxShadow: '0 20px 50px -24px rgba(0,0,0,0.9)', transformOrigin: '50% 50%' } },
         h('span', { style: { width: '42px', height: '42px', borderRadius: '50%', background: 'rgba(130,52,254,0.2)', border: '1px solid rgba(130,52,254,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#e6dcff', flex: 'none' } }, icon(st.icon, { size: 24 })),
         h('span', { class: 'kicker', style: { width: '138px', color: 'var(--text2)', fontSize: '13px', flex: 'none' } }, `${String(i + 1).padStart(2, '0')} ${st.label}`),
@@ -42,7 +41,8 @@ addScene({
       return el;
     });
     this.sum = h('div', { class: 'abs', style: { left: '0', width: '1920px', top: `${LEDGER_Y + 6 * (ROW_H + 10) + 18}px`, textAlign: 'center' } },
-      h('span', { class: 'ix-kicker', style: { fontSize: '16px', letterSpacing: '0.3em' } }, 'One season · six impact indicators'));
+      h('span', { class: 'ix-kicker', style: { fontSize: '16px', letterSpacing: '0.3em' } }, 'One season · six results'),
+      h('div', { class: 'kicker', style: { marginTop: '12px', fontSize: '11px', color: 'var(--text3)' } }, '* Illustrative estimates'));
     R.append(this.sum);
     // strokes canvas (rows collapse into the E strokes)
     this.lock = makeLockup({ height: 92 });
@@ -50,7 +50,7 @@ addScene({
     this.lockWrap = h('div', { class: 'abs', style: { left: '0', top: '0' } }, this.lock.el);
     R.append(this.lockWrap);
     this.tagline = h('div', { class: 'abs', style: { left: '0', width: '1920px', top: '642px', textAlign: 'center', fontSize: '46px', fontWeight: '450', letterSpacing: '-0.015em', color: 'var(--text)' } });
-    this.tagSpans = words(this.tagline, 'Impact you can measure.');
+    this.tagSpans = words(this.tagline, 'Impact you can see, from seed to shelf.');
     R.append(this.tagline);
     this.cta = h('div', { class: 'abs', style: { left: '0', width: '1920px', top: '760px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '18px' } });
     this.ctaBtn = h('div', { style: { display: 'flex', alignItems: 'center', gap: '16px', height: '66px', padding: '0 34px', borderRadius: '999px', background: 'var(--accent-grad)', color: '#ffffff', fontSize: '25px', fontWeight: '600', letterSpacing: '-0.005em', boxShadow: '0 0 40px rgba(130,52,254,0.35)' } }, 'Let’s build what’s next', h('span', { style: { fontSize: '26px' } }, '→'));
@@ -68,11 +68,11 @@ addScene({
 
     // ---------------- the line → the value chain → moves up as the ledger lands
     if (t >= 0) drawLine(g, CHAIN.x0, CHAIN.x1, CHAIN.y, { a: 1 - prog(t, 0.2, 0.5) });
-    const up = prog(t, this.cForm - 0.15, 0.7, E.inOutCubic);
+    const up = prog(t, this.cResults - 0.15, 0.7, E.inOutCubic);
     const fold = prog(t, this.cMeasure + 0.5, 0.8, E.inOutCubic);
     const s = lerp(1, 0.78, up);
     const cy = lerp(BIG.y, 196, up);
-    const rowAt = (i) => this.cForm + 0.45 + i * 0.14;
+    const rowAt = (i) => this.cResults + 0.45 + i * 0.14;
     this.chain.set({
       draw: prog(t, 0.05, 0.6, E.inOutCubic),
       prog: prog(t, this.cOne - 0.1, 0.6, E.inOutCubic),
@@ -83,7 +83,7 @@ addScene({
       x: 960 - 960 * s, y: cy - BIG.y * s, s,
     });
 
-    // ---------------- ledger: six formulas, then they fly onto the logo's E strokes
+    // ---------------- ledger: six results, then they fly onto the logo's E strokes
     const lh = this.lock.height, sc = lh / VIEWBOX[3];
     const iconW = lh * (ICON_VIEWBOX[2] / VIEWBOX[3]);
     if (!this.lockW) { const r = this.lock.el.getBoundingClientRect(); if (r.width > 10) this.lockW = r.width; }
