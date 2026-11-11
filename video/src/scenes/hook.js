@@ -12,6 +12,7 @@ import { VIEWBOX, ICON_VIEWBOX } from '../lib/logo-data.js';
 const BRIEF = 'A sunlit loft with exposed brick, close to the river.';
 const CHIPS = ['Loft', 'Sunlit', 'Exposed brick', 'Near the river'];
 const QUAD = [[-480, -250], [480, -250], [-480, 250], [480, 250]]; // 2×2 convergence layout (offsets from center)
+const SOLO = [1.24, 1.6, 1.06, 1.4]; // how large each input plays while it has the frame to itself
 
 addScene({
   id: 'hook',
@@ -61,7 +62,7 @@ addScene({
     R.append(this.v4);
 
     // typography: AI as a feature → AI as the product
-    this.type = h('div', { class: 'abs display', style: { left: '0', top: '470px', width: '1920px', textAlign: 'center', fontSize: '128px', fontWeight: 600, letterSpacing: '-0.02em', lineHeight: '1', whiteSpace: 'nowrap' } });
+    this.type = h('div', { class: 'abs display', style: { left: '0', top: '458px', width: '1920px', textAlign: 'center', fontSize: '148px', fontWeight: 600, letterSpacing: '-0.02em', lineHeight: '1', whiteSpace: 'nowrap' } });
     this.typeA = h('span', { style: { color: 'var(--text)' } }, 'AI as ');
     this.typeB = h('span', { style: { position: 'relative', display: 'inline-block' } }, 'a feature');
     this.under = h('i', { style: { position: 'absolute', left: '-4px', right: '-4px', top: '108%', height: '6px', background: 'var(--text2)', transformOrigin: '0 50%', display: 'block', borderRadius: '3px' } });
@@ -71,19 +72,21 @@ addScene({
     R.append(this.typeWrap);
 
     // logo lockup + outcomes
-    this.lock = makeLockup({ height: 88 });
+    this.lock = makeLockup({ height: 104 });
     this.lockWrap = h('div', { class: 'abs', style: { left: '0', top: '0', transformOrigin: '50% 50%' } }, this.lock.el);
     this.lock.el.style.position = 'relative';
     R.append(this.lockWrap);
-    this.outcomes = h('div', { class: 'abs', style: { left: '0', width: '1920px', top: '668px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '26px', fontFamily: 'var(--font-ui)', fontWeight: 600, fontSize: '19px', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--text2)' } });
+    // the three outcomes land as large words, one per phrase of the narration
+    this.outcomes = h('div', { class: 'abs display', style: { left: '0', width: '1920px', top: '664px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '30px', fontWeight: 600, fontSize: '50px', letterSpacing: '-0.012em', color: 'var(--text)', whiteSpace: 'nowrap' } });
     this.outItems = ['Real products', 'Workflows', 'Measurable outcomes'].map((x, i) => {
-      const el = h('span', { style: { display: 'flex', alignItems: 'center', gap: '26px' } }, i ? h('i', { style: { width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent)', display: 'block' } }) : null, h('span', {}, x));
+      const el = h('span', { style: { display: 'flex', alignItems: 'center', gap: '30px' } }, i ? h('i', { style: { width: '9px', height: '9px', borderRadius: '50%', background: 'var(--accent)', boxShadow: '0 0 14px rgba(130,52,254,0.8)', display: 'block' } }) : null, h('span', {}, x));
       this.outcomes.append(el);
       return el;
     });
     R.append(this.outcomes);
     // handoff line into the search scene's brief card
     this.handoff = h('div', { class: 'abs', style: { left: '460px', top: '483px', width: '1000px', height: '2px', background: 'var(--accent)', transformOrigin: '50% 50%', boxShadow: '0 0 16px rgba(130,52,254,0.6)' } });
+    this.handoff.style.display = 'none'; // scene changes are camera moves now (engine.js sceneCamera)
     R.append(this.handoff);
   },
 
@@ -93,7 +96,9 @@ addScene({
     const c1 = ctx.cue('h1', 0), c2 = ctx.cue('h2', 0), c3 = ctx.cue('h3', 0), c4 = ctx.cue('h4', 0);
     const cNot = ctx.cue('h5', 0), cProd = ctx.cue('h5', 1), cName = ctx.cue('h6', 0), cWf = ctx.cue('h6', 1), cOut = ctx.cue('h6', 2);
     const D = ctx.dur;
-    const conv0 = c4 + 1.25, conv1 = conv0 + 0.55; // 2×2 grid, then collapse into a line
+    const b0 = c1 - 1.33; // the brief's beats are timed against the first line of narration
+    const conv0 = c4 + 1.25; // 2×2 grid, then collapse into a line
+    const starts = [0.95 + b0, c2 - 0.12, c3 - 0.12, c4 - 0.12];
     const grid = prog(t, conv0 - 0.25, 0.35, E.outCubic);
     const collapse = prog(t, conv0 + 0.35, 0.4, E.inCubic);
     // slot transform for vignette k: solo → quadrant (grid) → collapsed line
@@ -102,14 +107,17 @@ addScene({
       const inGrid = grid;
       const x = lerp(0, q[0], inGrid) * (1 - collapse);
       const y = lerp(0, q[1], inGrid) * (1 - collapse);
-      const s = lerp(1, 0.42, inGrid);
+      // solo: large, landing with a small punch and then pushing in slowly; grid: all four at the same size
+      const lt = t - starts[k];
+      const solo = SOLO[k] * (1 + 0.07 * (1 - E.outExpo(clamp(lt / 0.45))) + 0.05 * clamp(lt / 1.6));
+      const s = lerp(solo, 0.42, inGrid);
       const o = Math.max(soloA, inGrid) * (1 - collapse);
       return { x, y, s, sy: 1 - collapse * 0.98, o };
     };
 
     // ---- opening line → caret
-    const lineP = prog(t, 0.25, 0.8, E.inOutCubic);
-    const lineOut = prog(t, 1.0, 0.25);
+    const lineP = prog(t, b0 - 0.1, 0.7, E.inOutCubic);
+    const lineOut = prog(t, 1.0 + b0, 0.25);
     if (lineP > 0 && lineOut < 1) {
       g.save(); g.globalAlpha = 1 - lineOut;
       g.fillStyle = C.accent; g.shadowColor = 'rgba(130,52,254,0.7)'; g.shadowBlur = 16;
@@ -119,15 +127,14 @@ addScene({
     }
 
     // ---- V1 brief
-    const v1a = env(t, 0.95, c2 - 0.1, 0.2, 0.15);
+    const v1a = env(t, 0.95 + b0, c2 - 0.1, 0.2, 0.15);
     { const S = slot(0, v1a); put(this.v1, { x: S.x, y: S.y, s: S.s, sy: S.sy, o: S.o }); }
-    revealWords(this.briefSpans, prog(t, 1.1, 0.9, E.linear), { rise: 6, soft: 2 });
+    revealWords(this.briefSpans, prog(t, 1.1 + b0, 0.9, E.linear), { rise: 6, soft: 2 });
     placeCaret(this.caret, this.briefSpans, { dx: 6, dy: 4 });
-    this.caret.style.opacity = t < 2.2 ? (t < 2.0 || Math.floor(t * 4) % 2 ? 1 : 0.2) : 0;
-    this.chips.forEach((c, i) => { const q = prog(t, 1.95 + i * 0.09, 0.35, E.outBack); put(c, { y: (1 - Math.min(q, 1)) * 18, o: clamp(q * 2) }); });
+    this.caret.style.opacity = t < 2.2 + b0 ? (t < 2.0 + b0 || Math.floor(t * 4) % 2 ? 1 : 0.2) : 0;
+    this.chips.forEach((c, i) => { const q = prog(t, 1.95 + b0 + i * 0.09, 0.35, E.outBack); put(c, { y: (1 - Math.min(q, 1)) * 18, o: clamp(q * 2) }); });
     // highlight words that became chips
-    ['sunlit', 'loft', 'exposed', 'brick,', 'river.'].forEach(() => {});
-    this.briefSpans.forEach((s) => { const w2 = s.textContent.toLowerCase(); if (['sunlit', 'loft', 'exposed', 'brick,', 'river.'].includes(w2)) s.style.color = t > 1.9 ? '#e9ffb3' : ''; });
+    this.briefSpans.forEach((s) => { const w2 = s.textContent.toLowerCase(); if (['sunlit', 'loft', 'exposed', 'brick,', 'river.'].includes(w2)) s.style.color = t > 1.9 + b0 ? '#cdb8ff' : ''; });
 
     // ---- V2 toy
     const v2a = env(t, c2 - 0.12, c3 - 0.1, 0.12, 0.15);
@@ -230,13 +237,13 @@ addScene({
     // ---- logo lockup
     if (!this.lockW) { const r = this.lock.el.getBoundingClientRect(); if (r.width > 10) this.lockW = r.width; }
     const lw = this.lockW || 1400;
-    const lx = (1920 - lw) / 2, ly = 540 - this.lock.height / 2 - 40;
-    const la = prog(t, cName - 0.6, 0.3) * (1 - prog(t, D - 0.75, 0.45, E.inCubic));
+    const lx = (1920 - lw) / 2, ly = 540 - this.lock.height / 2 - 62;
+    const la = prog(t, cName - 0.6, 0.3) * (1 - prog(t, D - 0.3, 0.3, E.inCubic)); // leaves with the camera's fly-out
     const push = lerp(1, 1.035, prog(t, cName, D - cName, E.linear));
     // icon builds centered, then slides left as the wordmark reveals
     const iconW = this.lock.height * (ICON_VIEWBOX[2] / VIEWBOX[3]);
     const center = (lw / 2 - iconW / 2) * (1 - prog(t, cName + 0.35, 1.0, E.inOutCubic));
-    put(this.lockWrap, { x: lx + center - (push - 1) * lw / 2, y: ly - (push - 1) * 75 - prog(t, D - 0.75, 0.5, E.inCubic) * 40, s: push, o: la });
+    put(this.lockWrap, { x: lx + center - (push - 1) * lw / 2, y: ly - (push - 1) * 75, s: push, o: la });
     this.lock.set({
       strokes: prog(t, cName - 0.55, 0.6),
       outline: prog(t, cName - 0.25, 0.8),
@@ -245,9 +252,9 @@ addScene({
       studio: prog(t, cName + 1.15, 0.7),
       glow: env(t, cName + 0.5, cName + 2.2, 0.3, 1.0) * 0.8,
     });
-    const oa = 1 - prog(t, D - 0.75, 0.45, E.inCubic);
+    const oa = 1 - prog(t, D - 0.3, 0.3, E.inCubic);
     const outAt = [cName + 3.2, cWf, cOut];
-    this.outItems.forEach((el, i) => { const q = prog(t, outAt[i] - 0.1, 0.45, E.outCubic); put(el, { y: (1 - q) * 12, o: q * oa }); });
+    this.outItems.forEach((el, i) => { const q = prog(t, outAt[i] - 0.1, 0.55, E.outCubic); put(el, { y: (1 - q) * 22, o: q * oa, blur: (1 - q) * 8 }); });
     // handoff to the brief card
     const hp = prog(t, D - 0.55, 0.5, E.inOutCubic);
     put(this.handoff, { sx: hp, o: hp > 0 ? 1 : 0 });

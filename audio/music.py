@@ -319,7 +319,12 @@ if 'vision' in SC:
             place(S['stab'], pan(stab(ch), 0.15), t0 + (b + bb * 4 + 3.5) * BEAT, 0.5)
         b += n_
     w_drums(drop, 19, 'drive', gain=1.0)
-    w_drums(drop + 19 * BEAT, 9, 'four', gain=0.85)  # robot: lighter hats
+    rb = 4 + 19  # the robot shot: lighter hats until the scene ends
+    w_drums(drop + 19 * BEAT, nb - rb, 'four', gain=0.85)
+    if nb > 28:
+        w_pad(t0 + 28 * BEAT, 'G6sus', nb - 28, bright=0.75, gain=0.6)
+        w_bass(t0 + 28 * BEAT, 'G6sus', nb - 28, pattern='8', grit=0.5, gain=0.7)
+        w_arp(t0 + 28 * BEAT, 'G6sus', nb - 28, rate=0.25, bright=0.9, gain=0.42, span=2, pattern='updown')
     fill(t0 + 20 * BEAT, 0.9)
     fill(t0 + nb * BEAT, 1.0)
 
@@ -395,7 +400,10 @@ if 'promise' in SC:
 # FINALE -------------------------------------------------------------
 if 'finale' in SC:
     t0, nb = section_beats('finale')
-    hitF = 11 * BEAT
+    # the wall drives for two bars, then everything falls away into the 3D logo: a long riser over the
+    # collapse and the camera move, and the hit lands as the glass turns white (just before the name is spoken)
+    hb = max(11, round((cue('f2') - 0.33 - t0) / BEAT))
+    hitF = hb * BEAT
     place(S['fx'], impact(0.8, 23), t0, 0.6)
     place(S['drums'], pan(_CR, 0), t0, 0.3)
     w_pad(t0, 'Fmaj9', 8, bright=0.7, gain=0.7)
@@ -404,11 +412,16 @@ if 'finale' in SC:
     w_drums(t0, 8, 'four', gain=1.0)
     place(S['drums'], pan(_CR, 0), t0 + 3 * BEAT, 0.35)   # "One team."
     place(S['fx'], impact(0.6, 25), t0 + 3 * BEAT, 0.5)
-    w_pad(t0 + 8 * BEAT, 'G6sus', 3.2, bright=0.9, gain=0.75)
-    place(S['fx'], riser(3 * BEAT + 0.3, 27), t0 + hitF - 3 * BEAT - 0.3, 0.75)
+    w_pad(t0 + 8 * BEAT, 'G6sus', hb - 8 + 0.2, bright=0.9, gain=0.75)
+    if hb - 8 >= 4:
+        w_bass(t0 + 8 * BEAT, 'G6sus', hb - 8, pattern='hold', grit=0.25, gain=0.6)
+        w_arp(t0 + (hb - 4) * BEAT, 'G6sus', 4, rate=0.25, bright=0.9, gain=0.3, span=2, pattern='up')
+        place(S['fx'], impact(0.9, 37), t0 + 8 * BEAT, 0.6)          # the wall lets go
+    build = min((hb - 8) * BEAT, 3.6) + 0.3
+    place(S['fx'], riser(build, 27), t0 + hitF - build, 0.8)
     place(S['fx'], reverse_swell(1.5, 8), t0 + hitF - 1.5, 0.9)
-    place(S['fx'], impact(1.6, 29), t0 + hitF, 1.0)
-    place(S['drums'], pan(_CR, 0), t0 + hitF, 0.45)
+    place(S['fx'], impact(1.7, 29), t0 + hitF, 1.0)
+    place(S['drums'], pan(_CR, 0), t0 + hitF, 0.5)
     w_pad(t0 + hitF, 'Cmaj9', 8, bright=0.8, gain=1.05)
     w_pad(t0 + hitF + 8 * BEAT, 'Fmaj9', 4, bright=0.55, gain=0.8)
     w_pad(t0 + hitF + 12 * BEAT, 'Cmaj9', nb - hitF / BEAT - 12 + 4, bright=0.5, gain=0.9)

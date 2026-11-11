@@ -5,7 +5,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/../video"
 TILES=(
-  hands:vision:6.05 faces:vision:7.65 tracking3d:vision:8.85 dataset:vision:10.95 benchmark:vision:13.65 robot:vision:16.05
+  hands:vision:6.05 faces:vision:7.65 tracking3d:vision:8.85 dataset:vision:10.95 benchmark:vision:13.65 robot:vision:17.30
   field:agri:9.05 conveyor:agri:16.65
   parse:search:7.25 search:search:8.75 recommend:search:18.75
   physical:story:10.45 generative:story:14.05

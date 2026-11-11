@@ -3,7 +3,7 @@ export default {
  "fps": 30,
  "bpm": 100.0,
  "beat": 0.6,
- "duration": 186.0,
+ "duration": 188.4,
  "scenes": [
   {
    "id": "hook",
@@ -103,7 +103,7 @@ export default {
   {
    "id": "finale",
    "start": 170.4,
-   "end": 186.0,
+   "end": 188.4,
    "lines": [
     "f1",
     "f2",
@@ -729,12 +729,12 @@ export default {
   "f2": {
    "id": "f2",
    "scene": "finale",
-   "start": 176.599,
-   "end": 178.219,
+   "start": 178.499,
+   "end": 180.119,
    "segs": [
     [
-     176.629,
-     178.099
+     178.529,
+     179.999
     ]
    ],
    "text": "Eagerworks AI Studio."
@@ -742,12 +742,12 @@ export default {
   "f3": {
    "id": "f3",
    "scene": "finale",
-   "start": 178.819,
-   "end": 181.348,
+   "start": 180.719,
+   "end": 183.248,
    "segs": [
     [
-     178.849,
-     181.279
+     180.749,
+     183.179
     ]
    ],
    "text": "From AI ideas to real-world products."
@@ -755,12 +755,12 @@ export default {
   "f4": {
    "id": "f4",
    "scene": "finale",
-   "start": 182.348,
-   "end": 183.716,
+   "start": 184.248,
+   "end": 185.616,
    "segs": [
     [
-     182.378,
-     183.618
+     184.278,
+     185.518
     ]
    ],
    "text": "Let's build what's next."

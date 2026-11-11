@@ -3,7 +3,7 @@ export default {
  "fps": 30,
  "bpm": 100.0,
  "beat": 0.6,
- "duration": 110.4,
+ "duration": 114.0,
  "scenes": [
   {
    "id": "hook",
@@ -21,7 +21,7 @@ export default {
   {
    "id": "vision",
    "start": 19.2,
-   "end": 37.2,
+   "end": 38.4,
    "lines": [
     "v1",
     "v2",
@@ -30,8 +30,8 @@ export default {
   },
   {
    "id": "agri",
-   "start": 37.2,
-   "end": 55.2,
+   "start": 38.4,
+   "end": 56.4,
    "lines": [
     "a1",
     "a2",
@@ -40,8 +40,8 @@ export default {
   },
   {
    "id": "inhouse",
-   "start": 55.2,
-   "end": 78.0,
+   "start": 56.4,
+   "end": 79.2,
    "lines": [
     "o1",
     "o2",
@@ -51,8 +51,8 @@ export default {
   },
   {
    "id": "promise",
-   "start": 78.0,
-   "end": 94.8,
+   "start": 79.2,
+   "end": 96.0,
    "lines": [
     "p1",
     "p2",
@@ -62,8 +62,8 @@ export default {
   },
   {
    "id": "finale",
-   "start": 94.8,
-   "end": 110.4,
+   "start": 96.0,
+   "end": 114.0,
    "lines": [
     "f1",
     "f2",
@@ -226,20 +226,20 @@ export default {
   "a1": {
    "id": "a1",
    "scene": "agri",
-   "start": 37.7,
-   "end": 41.914,
+   "start": 38.9,
+   "end": 43.114,
    "segs": [
     [
-     37.73,
-     38.59
+     38.93,
+     39.79
     ],
     [
-     38.8,
-     39.55
+     40.0,
+     40.75
     ],
     [
-     39.75,
-     41.84
+     40.95,
+     43.04
     ]
    ],
    "text": "Computer vision turns a camera into a live source of operational data."
@@ -247,20 +247,20 @@ export default {
   "a2": {
    "id": "a2",
    "scene": "agri",
-   "start": 42.464,
-   "end": 47.809,
+   "start": 43.664,
+   "end": 49.009,
    "segs": [
     [
-     42.494,
-     43.924
+     43.694,
+     45.124
     ],
     [
-     44.214,
-     45.694
+     45.414,
+     46.894
     ],
     [
-     45.914,
-     47.744
+     47.114,
+     48.944
     ]
    ],
    "text": "On a tractor, it detects, counts and measures every plant, and maps exactly where each one is."
@@ -268,20 +268,20 @@ export default {
   "a3": {
    "id": "a3",
    "scene": "agri",
-   "start": 48.809,
-   "end": 54.718,
+   "start": 50.009,
+   "end": 55.918,
    "segs": [
     [
-     48.839,
-     49.769
+     50.039,
+     50.969
     ],
     [
-     50.069,
-     52.839
+     51.269,
+     54.039
     ],
     [
-     53.209,
-     54.629
+     54.409,
+     55.829
     ]
    ],
    "text": "On the packing line, every pumpkin gets its own ID the moment it appears, and keeps it until it's counted."
@@ -289,16 +289,16 @@ export default {
   "o1": {
    "id": "o1",
    "scene": "inhouse",
-   "start": 55.8,
-   "end": 58.957,
+   "start": 57.0,
+   "end": 60.157,
    "segs": [
     [
-     55.83,
-     57.16
+     57.03,
+     58.36
     ],
     [
-     57.44,
-     58.88
+     58.64,
+     60.08
     ]
    ],
    "text": "Alongside our client work, we're building products of our own."
@@ -306,16 +306,16 @@ export default {
   "o2": {
    "id": "o2",
    "scene": "inhouse",
-   "start": 59.557,
-   "end": 63.994,
+   "start": 60.757,
+   "end": 65.194,
    "segs": [
     [
-     59.587,
-     61.577
+     60.787,
+     62.777
     ],
     [
-     61.927,
-     63.917
+     63.127,
+     65.117
     ]
    ],
    "text": "Like a vision system for packing lines that runs on a single overhead camera."
@@ -323,20 +323,20 @@ export default {
   "o3": {
    "id": "o3",
    "scene": "inhouse",
-   "start": 64.494,
-   "end": 69.817,
+   "start": 65.694,
+   "end": 71.017,
    "segs": [
     [
-     64.524,
-     66.474
+     65.724,
+     67.674
     ],
     [
-     66.844,
-     68.344
+     68.044,
+     69.544
     ],
     [
-     68.604,
-     69.754
+     69.804,
+     70.954
     ]
    ],
    "text": "It detects every apple in every crate, gives each one its own ID, and keeps a running count."
@@ -344,16 +344,16 @@ export default {
   "o4": {
    "id": "o4",
    "scene": "inhouse",
-   "start": 70.417,
-   "end": 76.22,
+   "start": 71.617,
+   "end": 77.42,
    "segs": [
     [
-     70.437,
-     74.127
+     71.637,
+     75.327
     ],
     [
-     74.507,
-     76.127
+     75.707,
+     77.327
     ]
    ],
    "text": "Each apple is sized and graded for ripeness as it crosses the line, so the team sees quality live."
@@ -361,12 +361,12 @@ export default {
   "p1": {
    "id": "p1",
    "scene": "promise",
-   "start": 78.6,
-   "end": 80.75,
+   "start": 79.8,
+   "end": 81.95,
    "segs": [
     [
-     78.63,
-     80.63
+     79.83,
+     81.83
     ]
    ],
    "text": "We're not just another AI studio.",
@@ -375,24 +375,24 @@ export default {
   "p2": {
    "id": "p2",
    "scene": "promise",
-   "start": 81.35,
-   "end": 86.258,
+   "start": 82.55,
+   "end": 87.458,
    "segs": [
     [
-     81.38,
-     82.46
+     82.58,
+     83.66
     ],
     [
-     82.89,
-     83.62
+     84.09,
+     84.82
     ],
     [
-     83.71,
-     84.45
+     84.91,
+     85.65
     ],
     [
-     84.57,
-     86.19
+     85.77,
+     87.39
     ]
    ],
    "text": "We start by listening: to your people, your users, and the problem behind the request."
@@ -400,16 +400,16 @@ export default {
   "p3": {
    "id": "p3",
    "scene": "promise",
-   "start": 86.708,
-   "end": 90.143,
+   "start": 87.908,
+   "end": 91.343,
    "segs": [
     [
-     86.738,
-     88.228
+     87.938,
+     89.428
     ],
     [
-     88.528,
-     90.068
+     89.728,
+     91.268
     ]
    ],
    "text": "We stay flexible and agile, adapting as your needs change."
@@ -417,20 +417,20 @@ export default {
   "p4": {
    "id": "p4",
    "scene": "promise",
-   "start": 90.593,
-   "end": 93.964,
+   "start": 91.793,
+   "end": 95.164,
    "segs": [
     [
-     90.623,
-     91.543
+     91.823,
+     92.743
     ],
     [
-     91.673,
-     92.603
+     92.873,
+     93.803
     ],
     [
-     92.843,
-     93.893
+     94.043,
+     95.093
     ]
    ],
    "text": "And we stay with you, side by side, until it really works."
@@ -438,20 +438,20 @@ export default {
   "f1": {
    "id": "f1",
    "scene": "finale",
-   "start": 95.4,
-   "end": 99.699,
+   "start": 96.6,
+   "end": 100.899,
    "segs": [
     [
-     95.43,
-     96.31
+     96.63,
+     97.51
     ],
     [
-     96.69,
-     97.92
+     97.89,
+     99.12
     ],
     [
-     98.09,
-     99.62
+     99.29,
+     100.82
     ]
    ],
    "text": "Different problems. One team that designs, builds and ships the whole system."
@@ -459,12 +459,12 @@ export default {
   "f2": {
    "id": "f2",
    "scene": "finale",
-   "start": 100.999,
-   "end": 102.619,
+   "start": 104.099,
+   "end": 105.719,
    "segs": [
     [
-     101.029,
-     102.499
+     104.129,
+     105.599
     ]
    ],
    "text": "Eagerworks AI Studio.",
@@ -473,12 +473,12 @@ export default {
   "f3": {
    "id": "f3",
    "scene": "finale",
-   "start": 103.219,
-   "end": 105.748,
+   "start": 106.319,
+   "end": 108.848,
    "segs": [
     [
-     103.249,
-     105.679
+     106.349,
+     108.779
     ]
    ],
    "text": "From AI ideas to real-world products.",
@@ -487,12 +487,12 @@ export default {
   "f4": {
    "id": "f4",
    "scene": "finale",
-   "start": 106.748,
-   "end": 108.116,
+   "start": 109.848,
+   "end": 111.216,
    "segs": [
     [
-     106.778,
-     108.018
+     109.878,
+     111.118
     ]
    ],
    "text": "Let's build what's next.",

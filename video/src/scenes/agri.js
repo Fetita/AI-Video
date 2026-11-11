@@ -108,6 +108,7 @@ addScene({
     R.append(this.pack);
     // hand-off line into the search scene's brief card (same position as the hook/intro line)
     this.handoff = h('div', { class: 'abs', style: { left: '460px', top: '483px', width: '1000px', height: '2px', background: 'var(--accent)', transformOrigin: '50% 50%', boxShadow: '0 0 16px rgba(130,52,254,0.6)' } });
+    this.handoff.style.display = 'none'; // scene changes are camera moves now (engine.js sceneCamera)
     R.append(this.handoff);
     const scenes = TIMELINE.scenes.map((s) => s.id);
     this.handsOff = scenes[scenes.indexOf('agri') + 1] === 'search'; // other cuts end without it

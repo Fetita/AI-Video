@@ -60,6 +60,9 @@ html, body {
   pointer-events: none;
 }
 
+/* scenes are composited layers: the scene camera scales the whole layer like a pre-comp */
+.scene { transform-origin: 960px 540px; will-change: transform, opacity; }
+
 canvas.fill { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
 
 .abs { position: absolute; }

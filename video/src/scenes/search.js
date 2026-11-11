@@ -345,7 +345,10 @@ const ctx0 = addScene({
     const bigIn = prog(t, cR + 0.05, 0.85, E.outCubic);
     const chatIn = prog(t, cF - 0.3, 0.8, E.inOutCubic);
     const rerank = prog(t, cF2 - 0.15, 1.0, E.inOutCubic);
-    const outro = prog(t, D - 1.0, 0.8, E.inOutCubic);
+    // into the story scene everything gathers into the assistant's dot; into any other scene the shortlist
+    // stays on screen and leaves with the camera's fly-out
+    const toStory = TIMELINE.scenes[ctx.order + 1]?.id === 'story';
+    const outro = toStory ? prog(t, D - 1.0, 0.8, E.inOutCubic) : prog(t, D - 0.3, 0.3, E.inCubic);
     const layout = (slot, k) => {
       // slot positions for 3 cards: wide layout (no chat) → compact (with chat)
       const bw = 440, g2 = 44;
@@ -373,7 +376,7 @@ const ctx0 = addScene({
       const L = layout(lerp(-0.6, 0, rerank), chatIn);
       put(this.roof.card, { x: L.x, y: L.y + (1 - rerank) * 20, s: L.s, o: prog(t, cF2 - 0.1, 0.6) * (1 - outro) });
       this.roof.rank.textContent = '01';
-      put(this.roof.upd, { o: env(t, cF2 + 0.5, D - 0.9, 0.3, 0.3) });
+      put(this.roof.upd, { o: env(t, cF2 + 0.5, toStory ? D - 0.9 : D + 1, 0.3, 0.3) });
     }
     put(this.slHead, { x: lerp(260, 110, chatIn), y: lerp(226, 266, chatIn), o: prog(t, cR + 0.3, 0.6) * (1 - outro) });
 
@@ -392,12 +395,10 @@ const ctx0 = addScene({
     put(this.bHint, { o: prog(t, cF2 + 0.9, 0.4) });
 
     // ---------- outro: the assistant's signal dot carries the idea into the next scene
-    // (the story's reticle; when another scene follows, as in the LinkedIn cut, it blooms out at the cut instead)
+    // (the story's reticle; only when the story scene follows)
     const dP = prog(t, D - 0.95, 0.9, E.inOutCubic);
     const dx = lerp(1300 + 32, 960, dP), dy = lerp(262 + 26, 540, dP);
-    const scenes = TIMELINE.scenes.map((s) => s.id);
-    const bloom = scenes[scenes.indexOf('search') + 1] === 'story' ? 0 : prog(t, D - 0.15, 0.4, E.outCubic);
-    put(this.dot, { x: dx, y: dy, s: lerp(0.4, 1.0, dP) * lerp(1, 4, bloom), o: (t > D - 0.95 ? clamp((t - (D - 0.95)) / 0.2) : 0) * (1 - bloom) });
+    put(this.dot, { x: dx, y: dy, s: lerp(0.4, 1.0, dP), o: toStory && t > D - 0.95 ? clamp((t - (D - 0.95)) / 0.2) : 0 });
   },
 });
 export default ctx0;

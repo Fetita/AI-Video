@@ -1,9 +1,17 @@
-// Finale — the whole studio in one wall, "One team. Design · Build · Ship.",
-// every tile collapses into the logo's E strokes → lockup → tagline → CTA.
+// Finale — the whole studio in one wall, "One team. Design · Build · Ship.", every tile collapses into three
+// strokes of violet light, which are the light tubes of the 3D logo (a Blender plate, scripts/render_logo.py):
+// the camera pulls back off them, the black-glass icon turns white-hot and lands as the flat lockup → tagline → CTA.
 import { addScene, h, put, prog, E, clamp, lerp, env, makeCanvas, rgba, C, W, H } from '../engine.js';
 import { makeLockup } from '../lib/logo.js';
-import { STROKES, VIEWBOX, ICON_VIEWBOX } from '../lib/logo-data.js';
+import { VIEWBOX, ICON_VIEWBOX } from '../lib/logo-data.js';
 import { words, revealWords } from '../lib/ui.js';
+import { makeClip } from '../lib/clip.js';
+
+// mirrored in scripts/render_logo.py
+const LOGO3D = { frames: 90, fps: 30, move: 2.5, endHeight: 300 };
+// where the three light tubes sit in the plate's first frames (screen px): the tiles collapse onto them
+const TUBES = [[700, 470, 1090, 50], [670, 670, 940, 390], [620, 960, 1010, 560]];
+const LOCK_H = 108;
 
 const TILES = [
   ['hands', 'Hand tracking'], ['faces', 'Face detection'], ['tracking3d', '3D tracking'], ['dataset', 'Custom datasets'], ['benchmark', 'Model benchmarking'],
@@ -49,10 +57,15 @@ addScene({
     // collapse strokes (canvas)
     const cv = makeCanvas(R);
     this.g = cv.ctx;
-    // lockup
-    this.lock = makeLockup({ height: 92 });
+    // the 3D logo plate (transparent frames, composited over the film's atmosphere)
+    this.plate = h('div', { class: 'abs', style: { left: '0', top: '0', width: '1920px', height: '1080px', opacity: 0 } });
+    this.logo3d = makeClip(this.plate, { name: 'logo', frames: LOGO3D.frames, fps: LOGO3D.fps, ext: 'png' });
+    R.append(this.plate);
+    // lockup (scaled about the icon's centre while it takes over from the plate)
+    this.lock = makeLockup({ height: LOCK_H });
     this.lock.el.style.position = 'relative';
-    this.lockWrap = h('div', { class: 'abs', style: { left: '0', top: '0' } }, this.lock.el);
+    const iconW = LOCK_H * (ICON_VIEWBOX[2] / VIEWBOX[3]);
+    this.lockWrap = h('div', { class: 'abs', style: { left: '0', top: '0', transformOrigin: `${(iconW / 2).toFixed(1)}px ${LOCK_H / 2}px` } }, this.lock.el);
     R.append(this.lockWrap);
     this.tagline = h('div', { class: 'abs', style: { left: '0', width: '1920px', top: '642px', textAlign: 'center', fontSize: '46px', fontWeight: 450, letterSpacing: '-0.015em', color: 'var(--text)' } });
     this.tagSpans = words(this.tagline, 'From AI ideas to real-world products.');
@@ -71,74 +84,100 @@ addScene({
     g.clearRect(0, 0, W, H);
     const D = ctx.dur;
     const cDiff = ctx.cue('f1', 0), cOne = ctx.cue('f1', 1), cBuild = ctx.cue('f1', 2), cName = ctx.cue('f2', 0), cTag = ctx.cue('f3', 0), cCta = ctx.cue('f4', 0);
-    const collapse = prog(t, cName - 1.25, 0.95, E.inOutCubic);
+    const t3d = cName - (LOGO3D.move - 0.05);        // first frame of the 3D plate
+    const tau = t - t3d;
+    const tCol = t3d - 0.8;                          // the wall starts collapsing
+    const collapse = prog(t, tCol, 0.95, E.inOutCubic);
+    const fadeOut = 1 - prog(t, D - 0.8, 0.5);
 
     // ---------- the wall assembles, pulses through every capability, then dims under the statement
-    const tilt = lerp(9, 4, prog(t, 0, cName, E.linear));
-    this.inner.style.transform = `rotateX(${tilt.toFixed(2)}deg) rotateY(${(-tilt * 0.6).toFixed(2)}deg) scale(${lerp(1.06, 0.98, prog(t, 0, cName, E.linear)).toFixed(4)})`;
-    // icon position (centered build) → stroke targets on screen
-    const lh = this.lock.height, sc = lh / VIEWBOX[3];
-    const iconW = lh * (ICON_VIEWBOX[2] / VIEWBOX[3]);
-    if (!this.lockW) { const r = this.lock.el.getBoundingClientRect(); if (r.width > 10) this.lockW = r.width; }
-    const lw = this.lockW || 1500;
-    const lx = (1920 - lw) / 2, ly = 520 - lh / 2 - 60;
-    const slide = prog(t, cName + 0.2, 1.1, E.inOutCubic);
-    const iconShift = (lw / 2 - iconW / 2) * (1 - slide);
-    const stroke = (k, u) => { const s = STROKES[k]; return { x: lx + iconShift + (lerp(s.x1, s.x2, u) - VIEWBOX[0]) * sc, y: ly + (lerp(s.y1, s.y2, u) - VIEWBOX[1]) * sc }; };
+    const tilt = lerp(9, 4, prog(t, 0, tCol, E.linear));
+    this.inner.style.transform = `rotateX(${tilt.toFixed(2)}deg) rotateY(${(-tilt * 0.6).toFixed(2)}deg) scale(${lerp(1.06, 0.98, prog(t, 0, tCol, E.linear)).toFixed(4)})`;
     this.tiles.forEach((tl, i) => {
       const d = Math.hypot(tl.c - 2, tl.r - 1);
       const inP = prog(t, -0.15 + d * 0.08, 0.7, E.outCubic);
       const pulse = env(t, cDiff - 0.1 + i * 0.075, cDiff + 0.35 + i * 0.075, 0.08, 0.25);
       tl.hl.style.opacity = pulse.toFixed(3);
-      // collapse: each tile flies onto one of the three E strokes and becomes a line
+      // collapse: each tile flies onto one of the three light tubes and becomes a stroke of light
       const k = i % 3, u = (Math.floor(i / 3) + 0.5) / 5;
-      const target = stroke(k, u);
+      const [x1, y1, x2, y2] = TUBES[k];
       const cp = clamp(collapse * 1.35 - (i / TILES.length) * 0.35);
       const e = E.inOutCubic(cp);
-      const x = lerp(tl.x, target.x - TW / 2, e), y = lerp(tl.y, target.y - TH / 2, e);
-      const sx = lerp(lerp(0.7, 1, inP), 0.16, e), sy = lerp(lerp(0.7, 1, inP), 0.03, e);
-      const rot = lerp(0, -33, e);
+      const x = lerp(tl.x, lerp(x1, x2, u) - TW / 2, e), y = lerp(tl.y, lerp(y1, y2, u) - TH / 2, e);
+      const len = Math.hypot(x2 - x1, y2 - y1) / 5;
+      const sx = lerp(lerp(0.7, 1, inP), (len * 1.04) / TW, e), sy = lerp(lerp(0.7, 1, inP), 0.045, e);
+      const rot = lerp(0, (Math.atan2(y2 - y1, x2 - x1) * 180) / Math.PI, e);
       tl.el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, ${((1 - inP) * -300).toFixed(1)}px) rotate(${rot.toFixed(2)}deg) scale(${sx.toFixed(4)}, ${sy.toFixed(4)})`;
-      tl.el.style.opacity = (inP * (1 - clamp((cp - 0.75) / 0.25))).toFixed(3);
-      tl.el.style.filter = cp > 0.4 ? `brightness(${(1 + cp * 2).toFixed(2)}) saturate(0)` : 'none';
+      tl.el.style.opacity = (inP * (1 - prog(t, t3d + 0.05, 0.3))).toFixed(3);
+      tl.el.style.filter = cp > 0.4 ? `brightness(${(1 + cp * 2.4).toFixed(2)}) saturate(0)` : 'none';
       tl.el.style.borderColor = cp > 0.3 ? 'rgba(130,52,254,0.9)' : 'rgba(255,255,255,0.14)';
+      tl.el.style.background = cp > 0.5 ? '#8234fe' : '#0b0d10';
+      tl.el.firstChild.style.opacity = (1 - clamp((cp - 0.45) / 0.3)).toFixed(3);
     });
-    const dimA = env(t, cOne - 0.3, cName - 0.9, 0.4, 0.45);
+    const dimA = env(t, cOne - 0.3, tCol + 0.35, 0.4, 0.45);
     this.dim.style.opacity = dimA.toFixed(3);
-    put(this.one, { y: (1 - prog(t, cOne - 0.05, 0.5, E.outCubic)) * 24, o: prog(t, cOne - 0.05, 0.4) * (1 - prog(t, cName - 1.45, 0.3)) });
+    put(this.one, { y: (1 - prog(t, cOne - 0.05, 0.5, E.outCubic)) * 24, o: prog(t, cOne - 0.05, 0.4) * (1 - prog(t, tCol - 0.2, 0.3)) });
     const wordAt = [cOne + 0.75, cBuild, cBuild + 0.55];
     this.dbsWords.forEach((w, i) => {
       const q = prog(t, wordAt[i] - 0.05, 0.35, E.outCubic);
       w.style.color = q > 0.5 ? '#ffffff' : 'var(--text3)';
       w.style.textShadow = q > 0.5 ? '0 0 30px rgba(130,52,254,0.35)' : 'none';
     });
-    put(this.dbs, { o: prog(t, cOne + 0.3, 0.4) * (1 - prog(t, cName - 1.45, 0.3)) });
+    put(this.dbs, { o: prog(t, cOne + 0.3, 0.4) * (1 - prog(t, tCol - 0.2, 0.3)) });
 
-    // ---------- lockup builds from the collapsed strokes
-    const la = prog(t, cName - 0.45, 0.2);
-    put(this.lockWrap, { x: lx + iconShift, y: ly, o: la * (1 - prog(t, D - 0.8, 0.5)) });
-    this.lock.set({
-      strokes: prog(t, cName - 0.45, 0.4),
-      outline: prog(t, cName - 0.25, 0.7),
-      fill: prog(t, cName + 0.35, 0.55),
-      letters: prog(t, cName + 0.45, 0.9),
-      studio: prog(t, cName + 1.05, 0.7),
-      glow: env(t, cName + 0.4, cName + 2.4, 0.3, 1.2),
-    });
+    // ---------- the 3D logo: aura, plate, and a ring of light as the glass turns white
+    const in3d = prog(t, t3d, 0.3, E.inOutSine);
+    const handover = prog(t, cName + 0.02, 0.3, E.inOutSine);   // plate → flat lockup
+    let pending;
+    this.plate.style.opacity = (in3d * (1 - handover)).toFixed(3);
+    if (in3d > 0 && handover < 1) pending = this.logo3d.show(Math.max(0, tau));
+    if (in3d > 0 && t < cName + 2.2) {
+      const ignite = prog(t, t3d + 0.1, 0.9, E.outCubic), white = prog(t, t3d + 1.5, 0.95, E.inOutSine);
+      const a = (0.34 * ignite * (1 - white * 0.4)) * (1 - prog(t, cName + 0.9, 1.3)) * in3d;
+      const r = lerp(760, 520, prog(t, t3d, LOGO3D.move, E.inOutSine));
+      const gr = g.createRadialGradient(960, 540, 0, 960, 540, r);
+      gr.addColorStop(0, `rgba(130,52,254,${a.toFixed(4)})`);
+      gr.addColorStop(0.45, `rgba(112,90,250,${(a * 0.42).toFixed(4)})`);
+      gr.addColorStop(1, 'rgba(102,134,246,0)');
+      g.fillStyle = gr; g.fillRect(0, 0, W, H);
+      const ring = prog(t, t3d + 2.05, 1.1, E.outCubic);
+      if (ring > 0 && ring < 1) {
+        g.save();
+        g.strokeStyle = `rgba(184,156,255,${(0.75 * (1 - ring) ** 1.5).toFixed(4)})`;
+        g.lineWidth = lerp(5, 1, ring);
+        g.shadowColor = 'rgba(130,52,254,0.9)'; g.shadowBlur = 24;
+        g.beginPath(); g.arc(960, 540, lerp(150, 980, ring), 0, Math.PI * 2); g.stroke();
+        g.restore();
+      }
+    }
+
+    // ---------- the flat lockup takes over from the plate's last frame, then settles into place
+    const lh = LOCK_H;
+    const iconW = lh * (ICON_VIEWBOX[2] / VIEWBOX[3]);
+    if (!this.lockW) { const r = this.lock.el.getBoundingClientRect(); if (r.width > 10) this.lockW = r.width / (this.lockS || 1); }
+    const lw = this.lockW || 1500;
+    const lx = (1920 - lw) / 2, ly = 520 - lh / 2 - 60;
+    const settle = prog(t, cName + 0.22, 1.05, E.inOutCubic);
+    const sc = lerp(LOGO3D.endHeight / lh, 1, settle);
+    this.lockS = sc;
+    const cx = lerp(960, lx + iconW / 2, settle), cy = lerp(540, ly + lh / 2, settle);
+    put(this.lockWrap, { x: cx - iconW / 2, y: cy - lh / 2, s: sc, o: handover * fadeOut });
+    this.lock.set({ strokes: 1, outline: 1, fill: 1, letters: prog(t, cName + 0.62, 0.9), studio: prog(t, cName + 1.2, 0.7), glow: env(t, cName, cName + 2.6, 0.3, 1.4) });
     revealWords(this.tagSpans, prog(t, cTag - 0.05, 1.7, E.linear), { rise: 10, soft: 2.5, blur: 4 });
-    put(this.tagline, { o: 1 - prog(t, D - 0.8, 0.5) });
+    put(this.tagline, { o: fadeOut });
     const ca = prog(t, cCta - 0.1, 0.55, E.outBack);
-    put(this.ctaBtn, { s: lerp(0.8, 1, Math.min(1.05, ca)), o: clamp(ca * 2) * (1 - prog(t, D - 0.8, 0.5)) });
-    put(this.url, { o: prog(t, cCta + 0.5, 0.5) * (1 - prog(t, D - 0.8, 0.5)) });
+    put(this.ctaBtn, { s: lerp(0.8, 1, Math.min(1.05, ca)), o: clamp(ca * 2) * fadeOut });
+    put(this.url, { o: prog(t, cCta + 0.5, 0.5) * fadeOut });
     // final fade to black
     this.black.style.opacity = prog(t, D - 0.6, 0.6, E.inOutSine).toFixed(3);
     // accent sweep under the tagline when it completes
     const sw = prog(t, cTag + 1.6, 0.6, E.inOutCubic);
     if (sw > 0 && t < D - 0.4) {
-      g.save(); g.globalAlpha = 1 - prog(t, D - 0.8, 0.5);
+      g.save(); g.globalAlpha = fadeOut;
       g.fillStyle = C.accent; g.shadowColor = 'rgba(130,52,254,0.7)'; g.shadowBlur = 14;
       g.fillRect(960 - 60 * sw, 722, 120 * sw, 3);
       g.restore();
     }
+    return pending;
   },
 });

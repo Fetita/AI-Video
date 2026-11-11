@@ -3,7 +3,7 @@ export default {
  "fps": 30,
  "bpm": 100.0,
  "beat": 0.6,
- "duration": 88.8,
+ "duration": 92.4,
  "scenes": [
   {
    "id": "hook",
@@ -21,7 +21,7 @@ export default {
   {
    "id": "vision",
    "start": 19.2,
-   "end": 37.2,
+   "end": 38.4,
    "lines": [
     "v1",
     "v2",
@@ -30,8 +30,8 @@ export default {
   },
   {
    "id": "search",
-   "start": 37.2,
-   "end": 56.4,
+   "start": 38.4,
+   "end": 57.6,
    "lines": [
     "s1",
     "s2",
@@ -40,8 +40,8 @@ export default {
   },
   {
    "id": "promise",
-   "start": 56.4,
-   "end": 73.2,
+   "start": 57.6,
+   "end": 74.4,
    "lines": [
     "p1",
     "p2",
@@ -51,8 +51,8 @@ export default {
   },
   {
    "id": "finale",
-   "start": 73.2,
-   "end": 88.8,
+   "start": 74.4,
+   "end": 92.4,
    "lines": [
     "f1",
     "f2",
@@ -65,12 +65,12 @@ export default {
   "h1": {
    "id": "h1",
    "scene": "hook",
-   "start": 1.3,
-   "end": 2.455,
+   "start": 0.9,
+   "end": 2.055,
    "segs": [
     [
-     1.33,
-     2.35
+     0.93,
+     1.95
     ]
    ],
    "text": "A creative brief."
@@ -78,12 +78,12 @@ export default {
   "h2": {
    "id": "h2",
    "scene": "hook",
-   "start": 2.905,
-   "end": 3.965,
+   "start": 2.505,
+   "end": 3.565,
    "segs": [
     [
-     2.935,
-     3.845
+     2.535,
+     3.445
     ]
    ],
    "text": "A child's toy."
@@ -91,12 +91,12 @@ export default {
   "h3": {
    "id": "h3",
    "scene": "hook",
-   "start": 4.415,
-   "end": 5.415,
+   "start": 4.015,
+   "end": 5.015,
    "segs": [
     [
-     4.445,
-     5.295
+     4.045,
+     4.895
     ]
    ],
    "text": "A camera feed."
@@ -104,12 +104,12 @@ export default {
   "h4": {
    "id": "h4",
    "scene": "hook",
-   "start": 5.865,
-   "end": 7.075,
+   "start": 5.465,
+   "end": 6.675,
    "segs": [
     [
-     5.895,
-     6.955
+     5.495,
+     6.555
     ]
    ],
    "text": "A stack of evidence."
@@ -117,16 +117,16 @@ export default {
   "h5": {
    "id": "h5",
    "scene": "hook",
-   "start": 8.075,
-   "end": 11.17,
+   "start": 7.675,
+   "end": 10.77,
    "segs": [
     [
-     8.105,
-     9.455
+     7.705,
+     9.055
     ],
     [
-     9.805,
-     11.085
+     9.405,
+     10.685
     ]
    ],
    "text": "Not AI as a feature. AI as the product.",
@@ -135,20 +135,20 @@ export default {
   "h6": {
    "id": "h6",
    "scene": "hook",
-   "start": 12.17,
-   "end": 18.923,
+   "start": 11.77,
+   "end": 18.523,
    "segs": [
     [
-     12.2,
-     16.33
+     11.8,
+     15.93
     ],
     [
-     16.73,
-     17.43
+     16.33,
+     17.03
     ],
     [
-     17.61,
-     18.86
+     17.21,
+     18.46
     ]
    ],
    "text": "Eagerworks AI Studio turns AI capabilities into real products, workflows and measurable outcomes."
@@ -215,16 +215,16 @@ export default {
   "s1": {
    "id": "s1",
    "scene": "search",
-   "start": 37.9,
-   "end": 41.73,
+   "start": 39.1,
+   "end": 42.93,
    "segs": [
     [
-     37.93,
-     40.48
+     39.13,
+     41.68
     ],
     [
-     40.79,
-     41.66
+     41.99,
+     42.86
     ]
    ],
    "text": "A production team describes the location they need, in their own words."
@@ -232,24 +232,24 @@ export default {
   "s2": {
    "id": "s2",
    "scene": "search",
-   "start": 42.33,
-   "end": 50.821,
+   "start": 43.53,
+   "end": 52.021,
    "segs": [
     [
-     42.36,
-     44.16
+     43.56,
+     45.36
     ],
     [
-     44.55,
-     45.66
+     45.75,
+     46.86
     ],
     [
-     46.01,
-     48.36
+     47.21,
+     49.56
     ],
     [
-     48.65,
-     50.75
+     49.85,
+     51.95
     ]
    ],
    "text": "AI parses every requirement, searches the catalog, evaluates each location against the brief, and returns a personalized shortlist."
@@ -257,16 +257,16 @@ export default {
   "s3": {
    "id": "s3",
    "scene": "search",
-   "start": 51.521,
-   "end": 55.83,
+   "start": 52.721,
+   "end": 57.03,
    "segs": [
     [
-     51.551,
-     53.211
+     52.751,
+     54.411
     ],
     [
-     53.541,
-     55.751
+     54.741,
+     56.951
     ]
    ],
    "text": "Then the conversation keeps going, and every reply makes the results sharper."
@@ -274,12 +274,12 @@ export default {
   "p1": {
    "id": "p1",
    "scene": "promise",
-   "start": 57.0,
-   "end": 59.15,
+   "start": 58.2,
+   "end": 60.35,
    "segs": [
     [
-     57.03,
-     59.03
+     58.23,
+     60.23
     ]
    ],
    "text": "We're not just another AI studio.",
@@ -288,24 +288,24 @@ export default {
   "p2": {
    "id": "p2",
    "scene": "promise",
-   "start": 59.75,
-   "end": 64.658,
+   "start": 60.95,
+   "end": 65.858,
    "segs": [
     [
-     59.78,
-     60.86
+     60.98,
+     62.06
     ],
     [
-     61.29,
-     62.02
+     62.49,
+     63.22
     ],
     [
-     62.11,
-     62.85
+     63.31,
+     64.05
     ],
     [
-     62.97,
-     64.59
+     64.17,
+     65.79
     ]
    ],
    "text": "We start by listening: to your people, your users, and the problem behind the request."
@@ -313,16 +313,16 @@ export default {
   "p3": {
    "id": "p3",
    "scene": "promise",
-   "start": 65.108,
-   "end": 68.543,
+   "start": 66.308,
+   "end": 69.743,
    "segs": [
     [
-     65.138,
-     66.628
+     66.338,
+     67.828
     ],
     [
-     66.928,
-     68.468
+     68.128,
+     69.668
     ]
    ],
    "text": "We stay flexible and agile, adapting as your needs change."
@@ -330,20 +330,20 @@ export default {
   "p4": {
    "id": "p4",
    "scene": "promise",
-   "start": 68.993,
-   "end": 72.364,
+   "start": 70.193,
+   "end": 73.564,
    "segs": [
     [
-     69.023,
-     69.943
+     70.223,
+     71.143
     ],
     [
-     70.073,
-     71.003
+     71.273,
+     72.203
     ],
     [
-     71.243,
-     72.293
+     72.443,
+     73.493
     ]
    ],
    "text": "And we stay with you, side by side, until it really works."
@@ -351,20 +351,20 @@ export default {
   "f1": {
    "id": "f1",
    "scene": "finale",
-   "start": 73.8,
-   "end": 78.099,
+   "start": 75.0,
+   "end": 79.299,
    "segs": [
     [
-     73.83,
-     74.71
+     75.03,
+     75.91
     ],
     [
-     75.09,
-     76.32
+     76.29,
+     77.52
     ],
     [
-     76.49,
-     78.02
+     77.69,
+     79.22
     ]
    ],
    "text": "Different problems. One team that designs, builds and ships the whole system."
@@ -372,12 +372,12 @@ export default {
   "f2": {
    "id": "f2",
    "scene": "finale",
-   "start": 79.399,
-   "end": 81.019,
+   "start": 82.499,
+   "end": 84.119,
    "segs": [
     [
-     79.429,
-     80.899
+     82.529,
+     83.999
     ]
    ],
    "text": "Eagerworks AI Studio.",
@@ -386,12 +386,12 @@ export default {
   "f3": {
    "id": "f3",
    "scene": "finale",
-   "start": 81.619,
-   "end": 84.148,
+   "start": 84.719,
+   "end": 87.248,
    "segs": [
     [
-     81.649,
-     84.079
+     84.749,
+     87.179
     ]
    ],
    "text": "From AI ideas to real-world products.",
@@ -400,12 +400,12 @@ export default {
   "f4": {
    "id": "f4",
    "scene": "finale",
-   "start": 85.148,
-   "end": 86.516,
+   "start": 88.248,
+   "end": 89.616,
    "segs": [
     [
-     85.178,
-     86.418
+     88.278,
+     89.518
     ]
    ],
    "text": "Let's build what's next.",

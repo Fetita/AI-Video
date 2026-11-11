@@ -1,73 +1,49 @@
 // 01 — Computer vision · Custom models · Robotics
-// API call → full vision stack → hands → faces → camera & wrist tracking → dataset → train/benchmark → robot.
+// API call → full vision stack → hands → faces → camera & wrist tracking → dataset → train/benchmark → robot
+// (the robot is a photoreal Blender plate with the overlays drawn in the same camera: lib/robot-shot.js).
 import { addScene, h, put, prog, E, clamp, lerp, env, makeCanvas, rng, rgba, C, keys, rrect, makeNoise, TIMELINE } from '../engine.js';
 import { makeHud, box, tag, recHud, brackets, FONT_UI } from '../lib/ui.js';
-import { handPoints, basis, drawHand, drawPose, bbox, FINGER_COLORS } from '../lib/hand.js';
-import { v3, add, sub, mul, norm, camera, lerp3, cross } from '../lib/three.js';
+import { handPoints, basis, drawHand, drawPose, bbox } from '../lib/hand.js';
+import { v3, add, sub, mul, norm, camera, cross } from '../lib/three.js';
 import { drawEgo } from '../lib/ego.js';
+import { makeClip } from '../lib/clip.js';
+import { SHOT, drawRobotOverlay } from '../lib/robot-shot.js';
 
 const FRAME = { x: 150, y: 118, w: 1620, h: 826 };
 const STACK = [['Capture', 'Ego + fixed cameras'], ['Annotate', 'Hands · faces · wrists'], ['Dataset', 'Custom · versioned'], ['Train', 'Detection · pose'], ['Evaluate', 'Benchmarks'], ['Deploy', 'Robot data pipeline']];
 
 // ------------------------------------------------------------ room with people (face detection)
-function drawRoom(g, t, faceA, blurA) {
-  const pan = Math.sin(t * 0.5) * 20;
-  const x0 = FRAME.x, y0 = FRAME.y, W = FRAME.w, H = FRAME.h;
-  const bg = g.createLinearGradient(0, y0, 0, y0 + H);
-  bg.addColorStop(0, '#2b3036'); bg.addColorStop(1, '#171a1d');
-  g.fillStyle = bg; g.fillRect(x0, y0, W, H);
-  // window light + shelves
-  const wg = g.createLinearGradient(x0 + 1100 + pan, 0, x0 + 1500 + pan, 0);
-  wg.addColorStop(0, 'rgba(210,225,235,0.18)'); wg.addColorStop(1, 'rgba(210,225,235,0.05)');
-  g.fillStyle = wg; g.fillRect(x0 + 1080 + pan, y0 + 60, 420, 420);
-  g.strokeStyle = 'rgba(0,0,0,0.3)'; g.lineWidth = 8; g.strokeRect(x0 + 1080 + pan, y0 + 60, 420, 420); g.beginPath(); g.moveTo(x0 + 1290 + pan, y0 + 60); g.lineTo(x0 + 1290 + pan, y0 + 480); g.stroke();
-  g.fillStyle = '#3a342f'; g.fillRect(x0 + 120 + pan, y0 + 150, 380, 14); g.fillRect(x0 + 120 + pan, y0 + 300, 380, 14);
-  [[150, 96, '#6b7f8c'], [210, 120, '#8c6b5a'], [300, 80, '#5a6b58'], [380, 110, '#7a7160']].forEach(([x, hh, c]) => { g.fillStyle = c; g.fillRect(x0 + x + pan, y0 + 150 - hh * 0.5, 40, hh * 0.5); });
-  // table edge in the foreground
-  g.fillStyle = '#2a211b'; g.fillRect(x0, y0 + H - 170, W, 170);
-  g.fillStyle = '#3a2e25'; g.fillRect(x0, y0 + H - 178, W, 10);
-  const people = [
-    { x: 420, y: 470, s: 1.25, c: '#3f5566', skin: '#b39580', blur: 0 },
-    { x: 930, y: 420, s: 0.95, c: '#6b4f45', skin: '#8f6e5a', blur: 1.5 },
-    { x: 1370, y: 440, s: 1.05, c: '#4d5a3f', skin: '#c7a38a', blur: 0.8 },
-  ];
-  const faces = [];
-  people.forEach((p, i) => {
-    const px = x0 + p.x + pan * (1 + i * 0.2), py = y0 + p.y + Math.sin(t * 1.4 + i) * 4;
-    g.save();
-    if (p.blur) g.filter = `blur(${p.blur}px)`;
-    // shoulders
-    g.fillStyle = p.c;
-    g.beginPath(); g.moveTo(px - 190 * p.s, y0 + H); g.bezierCurveTo(px - 190 * p.s, py + 120 * p.s, px - 120 * p.s, py + 95 * p.s, px, py + 92 * p.s); g.bezierCurveTo(px + 120 * p.s, py + 95 * p.s, px + 190 * p.s, py + 120 * p.s, px + 190 * p.s, y0 + H); g.closePath(); g.fill();
-    g.fillStyle = p.skin; g.fillRect(px - 26 * p.s, py + 40 * p.s, 52 * p.s, 60 * p.s);
-    const hg = g.createRadialGradient(px - 18 * p.s, py - 22 * p.s, 5, px, py, 80 * p.s);
-    hg.addColorStop(0, '#e2c9b5'); hg.addColorStop(0.35, p.skin); hg.addColorStop(1, '#4a3a31');
-    g.fillStyle = hg; g.beginPath(); g.ellipse(px, py, 58 * p.s, 72 * p.s, 0, 0, Math.PI * 2); g.fill();
-    g.fillStyle = '#2a211d'; g.beginPath(); g.ellipse(px, py - 42 * p.s, 60 * p.s, 36 * p.s, 0, Math.PI, Math.PI * 2); g.fill();
-    g.restore();
-    faces.push({ x: px - 66 * p.s, y: py - 84 * p.s, w: 132 * p.s, h: 164 * p.s, cx: px, cy: py, s: p.s });
-  });
-  // privacy blur on faces
+// The feed is a Blender still of three display mannequins (scripts/render_room.py), slightly larger than the
+// frame so the shot can push in. FACES are the head boxes that script prints, as fractions of the image.
+const ROOM = { w: 1720, h: 877 };
+const FACES = [[0.1601, 0.3167, 0.0752, 0.1976], [0.49, 0.3504, 0.0499, 0.134], [0.7714, 0.3516, 0.0624, 0.1644]];
+function drawRoom(g, img, mosaic, p, faceA, blurA) {
+  const cx = FRAME.x + FRAME.w / 2, cy = FRAME.y + FRAME.h / 2;
+  const z = lerp(0.975, 1.035, p), dx = lerp(14, -14, p);
+  const X = (u) => cx + dx + (u - ROOM.w / 2) * z, Y = (v) => cy + (v - ROOM.h / 2) * z;
+  g.drawImage(img, X(0), Y(0), ROOM.w * z, ROOM.h * z);
+  const faces = FACES.map(([fx, fy, fw, fh]) => ({ u: fx * ROOM.w, v: fy * ROOM.h, w: fw * ROOM.w, h: fh * ROOM.h }));
+  // privacy filter: a real mosaic of each head (the region is averaged down to a few cells and drawn back)
   if (blurA > 0) {
+    const m = mosaic.getContext('2d');
     faces.forEach((f) => {
+      const pad = 0.1;
+      const u = f.u - f.w * pad, v = f.v - f.h * pad, w = f.w * (1 + 2 * pad), h = f.h * (1 + 2 * pad);
+      m.clearRect(0, 0, mosaic.width, mosaic.height);
+      m.drawImage(img, u, v, w, h, 0, 0, mosaic.width, mosaic.height);
       g.save();
       g.globalAlpha = blurA;
-      g.beginPath(); g.ellipse(f.cx, f.cy, f.w * 0.46, f.h * 0.46, 0, 0, Math.PI * 2); g.clip();
-      const cell = 14;
-      for (let yy = f.y; yy < f.y + f.h; yy += cell) for (let xx = f.x; xx < f.x + f.w; xx += cell) {
-        const d = Math.hypot((xx - f.cx) / f.w, (yy - f.cy) / f.h);
-        const v = 120 + Math.sin(xx * 0.13 + yy * 0.07) * 18 - d * 90;
-        g.fillStyle = `rgb(${v + 30 | 0},${v + 10 | 0},${v | 0})`;
-        g.fillRect(xx, yy, cell - 1, cell - 1);
-      }
+      g.beginPath(); g.ellipse(X(u + w / 2), Y(v + h / 2), (w / 2) * z, (h / 2) * z, 0, 0, Math.PI * 2); g.clip();
+      g.imageSmoothingEnabled = false;
+      g.drawImage(mosaic, X(u), Y(v), w * z, h * z);
       g.restore();
     });
   }
-  g.save(); g.globalCompositeOperation = 'multiply'; g.fillStyle = 'rgba(150,175,190,1)'; g.fillRect(x0, y0, W, H); g.restore();
   faces.forEach((f, i) => {
     const a = clamp(faceA * 3 - i * 0.5);
-    box(g, f.x, f.y, f.w, f.h, { color: C.accent, a, lw: 1.6 });
-    tag(g, f.x, f.y - 6, blurA > 0.5 ? `FACE ${i + 1} · ANONYMIZED` : `FACE ${i + 1}`, { a, size: 12 });
+    const bx = X(f.u) - 8, by = Y(f.v) - 8, bw = f.w * z + 16, bh = f.h * z + 16;
+    box(g, bx, by, bw, bh, { color: C.accent, a, lw: 2 });
+    tag(g, bx, by - 6, blurA > 0.5 ? `FACE ${i + 1} · ANONYMIZED` : `FACE ${i + 1}`, { a, size: 13 });
   });
 }
 
@@ -137,81 +113,6 @@ function drawTracking(g, t, p, a) {
     g.fillStyle = 'rgba(243,243,239,0.75)'; g.fillText(label.toUpperCase(), lx + 40, 901);
     lx += 70 + g.measureText(label.toUpperCase()).width;
   });
-  g.restore();
-}
-
-// ------------------------------------------------------------ robot arm
-const ARM = { base: v3(0, 0, 0), h0: 0.55, l1: 0.95, l2: 0.85, grip: 0.28 };
-function demoPath(u) {
-  // pick at A → lift → place at B (world units)
-  const A = v3(-1.05, 0.12, 0.75), B = v3(1.05, 0.12, 0.55);
-  const p = lerp3(A, B, E.inOutSine(u));
-  p.y += Math.sin(Math.PI * u) * 0.9;
-  p.z += Math.sin(Math.PI * u) * 0.35;
-  return p;
-}
-function armIK(T) {
-  const yaw = Math.atan2(T.x, T.z);
-  const wristT = add(T, v3(0, ARM.grip, 0));
-  const d = Math.hypot(wristT.x, wristT.z), hgt = wristT.y - ARM.h0;
-  const L = Math.min(Math.hypot(d, hgt), ARM.l1 + ARM.l2 - 1e-3);
-  const a2 = Math.acos(clamp((ARM.l1 ** 2 + ARM.l2 ** 2 - L ** 2) / (2 * ARM.l1 * ARM.l2), -1, 1));
-  const a1 = Math.atan2(hgt, d) + Math.acos(clamp((ARM.l1 ** 2 + L ** 2 - ARM.l2 ** 2) / (2 * ARM.l1 * L), -1, 1));
-  const dir = v3(Math.sin(yaw), 0, Math.cos(yaw));
-  const shoulder = v3(0, ARM.h0, 0);
-  const elbow = add(shoulder, add(mul(dir, Math.cos(a1) * ARM.l1), v3(0, Math.sin(a1) * ARM.l1, 0)));
-  const a3 = a1 - (Math.PI - a2);
-  const wrist = add(elbow, add(mul(dir, Math.cos(a3) * ARM.l2), v3(0, Math.sin(a3) * ARM.l2, 0)));
-  return { yaw, dir, shoulder, elbow, wrist, tip: add(wrist, v3(0, -ARM.grip, 0)) };
-}
-function drawRobot(g, t, a, U, hand) {
-  if (a <= 0.001) return;
-  g.save(); g.globalAlpha = a;
-  const az = -0.55 + Math.sin(t * 0.25) * 0.08;
-  const cam = camera(v3(Math.sin(az) * 4.3, 2.5, -Math.cos(az) * 4.3), v3(0, 0.62, 0.45), { f: 1450, cx: 960, cy: 560 });
-  const P = (q) => cam.project(q);
-  for (let i = -4; i <= 4; i++) {
-    const s1 = P(v3(i * 0.5, 0, -2)), s2 = P(v3(i * 0.5, 0, 3)), s3 = P(v3(-2, 0, i * 0.5 + 0.5)), s4 = P(v3(2, 0, i * 0.5 + 0.5));
-    g.strokeStyle = 'rgba(255,255,255,0.06)'; g.lineWidth = 1; g.beginPath(); g.moveTo(s1.x, s1.y); g.lineTo(s2.x, s2.y); g.moveTo(s3.x, s3.y); g.lineTo(s4.x, s4.y); g.stroke();
-  }
-  // demonstration path (dashed) + robot trail (violet)
-  g.setLineDash([7, 8]); g.strokeStyle = 'rgba(124,198,255,0.8)'; g.lineWidth = 2; g.beginPath();
-  for (let k = 0; k <= 80; k++) { const q = P(demoPath(k / 80)); k ? g.lineTo(q.x, q.y) : g.moveTo(q.x, q.y); } g.stroke(); g.setLineDash([]);
-  if (U > 0) { g.strokeStyle = C.accent; g.lineWidth = 3.5; g.beginPath(); for (let k = 0; k <= 80 * U; k++) { const q = P(demoPath(k / 80)); k ? g.lineTo(q.x, q.y) : g.moveTo(q.x, q.y); } g.stroke(); }
-  // pick/place markers
-  [[demoPath(0), 'PICK'], [demoPath(1), 'PLACE']].forEach(([q0, label]) => { const q = P(v3(q0.x, 0.001, q0.z)); g.strokeStyle = 'rgba(255,255,255,0.35)'; g.lineWidth = 1.5; g.beginPath(); g.ellipse(q.x, q.y, 36, 12, 0, 0, Math.PI * 2); g.stroke(); tag(g, q.x + 42, q.y + 6, label, { bg: null, fg: 'rgba(255,255,255,0.55)', size: 12, anchor: 'bl', pad: 0 }); });
-  // the part being moved
-  const carry = U > 0.02 && U < 0.98;
-  const partPos = U <= 0.02 ? demoPath(0) : U >= 0.98 ? demoPath(1) : demoPath(U);
-  { const c = add(partPos, v3(0, -0.12, 0)); const s = 0.12; const pts = []; for (const dx of [-1, 1]) for (const dy of [0, 2]) for (const dz of [-1, 1]) pts.push(P(add(c, v3(dx * s, dy * s, dz * s))));
-    const face = (idx, fill) => { g.fillStyle = fill; g.beginPath(); idx.forEach((i, k) => (k ? g.lineTo(pts[i].x, pts[i].y) : g.moveTo(pts[i].x, pts[i].y))); g.closePath(); g.fill(); };
-    face([2, 3, 7, 6], '#ffc45c'); face([0, 1, 3, 2], '#d99a2b'); face([1, 3, 7, 5], '#b87d1c'); }
-  // arm
-  const T = demoPath(Math.max(0.0001, Math.min(0.9999, U)));
-  const k = armIK(T);
-  const seg = (A, B, w, col) => { const a1 = P(A), b1 = P(B); g.lineCap = 'round'; g.strokeStyle = '#1b1f24'; g.lineWidth = w * a1.s * 1.25; g.beginPath(); g.moveTo(a1.x, a1.y); g.lineTo(b1.x, b1.y); g.stroke(); g.strokeStyle = col; g.lineWidth = w * a1.s; g.beginPath(); g.moveTo(a1.x, a1.y); g.lineTo(b1.x, b1.y); g.stroke(); g.strokeStyle = 'rgba(255,255,255,0.35)'; g.lineWidth = w * a1.s * 0.25; g.beginPath(); g.moveTo(a1.x, a1.y - w * a1.s * 0.22); g.lineTo(b1.x, b1.y - w * a1.s * 0.22); g.stroke(); };
-  const bp = P(v3(0, 0, 0));
-  g.fillStyle = '#2a2f36'; g.beginPath(); g.ellipse(bp.x, bp.y, 0.34 * bp.s, 0.12 * bp.s, 0, 0, Math.PI * 2); g.fill();
-  seg(v3(0, 0, 0), k.shoulder, 0.26, '#8d959e');
-  seg(k.shoulder, k.elbow, 0.2, '#c3c9cf');
-  seg(k.elbow, k.wrist, 0.16, '#d9dde1');
-  seg(k.wrist, add(k.wrist, v3(0, -ARM.grip * 0.55, 0)), 0.12, '#8d959e');
-  const open = carry ? 0.05 : 0.12;
-  const gl = add(k.wrist, v3(0, -ARM.grip * 0.55, 0));
-  const side = norm(cross(k.dir, v3(0, 1, 0)));
-  [-1, 1].forEach((sgn) => seg(add(gl, mul(side, sgn * open)), add(add(gl, mul(side, sgn * open)), v3(0, -ARM.grip * 0.45, 0)), 0.05, '#e6e9ec'));
-  [k.shoulder, k.elbow, k.wrist].forEach((j) => { const q = P(j); g.fillStyle = '#0d0f12'; g.beginPath(); g.arc(q.x, q.y, 0.1 * q.s, 0, Math.PI * 2); g.fill(); g.strokeStyle = C.accent; g.lineWidth = 2.5; g.beginPath(); g.arc(q.x, q.y, 0.1 * q.s, 0, Math.PI * 2); g.stroke(); });
-  // ghost demonstrator hand (keypoints only) leading along the path
-  if (hand.a > 0.001) {
-    const hp = demoPath(hand.u);
-    const b = basis(v3(0.2, -0.9, 0.3), v3(0, 0.3, -1));
-    const pts = handPoints({ pos: add(hp, v3(0, 0.3, 0)), ...b, curl: [0.45, 0.45, 0.55, 0.6, 0.65], spread: 0.3, scale: 0.34 });
-    drawPose(g, pts.map(P), { alpha: hand.a, r: 4.5, lw: 2.5 });
-    const q = P(add(hp, v3(0, 0.55, 0)));
-    tag(g, q.x - 60, q.y, 'HUMAN DEMONSTRATION', { a: hand.a, bg: '#0d0f12', fg: C.sky, stroke: rgba(C.sky, 0.6), size: 12 });
-  }
-  const eq = P(add(k.elbow, v3(0, 0.25, 0)));
-  if (U > 0.05) tag(g, eq.x + 20, eq.y, 'ROBOT · REPLAYING', { a: clamp((U - 0.05) * 6), size: 12 });
   g.restore();
 }
 
@@ -325,6 +226,14 @@ addScene({
         { label: 'Robotics', at: ctx.cue('v3', 1) },
       ],
     });
+    // the robot plate (rendered in Blender, see lib/robot-shot.js) sits under the overlay canvas
+    this.plate = h('div', { class: 'abs', style: { left: '0', top: '0', width: '1920px', height: '1080px', opacity: 0,
+      maskImage: 'linear-gradient(180deg, transparent 0%, #000 17%)', webkitMaskImage: 'linear-gradient(180deg, transparent 0%, #000 17%)' } });
+    this.robot = makeClip(this.plate, { name: 'robot', frames: SHOT.frames, fps: SHOT.fps });
+    R.append(this.plate);
+    this.roomImg = h('img', { src: 'assets/renders/room.jpg', style: { display: 'none' } });
+    R.append(this.roomImg);
+    this.mosaic = makeCanvas(null, 8, 10, '').c;
     const cv = makeCanvas(R);
     this.g = cv.ctx;
     this.atlas = buildAtlas();
@@ -340,12 +249,14 @@ addScene({
     R.append(this.api);
     // incoming hand-off: the intro's violet line (same position) contracts and opens the API call card
     this.handIn = h('div', { class: 'abs', style: { left: '460px', top: '483px', width: '1000px', height: '2px', background: 'var(--accent)', transformOrigin: '50% 50%', boxShadow: '0 0 16px rgba(130,52,254,0.6)' } });
-    R.insertBefore(this.handIn, this.api); // behind the card, so the card covers it as it opens
+    this.handIn.style.display = 'none'; // scene changes are camera moves now (engine.js sceneCamera)
+    R.insertBefore(this.handIn, this.api);
     // outgoing hand-off, only when the search scene follows directly (the LinkedIn cut): a violet line draws
     // where the search brief card opens, as the packing-line scene does in the full film
     const order = TIMELINE.scenes.map((s) => s.id);
     if (order[order.indexOf('vision') + 1] === 'search') {
       this.handOut = h('div', { class: 'abs', style: { left: '460px', top: '483px', width: '1000px', height: '2px', background: 'var(--accent)', transformOrigin: '50% 50%', boxShadow: '0 0 16px rgba(130,52,254,0.6)' } });
+      this.handOut.style.display = 'none';
       R.append(this.handOut);
     }
     this.stack = STACK.map(([k, v], i) => {
@@ -406,7 +317,6 @@ addScene({
     const trkA = env(t, cTrk - 0.05, cDs + 0.25, 0.2, 0.35);
     const dsA = env(t, cDs - 0.1, cTr + 0.25, 0.3, 0.35);
     const chA = env(t, cTr - 0.05, cRb + 0.2, 0.3, 0.35);
-    const rbA = env(t, cRb - 0.1, D + 1, 0.4, 0.01) * (1 - prog(t, D - 0.55, 0.5, E.inCubic));
     const frameClip = (a, punch) => {
       g.save();
       g.globalAlpha = a;
@@ -437,7 +347,7 @@ addScene({
     if (roomA > 0.001) {
       frameClip(roomA, 1 - prog(t, cDet - 0.05, 0.5, E.outCubic));
       const fa = prog(t, cDet + 0.15, 0.7, E.outCubic);
-      drawRoom(g, t, fa, prog(t, cDet + 0.8, 0.35, E.inOutCubic));
+      drawRoom(g, this.roomImg, this.mosaic, prog(t, cDet - 0.05, cTrk - cDet + 0.2, E.linear), fa, prog(t, cDet + 0.8, 0.35, E.inOutCubic));
       g.restore();
       g.save(); g.globalAlpha = roomA; recHud(g, FRAME.x + 28, FRAME.y + 24, 'EGO CAM', t - cVS + 4.2); tag(g, FRAME.x + FRAME.w - 28, FRAME.y + 48, 'FACE DETECTION · PRIVACY FILTER', { bg: null, fg: 'rgba(255,255,255,0.7)', size: 12, anchor: 'br', pad: 0 }); g.restore();
     }
@@ -476,10 +386,16 @@ addScene({
     if (chA > 0.001) { g.save(); g.fillStyle = `rgba(7,8,10,${(0.85 * chA).toFixed(3)})`; g.fillRect(0, 0, 1920, 1080); g.restore(); }
     drawCharts(g, t, chA, prog(t, cTr, cRb - cTr - 0.2, E.inOutSine));
 
-    // ---------- G: robot replays the human demonstration
-    const hand = { a: env(t, cRb - 0.1, cRb + 1.6, 0.3, 0.4), u: prog(t, cRb, 1.3, E.inOutSine) };
-    drawRobot(g, t, rbA, prog(t, cRb + 1.1, 2.6, E.inOutSine), hand);
-    if (rbA > 0.001) tag(g, 200, 200, 'DATA PIPELINES FOR ROBOTICS', { a: rbA, bg: null, fg: 'rgba(255,255,255,0.7)', size: 13, anchor: 'bl', pad: 0 });
-    if (this.handOut) { const hp = prog(t, D - 0.55, 0.5, E.inOutCubic); put(this.handOut, { sx: hp, o: hp > 0 ? 1 : 0 }); }
+    // ---------- G: robot replays the human demonstration (photoreal plate + overlays in the same camera)
+    const tau = t - (cRb - 0.34);
+    const rbIn = prog(t, cRb - 0.34, 0.5, E.inOutSine);
+    this.plate.style.opacity = rbIn.toFixed(3);
+    let pending;
+    if (rbIn > 0) {
+      pending = this.robot.show(Math.max(0, tau));
+      drawRobotOverlay(g, tau, rbIn);
+      tag(g, 200, 200, 'DATA PIPELINES FOR ROBOTICS', { a: rbIn, bg: null, fg: 'rgba(255,255,255,0.7)', size: 13, anchor: 'bl', pad: 0 });
+    }
+    return pending;
   },
 });

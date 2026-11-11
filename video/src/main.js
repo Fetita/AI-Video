@@ -1,36 +1,20 @@
-import { addGlobal, mount, seek, makeCanvas, W, H, FPS, TIMELINE, h } from './engine.js';
+import { addGlobal, mount, seek, FPS, TIMELINE, h } from './engine.js';
 import { makeCaptions } from './lib/captions.js';
+import { makeAtmosphere, makeSweep } from './lib/atmosphere.js';
 
 // Scene order comes from the timeline, so an alternate cut (?cut=…) can drop or reorder scenes.
 const SCENES = TIMELINE.scenes.map((s) => s.id);
 
-// ---- global background: deep graphite with a soft top light and a faint engineering grid
+// ---- global background: lit, drifting atmosphere behind every scene (lib/atmosphere.js)
 addGlobal({
-  setup(stage) {
-    const bg = h('div', { class: 'layer', style: { zIndex: 0 } });
-    const { c, ctx } = makeCanvas(bg);
-    const g = ctx.createRadialGradient(W * 0.5, H * 0.18, 0, W * 0.5, H * 0.35, W * 0.75);
-    g.addColorStop(0, '#15181d');
-    g.addColorStop(0.45, '#0c0e11');
-    g.addColorStop(1, '#060708');
-    ctx.fillStyle = g;
-    ctx.fillRect(0, 0, W, H);
-    stage.prepend(bg);
-    this.grid = h('div', {
-      class: 'layer',
-      style: {
-        zIndex: 0,
-        backgroundImage: 'linear-gradient(rgba(255,255,255,0.028) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.028) 1px, transparent 1px)',
-        backgroundSize: '48px 48px',
-        maskImage: 'radial-gradient(ellipse 70% 60% at 50% 45%, #000 20%, transparent 80%)',
-        webkitMaskImage: 'radial-gradient(ellipse 70% 60% at 50% 45%, #000 20%, transparent 80%)',
-      },
-    });
-    bg.after(this.grid);
-  },
-  render(t) {
-    this.grid.style.backgroundPosition = `${(t * 6) % 48}px ${(t * 3) % 48}px`;
-  },
+  setup(stage) { this.update = makeAtmosphere(stage); },
+  render(t) { this.update(t); },
+});
+
+// ---- a band of light crosses the frame on every scene change
+addGlobal({
+  setup(stage) { this.update = makeSweep(stage); },
+  render(t) { this.update(t); },
 });
 
 // ---- burned-in captions (only for cuts that ask for them)

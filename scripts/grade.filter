@@ -1,0 +1,6 @@
+[0:v]format=gbrp,split=3[base][h1][h2];
+[h1]scale=960:540:flags=bilinear,curves=all='0/0 0.5/0 0.8/0.45 1/1',gblur=sigma=5:steps=2,scale=1920:1080:flags=bicubic[glow];
+[h2]scale=480:270:flags=bilinear,curves=all='0/0 0.32/0 0.75/0.5 1/1',gblur=sigma=11:steps=2,scale=1920:1080:flags=bicubic,colorchannelmixer=rr=0.92:gg=0.80:bb=1.0[hal];
+[base][glow]blend=all_mode=screen:all_opacity=0.30[x1];
+[x1][hal]blend=all_mode=screen:all_opacity=0.36[x2];
+[x2]curves=all='0/0 0.25/0.235 0.5/0.505 0.75/0.775 1/1',noise=alls=4:allf=t+u,format=yuv420p[v]

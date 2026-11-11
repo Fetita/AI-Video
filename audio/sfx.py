@@ -271,10 +271,11 @@ if 'hook' in SC:
     c2, c3, c4 = cue('h2'), cue('h3'), cue('h4')
     cNot, cProd, cName, cWf, cOut = cue('h5', 0), cue('h5', 1), cue('h6', 0), cue('h6', 1), cue('h6', 2)
     D = SC['hook']['end'] - s
-    at(0.25, s_rise(0.9, 400, 1200), -30)
-    at(1.1, s_typing(0.9, 1, 11), -31)
+    b0 = cue('h1') - 1.33   # the brief's beats follow the first line of narration
+    at(max(0.02, 0.25 + b0 - 0.3), s_rise(0.8, 400, 1200), -30)
+    at(1.1 + b0, s_typing(0.9, 1, 11), -31)
     for i in range(4):
-        at(1.95 + i * 0.09, s_pop(900 + i * 90, 1300 + i * 90), -27, -0.3 + i * 0.2)
+        at(1.95 + b0 + i * 0.09, s_pop(900 + i * 90, 1300 + i * 90), -27, -0.3 + i * 0.2)
     at(c2 - 0.14, s_whoosh(0.32, 600, 3000, 2), -27)
     at(c2 - 0.12 + 0.42, s_clack(1.0), -19)
     at(c2 + 0.1, s_lock(), -25)
@@ -297,7 +298,6 @@ if 'hook' in SC:
     at(cName - 0.25, s_rise(0.8, 500, 1000), -33)
     for i, tt in enumerate([cName + 3.2, cWf, cOut]):
         at(tt - 0.1, s_pop(700 + i * 110, 1000 + i * 110), -29)
-    at(s + D - 0.55, s_whoosh(0.5, 1500, 5000, 7), -31)
 
 
 # ================================================================== INTRO
@@ -401,10 +401,17 @@ if 'vision' in SC:
     at(cDs, s_data(1.5, 29, 40), -33)
     at(cTr - 0.05, s_rise(cRb - cTr - 0.2, 300, 1200), -34)
     at(cTr + 0.667 * (cRb - cTr - 0.2), s_bell(1760, 0.8, 0.3), -27, 0.4)
-    at(cRb - 0.15, s_whoosh(0.5, 600, 2400, 19), -27)
-    at(cRb + 1.1, s_servo(2.6), -30)
-    at(cRb + 1.12, s_click(), -26, -0.3)
-    at(cRb + 1.1 + 2.55, s_click(), -26, 0.3)
+    # the robot shot (timings mirror video/src/lib/robot-shot.js; r0 = first frame of the plate)
+    r0 = cRb - 0.34
+    at(r0 + 0.1, s_whoosh(0.5, 600, 2400, 19), -27)
+    at(r0 + 0.3, s_data(1.2, 30, 18), -34, 0.2)            # the demonstrated path draws
+    at(r0 + 0.25, s_servo(0.85), -33, -0.3)                # the arm lowers onto the part
+    at(r0 + 1.36, s_click(), -25, -0.3)                    # grip
+    at(r0 + 1.4, s_lock(), -27, -0.3)
+    at(r0 + 1.5, s_servo(2.8), -29)                        # the replayed move
+    at(r0 + 4.34, s_click(), -25, 0.3)                     # release
+    at(r0 + 4.5, s_bell(1568, 1.0, 0.35), -28, 0.3)        # task complete
+    at(r0 + 4.65, s_servo(0.9), -34, 0.3)                  # lift off
 
 
 # ================================================================== AGRI
@@ -498,18 +505,31 @@ if 'promise' in SC:
 if 'finale' in SC:
     s = SC['finale']['start']
     cDiff, cOne, cBuild, cNameF, cTag, cCta = cue('f1', 0), cue('f1', 1), cue('f1', 2), cue('f2', 0), cue('f3', 0), cue('f4', 0)
-    at(s - 0.2, s_whoosh(0.9, 400, 2500, 24), -25)
     at(s - 0.1, s_data(0.8, 40, 30), -34)
     for i in range(15):
         at(cDiff - 0.1 + i * 0.075, s_tick(1600 + i * 110, 0.012), -33, -0.8 + (i % 5) * 0.4)
     for i, tt in enumerate([cOne + 0.75, cBuild, cBuild + 0.55]):
         at(tt - 0.05, s_pop(880 * 2 ** (i * 4 / 12), 1320 * 2 ** (i * 4 / 12), 0.1), -26)
-    at(cNameF - 1.25, s_suck(0.95, 41), -22)
-    for i in range(3):
-        at(cNameF - 0.45 + i * 0.13, s_tick(1760 + i * 220, 0.02), -29)
-    at(cNameF - 0.25, s_rise(0.7, 500, 1000), -33)
+    # the 3D logo (timings mirror video/src/scenes/finale.js; g0 = first frame of the plate)
+    g0 = cNameF - 2.45
+    at(g0 - 0.8, s_suck(0.95, 41), -22)                    # the wall collapses into three strokes of light
+    for i in range(3):                                     # the light tubes ignite one after another
+        at(g0 + 0.08 + i * 0.16, s_rise(0.42, 150 * 2 ** (i * 5 / 12), 300 * 2 ** (i * 5 / 12)), -24, -0.4 + i * 0.4)
+        at(g0 + 0.3 + i * 0.16, s_lock(), -28, -0.4 + i * 0.4)
+    at(g0 + 0.5, s_whoosh(1.9, 300, 1800, 46), -30)        # the camera pulls back
+    at(g0 + 1.5, s_rise(0.75, 400, 1700), -29)             # the glass turns white
+    at(g0 + 2.05, s_whoosh(1.1, 3200, 500, 47), -26)       # ring of light
+    at(cNameF + 0.3, s_whoosh(0.8, 1800, 600, 48), -30)    # the lockup settles into place
     at(cTag - 0.05, s_sparkle(1.6, 42, 8), -34)
     at(cCta - 0.1, s_pop(900, 1400, 0.1), -25)
+
+
+# ================================================================== SCENE CHANGES
+# every cut is a camera move through the frame: air rushing past, a soft thump as the next scene lands
+for i, sc in enumerate(TL['scenes'][1:]):
+    T = sc['start']
+    at(T - 0.52, s_whoosh(0.66, 450, 4200, 60 + i), -25, -0.2 + 0.4 * (i % 2))
+    at(T - 0.03, s_thump(), -24)
 
 
 OUT = reverb(OUT, wet=0.12, dur=1.4, tone=7000)

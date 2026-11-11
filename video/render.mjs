@@ -3,7 +3,7 @@
 // Chromium and pipes PNG frames into ffmpeg.
 //
 //   node render.mjs --stills 12.5,30,44.2 [--only search] [--outdir dir]
-//   node render.mjs --video [--from 0 --to 20] [--workers 4] [--out build/frames.mkv]
+//   node render.mjs --video [--from 0 --to 20] [--workers 4] [--mb 4 --shutter 0.5] [--out build/frames.mkv]
 //
 // Video mode writes a lossless RGB intermediate per worker, then joins them;
 // audio is muxed and the delivery encode happens in ../scripts/finalize.sh.
@@ -21,7 +21,7 @@ const opt = (name, def) => {
   return i >= 0 ? (args[i + 1] && !args[i + 1].startsWith('--') ? args[i + 1] : true) : def;
 };
 
-const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.woff2': 'font/woff2', '.svg': 'image/svg+xml', '.png': 'image/png', '.json': 'application/json', '.jpg': 'image/jpeg' };
+const MIME = { '.webp': 'image/webp', '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.woff2': 'font/woff2', '.svg': 'image/svg+xml', '.png': 'image/png', '.json': 'application/json', '.jpg': 'image/jpeg' };
 function serve() {
   return new Promise((resolve) => {
     const server = http.createServer((req, res) => {
@@ -35,6 +35,8 @@ function serve() {
   });
 }
 
+// PW_CHROMIUM points at a Chromium binary when the Playwright version here has no matching browser download.
+const LAUNCH = process.env.PW_CHROMIUM ? { executablePath: process.env.PW_CHROMIUM } : {};
 const BROWSER_ARGS = ['--font-render-hinting=none', '--disable-lcd-text', '--force-color-profile=srgb', '--hide-scrollbars', '--disable-gpu-vsync', '--run-all-compositor-stages-before-draw'];
 
 async function openPage(browser, port, only) {
@@ -63,7 +65,7 @@ async function stills(port) {
   const times = String(opt('stills')).split(',').map(Number);
   const outdir = opt('outdir', path.join(ROOT, 'build', 'stills'));
   fs.mkdirSync(outdir, { recursive: true });
-  const browser = await chromium.launch({ args: BROWSER_ARGS });
+  const browser = await chromium.launch({ ...LAUNCH, args: BROWSER_ARGS });
   const page = await openPage(browser, port, opt('only', null));
   for (const t of times) {
     const buf = await frame(page, t);
@@ -74,15 +76,22 @@ async function stills(port) {
   await browser.close();
 }
 
-function encoder(out, fps) {
-  const ff = spawn('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', String(fps), '-c:v', 'png', '-i', '-',
-    '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '10', '-pix_fmt', 'yuv444p', '-g', '60', out], { stdio: ['pipe', 'inherit', 'inherit'] });
+// Motion blur: every output frame is the linear-light average of `mb` sub-frames spread over the open
+// part of the shutter (0.5 = 180°). The page is seeked to each sub-frame time; ffmpeg does the accumulation.
+function encoder(out, fps, mb = 1) {
+  const vf = mb > 1
+    ? ['-vf', `format=gbrp16le,lutrgb=r='pow(val/maxval\\,2.2)*maxval':g='pow(val/maxval\\,2.2)*maxval':b='pow(val/maxval\\,2.2)*maxval',`
+        + `tmix=frames=${mb},select='not(mod(n+1\\,${mb}))',setpts=N/(${fps}*TB),`
+        + `lutrgb=r='pow(val/maxval\\,1/2.2)*maxval':g='pow(val/maxval\\,1/2.2)*maxval':b='pow(val/maxval\\,1/2.2)*maxval'`]
+    : [];
+  const ff = spawn('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', String(fps * mb), '-c:v', 'png', '-i', '-',
+    ...vf, '-r', String(fps), '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '8', '-pix_fmt', 'yuv444p', '-g', '60', out], { stdio: ['pipe', 'inherit', 'inherit'] });
   const done = new Promise((resolve, reject) => ff.on('close', (code) => (code === 0 ? resolve() : reject(new Error(`ffmpeg ${code}`)))));
   return { ff, done };
 }
 
 async function video(port) {
-  const probe = await chromium.launch({ args: BROWSER_ARGS });
+  const probe = await chromium.launch({ ...LAUNCH, args: BROWSER_ARGS });
   const p0 = await openPage(probe, port, opt('only', null));
   const { duration, fps } = await p0.evaluate(() => ({ duration: window.__duration, fps: window.__fps }));
   await probe.close();
@@ -90,6 +99,8 @@ async function video(port) {
   const to = Math.min(Number(opt('to', duration)), duration);
   const f0 = Math.round(from * fps), f1 = Math.round(to * fps);
   const workers = Number(opt('workers', 4));
+  const mb = Math.max(1, Number(opt('mb', 1)));           // sub-frames per frame (motion blur)
+  const shutter = Number(opt('shutter', 0.5));             // fraction of the frame interval the shutter is open
   const out = path.resolve(opt('out', path.join(ROOT, 'build', 'frames.mkv')));
   const segdir = path.join(path.dirname(out), 'segments');
   fs.mkdirSync(segdir, { recursive: true });
@@ -104,12 +115,14 @@ async function video(port) {
     jobs.push({ a, b, seg });
   }
   await Promise.all(jobs.map(async (job) => {
-    const browser = await chromium.launch({ args: BROWSER_ARGS });
+    const browser = await chromium.launch({ ...LAUNCH, args: BROWSER_ARGS });
     const page = await openPage(browser, port, opt('only', null));
-    const { ff, done } = encoder(job.seg, fps);
+    const { ff, done } = encoder(job.seg, fps, mb);
     for (let i = job.a; i < job.b; i++) {
-      const buf = await frame(page, i / fps);
-      if (!ff.stdin.write(buf)) await new Promise((r) => ff.stdin.once('drain', r));
+      for (let k = 0; k < mb; k++) {
+        const buf = await frame(page, (i + (k / mb) * shutter) / fps);
+        if (!ff.stdin.write(buf)) await new Promise((r) => ff.stdin.once('drain', r));
+      }
       rendered++;
       if (rendered % 60 === 0) {
         const el = (Date.now() - started) / 1000;

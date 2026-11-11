@@ -214,12 +214,16 @@ export function lineInfo(id, sceneStart = 0) {
 
 /** Register a scene module. def: {id, pre, post, z, setup(ctx), render(t, ctx)} */
 export function addScene(def) {
-  const info = TL.scenes.find((s) => s.id === def.id);
+  const order = TL.scenes.findIndex((s) => s.id === def.id);
+  const info = TL.scenes[order];
   if (!info) throw new Error(`scene ${def.id} not in timeline`);
   const root = h('div', { class: 'scene', 'data-scene': def.id });
   const ctx = {
     id: def.id,
     root,
+    order,
+    first: order === 0,
+    last: order === TL.scenes.length - 1,
     start: info.start,
     end: info.end,
     dur: info.end - info.start,
@@ -227,8 +231,30 @@ export function addScene(def) {
     /** Scene-relative start (or end) time of a VO clause. */
     cue: (id, seg = 0, which = 0) => lineInfo(id, info.start).segs[seg][which],
   };
-  scenes.push({ def, ctx, pre: def.pre ?? 0.8, post: def.post ?? 0.8, z: def.z ?? scenes.length });
+  // every scene stays mounted a little past its cut so the camera move can carry it across
+  scenes.push({ def, ctx, pre: Math.max(def.pre ?? 0.8, CAM.inPre), post: Math.max(def.post ?? 0.8, CAM.outPost), z: def.z ?? scenes.length });
   return ctx;
+}
+
+// ---------------------------------------------------------------- scene camera
+// Each scene is shot by a virtual camera: a slow push-in for its whole length, a fast "fly out" towards the
+// viewer as it ends and a settle from further back as the next one starts. With the renderer's motion blur
+// the fly-through reads as one continuous move through the film rather than a cut.
+export const CAM = { push: 0.026, inFrom: 0.86, inDur: 1.0, inPre: 0.12, inFade: 0.26, outTo: 0.42, outDur: 0.52, outPost: 0.12, outFade: 0.2 };
+export function sceneCamera(ctx, t) {
+  const u = clamp((t - ctx.start) / ctx.dur);
+  let s = 1 + CAM.push * u, o = 1;
+  if (!ctx.first) {
+    const a = t - (ctx.start - CAM.inPre);
+    s *= lerp(CAM.inFrom, 1, E.outQuart(clamp(a / CAM.inDur)));
+    o *= smooth(clamp(a / CAM.inFade));
+  }
+  if (!ctx.last) {
+    const b = (t - (ctx.end - CAM.outDur)) / (CAM.outDur + CAM.outPost);
+    s *= 1 + CAM.outTo * E.inCubic(clamp(b));
+    o *= 1 - smooth(clamp((t - (ctx.end + CAM.outPost - CAM.outFade)) / CAM.outFade));
+  }
+  return { s, o };
 }
 export function addGlobal(def) { globals.push(def); }
 
@@ -252,6 +278,9 @@ export function seek(t) {
       if (s.ctx.root.style.display !== 'block') s.ctx.root.style.display = 'block';
       const r = s.def.render(t - s.ctx.start, s.ctx, t);
       if (r && typeof r.then === 'function') pending.push(r);
+      const cam = s.def.camera === false ? { s: 1, o: 1 } : sceneCamera(s.ctx, t);
+      s.ctx.root.style.transform = `scale(${cam.s.toFixed(5)})`;
+      s.ctx.root.style.opacity = cam.o.toFixed(3);
     } else if (s.ctx.root.style.display !== 'none') {
       s.ctx.root.style.display = 'none';
     }

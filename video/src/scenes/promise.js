@@ -50,7 +50,7 @@ addScene({
     const D = ctx.dur;
     const L = (id) => ctx.line(id);
     const c1 = L('p1').start, c1e = L('p1').end, c2 = L('p2').start;
-    const out = prog(t, D - 0.95, 0.6, E.inCubic);
+    const out = ctx.last ? prog(t, D - 0.95, 0.6, E.inCubic) : prog(t, D - 0.32, 0.32, E.inCubic); // leaves with the camera's fly-out
 
     this.glow.style.opacity = (env(t, 0, D, 1.2, 0.9) * lerp(0.7, 1, 0.5 + 0.5 * Math.sin(t * 1.3))).toFixed(3);
 

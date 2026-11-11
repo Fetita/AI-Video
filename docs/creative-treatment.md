@@ -304,24 +304,35 @@ its board and the story "The Slowest Guide in the Woods" are original, and the p
 
 See `README.md` for commands to re-render after edits.
 
-## 11. LinkedIn cut (1:29)
+## 11. Hero cut: the LinkedIn overview (1:32)
 
-`out/eagerworks-ai-studio-linkedin.mp4`, built from `audio/vo_script.linkedin.json`. Purpose: reach people who don't know Eagerworks yet, in a feed where most viewers watch muted and decide in the first seconds.
+`out/eagerworks-ai-studio-linkedin.mp4`, built from `audio/vo_script.linkedin.json`. Purpose: reach people who don't know Eagerworks yet, in a feed where most viewers watch muted and decide in the first seconds. It is also the cut that carries the film's cinematic pipeline: 3D shots, motion blur, a moving camera and a finishing grade.
 
 | Time | Section | Why it stays |
 |---|---|---|
-| 0:00.0 – 0:19.2 | Hook + brand reveal (unchanged) | Fast vignette cuts from the first second; says what Eagerworks AI Studio is. |
-| 0:19.2 – 0:37.2 | 01 Computer vision · Robotics | The film's most kinetic case, and "Some problems need more than an API call" works as a cold open. |
-| 0:37.2 – 0:56.4 | 02 Generative AI · Search · Recommendation | The relatable one: a chat assistant that turns a brief into a shortlist. |
-| 0:56.4 – 1:13.2 | How we work | The differentiator: not just another AI studio; Listen · Adapt · Stay. |
-| 1:13.2 – 1:28.8 | Finale + CTA | The recap wall still shows every capability (field, packing line, story, documents) in a few seconds. |
+| 0:00.0 – 0:19.2 | Hook + brand reveal | Four inputs, each full-frame with its own push-in, from the first second; says what Eagerworks AI Studio is. |
+| 0:19.2 – 0:38.4 | 01 Computer vision · Robotics | The film's most kinetic case; it now ends on a photoreal robot arm replaying a human demonstration. |
+| 0:38.4 – 0:57.6 | 02 Generative AI · Search · Recommendation | The relatable one: a chat assistant that turns a brief into a shortlist. |
+| 0:57.6 – 1:14.4 | How we work | The differentiator: not just another AI studio; Listen · Adapt · Stay. |
+| 1:14.4 – 1:32.4 | Finale + CTA | The recap wall shows every capability, then collapses into the 3D logo. |
 
-Removed: the introduction (the hook already says who we are), the field & packing-line, story and documents cases, and the in-house product chapter. Their capabilities still flash by on the finale wall.
+Removed from the full film: the introduction (the hook already says who we are), the field & packing-line, story and documents cases, and the in-house product chapter. Their capabilities still flash by on the finale wall.
 
-Changes for the feed:
-- **Burned-in captions** (large, high-contrast, bottom-centre, phrase by phrase), skipped where the same words are already on screen as typography (the thesis, "Not just another AI studio.", the logo, tagline and CTA).
-- **Tighter pacing:** shorter pauses in the search and How-we-work narration, shorter scene holds. Same voice, same lines.
-- **Hand-offs re-made for the new neighbours:** robotics now ends on the violet line the search brief opens from; the search assistant's dot blooms out instead of carrying into the story scene.
+**The 3D shots (Blender Cycles, procedural, built in Python)**
+- **Robot arm** (`scripts/render_robot.py`, 6 s): a white six-axis-style arm in a black studio with violet and blue rim lights and a polished floor carrying a faint tracking grid. It lowers onto an amber part, grips it, carries it along the demonstrated arc and releases it on the place pad, while the camera dollies around the cell with the focus on the gripper. The film draws its overlays in the same camera with the same kinematics (`video/src/lib/robot-shot.js`): the dotted human-demonstration path and keypoint hand, the violet replay trail, the joint pose estimate, pick/place labels and a small telemetry readout (joint angles, tool error).
+- **Face detection** (`scripts/render_room.py`): the feed is a rendered room with three display mannequins behind a workbench, daylight from a window, shallow depth of field. Mannequins are deliberate: the beat shows detection and anonymisation without showing anyone's face. The privacy filter is a real mosaic of the image under each box.
+- **Logo sting** (`scripts/render_logo.py`, 3 s): the wall's tiles collapse into three strokes of violet light, which turn out to be light tubes inside the cut-out "E" of the Eagerworks icon, extruded as black glass. Strip lights streak across the glass as the camera orbits and pulls back; the slab turns white-hot as it comes frontal, a ring of light leaves it, and that frame dissolves into the flat lockup, which scales down into place as the wordmark slides out and the name is spoken.
+
+**Camera and finish**
+- **Scene camera:** every scene pushes in slowly; a scene change is a fly-through (the outgoing scene accelerates towards the viewer, the incoming one settles from further back) crossed by a band of violet light, with a whoosh and a soft thump in the sound design. These moves replace the earlier hand-off lines.
+- **Motion blur:** each frame averages 8 sub-frames in linear light (180° shutter), so fast moves streak the way a camera would record them.
+- **Atmosphere:** two slow brand-coloured lights and dust drifting at several depths behind every scene; the lights swell on each scene change.
+- **Grade:** a tight glow and a wider, slightly violet halation around highlights, a gentle contrast curve and fine grain, applied in the delivery encode.
+
+**For the feed**
+- **Burned-in captions** (large, bottom-centre, phrase by phrase, on a blurred glass plate); the words brighten as they are spoken. Skipped where the same words are already on screen as typography (the thesis, "Not just another AI studio.", the logo, tagline and CTA).
+- **Tighter pacing:** shorter pauses in the search and How-we-work narration; the narration starts under a second in.
+- **Room for the two hero shots:** the robotics scene holds 1.2 s longer for the arm, and the finale leaves 3.2 s between "…ships the whole system." and "Eagerworks AI Studio." for the logo sting, where the music drops to a riser and lands its biggest hit as the glass turns white.
 - **Chapters renumbered** 01–02.
 
 ## 12. Themed LinkedIn cuts
