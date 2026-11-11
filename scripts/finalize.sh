@@ -9,7 +9,7 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 FRAMES="${1:-$ROOT/video/build/frames.mkv}"
 MIX="${2:-$ROOT/audio/build/mix.wav}"
 OUT="${3:-$ROOT/out/eagerworks-ai-studio.mp4}"
-CRF="${CRF:-17}"
+CRF="${CRF:-20}"
 if [ "${GRADE:-1}" = "0" ]; then
   FILTER="[0:v]noise=alls=2:allf=t+u,format=yuv420p[v]"
 else

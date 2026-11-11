@@ -325,7 +325,7 @@ Removed from the full film: the introduction (the hook already says who we are),
 
 **Camera and finish**
 - **Scene camera:** every scene pushes in slowly; a scene change is a fly-through (the outgoing scene accelerates towards the viewer, the incoming one settles from further back) crossed by a band of violet light, with a whoosh and a soft thump in the sound design. These moves replace the earlier hand-off lines.
-- **Motion blur:** each frame averages 8 sub-frames in linear light (180° shutter), so fast moves streak the way a camera would record them.
+- **Motion blur:** each frame averages 6 sub-frames in linear light (180° shutter), so fast moves streak the way a camera would record them.
 - **Atmosphere:** two slow brand-coloured lights and dust drifting at several depths behind every scene; the lights swell on each scene change.
 - **Grade:** a tight glow and a wider, slightly violet halation around highlights, a gentle contrast curve and fine grain, applied in the delivery encode.
 

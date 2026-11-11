@@ -41,7 +41,7 @@ export function shotCamera(tau) {
 function polyline(g, pts) { g.beginPath(); pts.forEach((q, i) => (i ? g.lineTo(q.x, q.y) : g.moveTo(q.x, q.y))); g.stroke(); }
 
 /** Overlays for the plate at shot time tau (a = overall opacity). */
-export function drawRobotOverlay(g, tau, a) {
+export function drawRobotOverlay(g, tau, a, tauReadout = tau) {
   if (a <= 0.001) return;
   const cam = shotCamera(tau);
   const P = (q) => cam.project(q);
@@ -115,9 +115,11 @@ export function drawRobotOverlay(g, tau, a) {
   const ta = clamp((tau - 1.2) / 0.5);
   if (ta > 0) {
     const x0 = 1486, y0 = 196, w = 274, rowH = 30;
+    // the readout ticks at 10 Hz (tauReadout is held between ticks), so its digits stay legible under motion blur
+    const kr = ik(tip(tauReadout)), Ur = moveU(tauReadout);
     const deg = (r) => `${(r * 180 / Math.PI).toFixed(1)}°`;
-    const err = U > 0 && U < 0.999 ? 0.6 + 0.5 * hash(Math.floor(tau * 12), 3) : 0.4;
-    const rows = [['J1', 'BASE', deg(k.yaw)], ['J2', 'SHOULDER', deg(k.a1)], ['J3', 'ELBOW', deg(Math.PI - k.a2)], ['TCP', 'ERROR', `${err.toFixed(1)} mm`]];
+    const err = Ur > 0 && Ur < 0.999 ? 0.6 + 0.5 * hash(Math.round(tauReadout * 10), 3) : 0.4;
+    const rows = [['J1', 'BASE', deg(kr.yaw)], ['J2', 'SHOULDER', deg(kr.a1)], ['J3', 'ELBOW', deg(Math.PI - kr.a2)], ['TCP', 'ERROR', `${err.toFixed(1)} mm`]];
     g.save();
     g.globalAlpha = a * ta;
     g.textBaseline = 'middle';

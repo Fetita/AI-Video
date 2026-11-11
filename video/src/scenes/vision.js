@@ -281,7 +281,7 @@ addScene({
     R.append(this.dsPanel);
   },
 
-  render(t, ctx) {
+  render(t, ctx, T) {
     const g = this.g;
     g.clearRect(0, 0, 1920, 1080);
     this.hud(t);
@@ -393,7 +393,7 @@ addScene({
     let pending;
     if (rbIn > 0) {
       pending = this.robot.show(Math.max(0, tau));
-      drawRobotOverlay(g, tau, rbIn);
+      drawRobotOverlay(g, tau, rbIn, tau - (T - Math.floor(T * 10 + 1e-6) / 10));
       tag(g, 200, 200, 'DATA PIPELINES FOR ROBOTICS', { a: rbIn, bg: null, fg: 'rgba(255,255,255,0.7)', size: 13, anchor: 'bl', pad: 0 });
     }
     return pending;

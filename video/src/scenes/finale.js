@@ -11,7 +11,7 @@ import { makeClip } from '../lib/clip.js';
 const LOGO3D = { frames: 90, fps: 30, move: 2.5, endHeight: 300 };
 // where the three light tubes sit in the plate's first frames (screen px): the tiles collapse onto them
 const TUBES = [[700, 470, 1090, 50], [670, 670, 940, 390], [620, 960, 1010, 560]];
-const LOCK_H = 108;
+const LOCK_H = 132;
 
 const TILES = [
   ['hands', 'Hand tracking'], ['faces', 'Face detection'], ['tracking3d', '3D tracking'], ['dataset', 'Custom datasets'], ['benchmark', 'Model benchmarking'],
@@ -67,12 +67,12 @@ addScene({
     const iconW = LOCK_H * (ICON_VIEWBOX[2] / VIEWBOX[3]);
     this.lockWrap = h('div', { class: 'abs', style: { left: '0', top: '0', transformOrigin: `${(iconW / 2).toFixed(1)}px ${LOCK_H / 2}px` } }, this.lock.el);
     R.append(this.lockWrap);
-    this.tagline = h('div', { class: 'abs', style: { left: '0', width: '1920px', top: '642px', textAlign: 'center', fontSize: '46px', fontWeight: 450, letterSpacing: '-0.015em', color: 'var(--text)' } });
+    this.tagline = h('div', { class: 'abs', style: { left: '0', width: '1920px', top: '606px', textAlign: 'center', fontSize: '58px', fontWeight: 450, letterSpacing: '-0.015em', color: 'var(--text)' } });
     this.tagSpans = words(this.tagline, 'From AI ideas to real-world products.');
     R.append(this.tagline);
-    this.cta = h('div', { class: 'abs', style: { left: '0', width: '1920px', top: '760px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '18px' } });
-    this.ctaBtn = h('div', { style: { display: 'flex', alignItems: 'center', gap: '16px', height: '66px', padding: '0 34px', borderRadius: '999px', background: 'var(--accent-grad)', color: '#ffffff', fontSize: '25px', fontWeight: 600, letterSpacing: '-0.005em', boxShadow: '0 0 40px rgba(130,52,254,0.35)' } }, 'Let’s build what’s next', h('span', { style: { fontSize: '26px' } }, '→'));
-    this.url = h('div', { class: 'kicker', style: { color: 'var(--text2)', fontSize: '15px', letterSpacing: '0.22em' } }, 'eagerworks.com');
+    this.cta = h('div', { class: 'abs', style: { left: '0', width: '1920px', top: '762px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '18px' } });
+    this.ctaBtn = h('div', { style: { display: 'flex', alignItems: 'center', gap: '18px', height: '80px', padding: '0 42px', borderRadius: '999px', background: 'var(--accent-grad)', color: '#ffffff', fontSize: '30px', fontWeight: 600, letterSpacing: '-0.005em', boxShadow: '0 0 40px rgba(130,52,254,0.35)' } }, 'Let’s build what’s next', h('span', { style: { fontSize: '31px' } }, '→'));
+    this.url = h('div', { class: 'kicker', style: { color: 'var(--text2)', fontSize: '19px', letterSpacing: '0.22em' } }, 'eagerworks.com');
     this.cta.append(this.ctaBtn, this.url);
     R.append(this.cta);
     this.black = h('div', { class: 'layer', style: { background: '#000', zIndex: 60 } });
@@ -109,10 +109,13 @@ addScene({
       const rot = lerp(0, (Math.atan2(y2 - y1, x2 - x1) * 180) / Math.PI, e);
       tl.el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, ${((1 - inP) * -300).toFixed(1)}px) rotate(${rot.toFixed(2)}deg) scale(${sx.toFixed(4)}, ${sy.toFixed(4)})`;
       tl.el.style.opacity = (inP * (1 - prog(t, t3d + 0.05, 0.3))).toFixed(3);
-      tl.el.style.filter = cp > 0.4 ? `brightness(${(1 + cp * 2.4).toFixed(2)}) saturate(0)` : 'none';
-      tl.el.style.borderColor = cp > 0.3 ? 'rgba(130,52,254,0.9)' : 'rgba(255,255,255,0.14)';
-      tl.el.style.background = cp > 0.5 ? '#8234fe' : '#0b0d10';
-      tl.el.firstChild.style.opacity = (1 - clamp((cp - 0.45) / 0.3)).toFixed(3);
+      // the picture drains away and the tile becomes a bar of violet light
+      const lit = clamp((cp - 0.3) / 0.4);
+      tl.el.style.filter = cp > 0.2 ? `brightness(${(1 + cp * 0.22).toFixed(2)})` : 'none';
+      tl.el.style.borderColor = lit > 0 ? 'rgba(184,156,255,0.95)' : 'rgba(255,255,255,0.14)';
+      tl.el.style.background = lit > 0 ? '#8f4bff' : '#0b0d10';
+      tl.el.style.boxShadow = lit > 0 ? `0 0 ${(60 * lit).toFixed(0)}px ${(14 * lit).toFixed(0)}px rgba(130,52,254,${(0.85 * lit).toFixed(3)})` : '0 24px 60px -20px rgba(0,0,0,0.8)';
+      for (const child of tl.el.children) if (child !== tl.hl) child.style.opacity = (1 - lit).toFixed(3);
     });
     const dimA = env(t, cOne - 0.3, tCol + 0.35, 0.4, 0.45);
     this.dim.style.opacity = dimA.toFixed(3);
@@ -156,7 +159,7 @@ addScene({
     const iconW = lh * (ICON_VIEWBOX[2] / VIEWBOX[3]);
     if (!this.lockW) { const r = this.lock.el.getBoundingClientRect(); if (r.width > 10) this.lockW = r.width / (this.lockS || 1); }
     const lw = this.lockW || 1500;
-    const lx = (1920 - lw) / 2, ly = 520 - lh / 2 - 60;
+    const lx = (1920 - lw) / 2, ly = 448 - lh / 2;
     const settle = prog(t, cName + 0.22, 1.05, E.inOutCubic);
     const sc = lerp(LOGO3D.endHeight / lh, 1, settle);
     this.lockS = sc;
@@ -175,7 +178,7 @@ addScene({
     if (sw > 0 && t < D - 0.4) {
       g.save(); g.globalAlpha = fadeOut;
       g.fillStyle = C.accent; g.shadowColor = 'rgba(130,52,254,0.7)'; g.shadowBlur = 14;
-      g.fillRect(960 - 60 * sw, 722, 120 * sw, 3);
+      g.fillRect(960 - 70 * sw, 706, 140 * sw, 3);
       g.restore();
     }
     return pending;

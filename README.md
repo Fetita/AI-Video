@@ -1,12 +1,14 @@
 # Eagerworks AI Studio: promotional film
 
-A 3:06 premium B2B film positioning **Eagerworks AI Studio** as the partner that turns
+A premium B2B film positioning **Eagerworks AI Studio** as the partner that turns
 AI capabilities into real products, workflows and measurable outcomes.
 
-**Deliverable:** [`out/eagerworks-ai-studio.mp4`](out/eagerworks-ai-studio.mp4) (1920×1080, 30 fps, H.264 + AAC, −14 LUFS)
-**Hero cut** (the LinkedIn overview, rebuilt with the cinematic pipeline below):
-[`linkedin`](out/eagerworks-ai-studio-linkedin.mp4) (1:32, burned-in captions)
-**Themed LinkedIn cuts** (previous pipeline; rebuild them with the same commands to get the new look):
+**Hero cut:** [`out/eagerworks-ai-studio-linkedin.mp4`](out/eagerworks-ai-studio-linkedin.mp4)
+(1:32, 1920×1080, 30 fps, H.264 + AAC, −14 LUFS, burned-in captions; poster frame:
+[`…-poster.jpg`](out/eagerworks-ai-studio-linkedin-poster.jpg)). The LinkedIn overview, rebuilt with the cinematic
+pipeline described below: 3D shots, motion blur, a moving camera and a finishing grade.
+**Other cuts** (renders from the previous pipeline; rebuilding them with the commands below picks up the new look and timings):
+[full film](out/eagerworks-ai-studio.mp4) (3:06) ·
 [`linkedin-cv`](out/eagerworks-ai-studio-linkedin-cv.mp4) (1:50, every computer-vision case) ·
 [`linkedin-genai`](out/eagerworks-ai-studio-linkedin-genai.mp4) (1:44, generative and document AI)
 **Creative treatment** (narrative, storyboard, timings, VO script, on-screen text, visual & sound direction, reference mapping):
@@ -27,7 +29,7 @@ the story character sheets, and a clip of Eagerworks' own packing-line vision pr
   same camera and kinematics, so they sit exactly on the render. The finale is a logo sting: the Eagerworks icon as
   black glass with violet light tubes that turns white-hot and becomes the flat lockup (`scripts/render_logo.py`).
   The face-detection beat plays over a rendered room of display mannequins (`scripts/render_room.py`).
-- **Motion blur.** Every frame is the linear-light average of several sub-frames (`render.mjs --mb 8`, a 180° shutter).
+- **Motion blur.** Every frame is the linear-light average of several sub-frames (`render.mjs --mb 6`, a 180° shutter).
 - **A scene camera.** Each scene pushes in slowly; scene changes are fly-throughs (the outgoing scene rushes past,
   the next one settles from further back) with a band of light crossing the frame (`engine.js`, `lib/atmosphere.js`).
 - **Atmosphere.** Two slow brand-coloured lights, drifting dust at several depths and a dithered gradient replace the flat background.
@@ -66,12 +68,12 @@ scripts/
   finalize.sh           delivery encode (grade, grain, H.264 High, AAC, faststart)
   contact_sheet.py      stills → review sheet
 docs/creative-treatment.md
-out/eagerworks-ai-studio.mp4
+out/                    delivery files (one per cut) and the hero cut's poster frame
 ```
 
 ## Rebuild
 
-Requirements: Node 22 with Playwright 1.56 and Chromium, Python 3.11 with `numpy scipy soundfile pyloudnorm kokoro-onnx`, and ffmpeg.
+Requirements: Node 22 with Playwright 1.56 and Chromium, Python with `numpy scipy soundfile pyloudnorm kokoro-onnx`, ffmpeg, and (for the Blender renders only) a Python 3.11 venv with `bpy==5.0.1`.
 Kokoro model files (`kokoro-v1.0.onnx`, `voices-v1.0.bin`) come from the
 [kokoro-onnx release](https://github.com/thewh1teagle/kokoro-onnx/releases/tag/model-files-v1.0); set `KOKORO_DIR` to their folder.
 
@@ -87,10 +89,10 @@ python3 ../scripts/render_logo.py --samples 36 --res 0.75                       
 python3 ../scripts/render_room.py && ../scripts/pack_plates.sh
 cd ../video && npm install && node extract_characters.mjs && ../scripts/extract_clips.sh && ../scripts/make_recap.sh
 
-# 3. picture (--mb 8 = motion blur from 8 sub-frames per frame; omit it for a fast draft)
+# 3. picture (--mb 6 = motion blur from 6 sub-frames per frame, ≈6× the render time; omit it for a fast draft)
 #    review stills with:  node render.mjs --stills 12.5,30 [--only search]
 #    if this Playwright version has no browser download, point PW_CHROMIUM at a Chromium binary
-node render.mjs --video --workers 4 --mb 8 --out build/frames.mkv
+node render.mjs --video --workers 4 --mb 6 --out build/frames.mkv
 
 # 4. sound
 cd ../audio && python3 music.py && python3 sfx.py && python3 mix.py
@@ -113,7 +115,7 @@ full film's, so the two never overwrite each other:
 cd audio && export CUT=linkedin
 python3 tts.py && python3 build_timeline.py          # → build/vo-linkedin/, video/src/timeline-linkedin.js
 python3 music.py && python3 sfx.py && python3 mix.py # → build/mix-linkedin.wav
-cd ../video && node render.mjs --video --workers 4 --mb 8 --query cut=linkedin --out build/frames-linkedin.mkv
+cd ../video && node render.mjs --video --workers 4 --mb 6 --query cut=linkedin --out build/frames-linkedin.mkv
 cd .. && scripts/finalize.sh video/build/frames-linkedin.mkv audio/build/mix-linkedin.wav out/eagerworks-ai-studio-linkedin.mp4
 ```
 
