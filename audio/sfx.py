@@ -362,6 +362,9 @@ if 'story' in SC:
     at(s + 3.4, s_whoosh(1.1, 400, 1600, 14), -30)
     for i, off in enumerate([0.35, 0.85, 1.35]):
         at(cPlace + off + 0.5, s_clack([1.08, 0.9, 1.15][i], 20 + i), -20, -0.3 + i * 0.3)
+    # the 3D pieces hop once after landing (scripts/render_board.py: drop 0.55 s, hop 0.22 s): a softer second clack
+    for i, (tl, pitch) in enumerate([(s + 0.15, 0.95), (cPlace + 0.35, 1.08), (cPlace + 0.85, 0.9), (cPlace + 1.35, 1.15)]):
+        at(tl + 0.55 + 0.22, s_clack(pitch * 1.06, 50 + i), -31, -0.3 + i * 0.2)
     for i in range(4):
         at(cRec + i * 0.28, s_lock(), -26, -0.6 + i * 0.4)
     for k in range(4):
@@ -431,6 +434,7 @@ if 'agri' in SC:
     at(cMap + 0.3, s_whoosh(0.6, 2200, 600, 21), -27)
     at(cMap + 1.3, s_bell(1760, 0.8, 0.3), -28)
     at(cPack - 0.15, s_whoosh(0.5, 600, 2500, 22), -26)
+    at(cPack - 0.2, s_whoosh(1.3, 300, 1300, 38), -31)                 # the line camera swings up overhead (render_packline.py)
     at(cPack - 0.1, s_belt(s + D - cPack + 0.8), -33)
     BV, LINE_DX = 250, 1080 + 110
     for k in range(40):

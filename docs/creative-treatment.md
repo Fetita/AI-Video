@@ -384,3 +384,20 @@ The hero cut retired the old hand-off lines only at its own scene changes. The f
 
 Their old sound cues (the intro's exit whoosh, the field's hand-off whoosh, the search riser, the in-house exit whoosh) are removed, since the scene-change whoosh now covers each cut. The burned-in captions stay a LinkedIn-only feature: the full film has none.
 
+
+## 14. Every client case in 3D
+
+The hero cut's photoreal robot arm set the bar; the other client cases were still line art and sprites. They are now
+Blender (Cycles) shots too, built from procedural scenes and procedural materials only, lit like live action, with the
+film's overlays drawn on top in the same camera.
+
+| Beat | Shot | What it shows |
+|---|---|---|
+| 02 Field · establishing (0–6.6 s of the chapter) | `tractor` | Golden hour on a lettuce field ringed by woods, the sun a few degrees above the horizon behind the machine. A graphite tractor with mud on its paint, dusty treaded tyres and its work lights on drives the rows; its boom camera reaches over them. The camera tracks alongside, then pushes in behind the boom camera and looks down where it looks: the cut to its feed. The `CAMERA` tag, the violet field of view and the data packets start from the lens and footprint the shot exports. |
+| 02 Field · live feed | `feed` | That feed, straight down under the boom's LED flood: butterhead lettuces with translucent, ruffled leaves and dew, tilled loam with clods, stones and straw. The camera is orthographic at the film's own pixel scale and every plant comes from the film's field model, so the boxes, IDs, GAP and OFF-ROW flags, measurements and GPS tags land on the rendered plants unchanged. |
+| 02 Field · packing line | `packline` | A packhouse conveyor at night: worn cleated belt, brushed steel rails, hanging LED fixtures, an epoxy floor. Ribbed orange, deep, pale and green pumpkins ride their lanes. The shot opens low and oblique and rises to the overhead line camera before the IDs appear; boxes, trails and diameters follow each pumpkin's exported position. |
+| 04 Story · board | `board` | A varnished walnut board with engraved slots on an oak table, window light and a warm lamp. The pieces are thick bevelled beech discs with the characters printed on an inset face. The sloth lands in close-up, the camera pulls back to the whole board, and the other three drop in with a small hop and settle (each hop has its own soft clack). Reticles, labels and relation lines follow the exported pieces. |
+| 01 Vision · 3D tracking | `tracking` | The robot shot's black studio with a real workbench (oak top, steel legs, parts box, nuts, screwdriver) and the tracked devices: a head camera and two LED wrist bands. Poses and camera come from the film's tracking model, so the estimate, ground truth, frustum and wrist trails are drawn by the film over the real set. |
+
+The map beat (every counted plant on a field outline) and the document and search interfaces stay graphic on purpose:
+they are data views, not places.
