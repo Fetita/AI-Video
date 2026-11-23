@@ -8,6 +8,8 @@ import { v3, add, sub, mul, norm, camera, cross } from '../lib/three.js';
 import { drawEgo } from '../lib/ego.js';
 import { makeClip } from '../lib/clip.js';
 import { SHOT, drawRobotOverlay } from '../lib/robot-shot.js';
+import { PLATES, makePlate, plateTime } from '../lib/shot.js';
+import { TRACK } from '../lib/tracking.js';
 
 const FRAME = { x: 150, y: 118, w: 1620, h: 826 };
 const STACK = [['Capture', 'Ego + fixed cameras'], ['Annotate', 'Hands · faces · wrists'], ['Dataset', 'Custom · versioned'], ['Train', 'Detection · pose'], ['Evaluate', 'Benchmarks'], ['Deploy', 'Robot data pipeline']];
@@ -48,18 +50,12 @@ function drawRoom(g, img, mosaic, p, faceA, blurA) {
 }
 
 // ------------------------------------------------------------ 3D tracking view
-function camPath(u) {
-  // a person walking a loop around a workbench (world units = meters-ish)
-  const a = u * Math.PI * 1.6 - 0.6;
-  return v3(Math.cos(a) * 2.4, 1.6 + Math.sin(u * 30) * 0.03, Math.sin(a) * 1.6 + 0.3);
-}
+const camPath = (u) => TRACK.camPath(u);
 function drawTracking(g, t, p, a) {
   if (a <= 0.001) return;
   g.save();
   g.globalAlpha = a;
-  const az = lerp(-0.75, -0.3, p);
-  const eye = v3(Math.sin(az) * 5.6, 3.6, -Math.cos(az) * 5.6);
-  const cam = camera(eye, v3(0, 0.75, 0.3), { f: 1500, cx: 960, cy: 540 });
+  const cam = TRACK.camera(p);  // the same orbit camera the plate (scripts/render_tracking.py) was rendered with
   const P = (q) => cam.project(q);
   // floor grid
   g.lineWidth = 1;
@@ -68,12 +64,6 @@ function drawTracking(g, t, p, a) {
     g.strokeStyle = i === 0 ? 'rgba(255,255,255,0.16)' : 'rgba(255,255,255,0.06)';
     g.beginPath(); g.moveTo(s1.x, s1.y); g.lineTo(s2.x, s2.y); g.moveTo(s3.x, s3.y); g.lineTo(s4.x, s4.y); g.stroke();
   }
-  // workbench block
-  const bench = [v3(-0.9, 0, -0.5), v3(0.9, 0, -0.5), v3(0.9, 0, 0.9), v3(-0.9, 0, 0.9)];
-  const top = bench.map((q) => P(add(q, v3(0, 0.9, 0))));
-  g.fillStyle = 'rgba(255,255,255,0.05)'; g.strokeStyle = 'rgba(255,255,255,0.18)';
-  g.beginPath(); top.forEach((q, i) => (i ? g.lineTo(q.x, q.y) : g.moveTo(q.x, q.y))); g.closePath(); g.fill(); g.stroke();
-  bench.forEach((q, i) => { const b0 = P(q), b1 = top[i]; g.beginPath(); g.moveTo(b0.x, b0.y); g.lineTo(b1.x, b1.y); g.stroke(); });
   const U = p; // progress along the path
   // ground truth (dashed, full) and estimate (solid, up to now)
   g.setLineDash([6, 8]); g.strokeStyle = 'rgba(255,255,255,0.45)'; g.lineWidth = 1.5; g.beginPath();
@@ -81,16 +71,14 @@ function drawTracking(g, t, p, a) {
   g.strokeStyle = C.accent; g.lineWidth = 2.5; g.beginPath();
   for (let k = 0; k <= 120 * U; k++) { const u = k / 120; const q = P(add(camPath(u), v3(Math.sin(u * 40) * 0.025, Math.cos(u * 33) * 0.02, 0))); k ? g.lineTo(q.x, q.y) : g.moveTo(q.x, q.y); } g.stroke();
   // camera frustum at current pose
-  const c0 = camPath(U), c1 = camPath(Math.min(1, U + 0.01));
-  const fw = norm(add(sub(v3(0, 0.9, 0.2), c0), mul(norm(sub(c1, c0)), 0.4)));
-  const rt = norm(cross(fw, v3(0, 1, 0))), up = cross(rt, fw);
+  const { c0, fw, rt, up } = TRACK.head(U);
   const corner = (sx, sy) => P(add(add(add(c0, mul(fw, 0.55)), mul(rt, sx * 0.36)), mul(up, sy * 0.22)));
   const cc = P(c0), k1 = corner(-1, 1), k2 = corner(1, 1), k3 = corner(1, -1), k4 = corner(-1, -1);
   g.fillStyle = 'rgba(130,52,254,0.12)'; g.strokeStyle = C.accent; g.lineWidth = 2;
   g.beginPath(); g.moveTo(k1.x, k1.y); g.lineTo(k2.x, k2.y); g.lineTo(k3.x, k3.y); g.lineTo(k4.x, k4.y); g.closePath(); g.fill(); g.stroke();
   [k1, k2, k3, k4].forEach((k) => { g.beginPath(); g.moveTo(cc.x, cc.y); g.lineTo(k.x, k.y); g.stroke(); });
   // wrists: positions relative to the head camera, with 3 s trails
-  const wrist = (side, u) => { const c = camPath(u); const f = norm(sub(v3(0, 0.9, 0.2), c)); const r = norm(cross(f, v3(0, 1, 0))); return add(add(add(c, mul(f, 0.45)), mul(r, side * (0.24 + Math.sin(u * 17 + side) * 0.05))), v3(0, -0.55 + Math.sin(u * 23 + side * 2) * 0.06, 0)); };
+  const wrist = (side, u) => TRACK.wrist(side, u);
   [[-1, C.sky], [1, C.coral]].forEach(([side, col]) => {
     g.strokeStyle = rgba(col, 0.9); g.lineWidth = 2; g.beginPath();
     const tail = 0.12;
@@ -234,6 +222,8 @@ addScene({
     this.roomImg = h('img', { src: 'assets/renders/room.jpg', style: { display: 'none' } });
     R.append(this.roomImg);
     this.mosaic = makeCanvas(null, 8, 10, '').c;
+    this.trackPlate = makePlate(R, 'tracking');
+    this.trackPlate.el.style.opacity = 0;
     const cv = makeCanvas(R);
     this.g = cv.ctx;
     this.atlas = buildAtlas();
@@ -356,7 +346,12 @@ addScene({
     if (anyFeed > 0.001) { g.save(); g.globalAlpha = anyFeed; g.strokeStyle = 'rgba(255,255,255,0.14)'; g.lineWidth = 1; rrect(g, FRAME.x + 0.5, FRAME.y + 0.5, FRAME.w, FRAME.h, 18); g.stroke(); g.restore(); }
 
     // ---------- D: camera + wrist tracking
-    drawTracking(g, t, prog(t, cTrk - 0.1, cDs - cTrk + 0.6, E.linear) * 0.9 + 0.05, trkA);
+    // the tracking shot: a Blender plate of the bench and the tracked devices, overlays at the frame it shows
+    const trC = { cTrk, cDs }, trT0 = PLATES.tracking.t0(trC);
+    this.trackPlate.el.style.display = trkA > 0.001 ? 'block' : 'none';
+    this.trackPlate.el.style.opacity = trkA.toFixed(3);
+    const trPending = trkA > 0.001 ? this.trackPlate.show(t, trT0) : undefined;
+    drawTracking(g, t, TRACK.progress(trkA > 0.001 ? plateTime('tracking', t, trT0) : t, trC), trkA);
     if (trkA > 0.001) tag(g, 200, 200, 'CAMERA + WRIST TRACKING · 3D', { a: trkA, bg: null, fg: 'rgba(255,255,255,0.7)', size: 13, anchor: 'bl', pad: 0 });
 
     // ---------- E: dataset wall
@@ -396,6 +391,6 @@ addScene({
       drawRobotOverlay(g, tau, rbIn, tau - (T - Math.floor(T * 10 + 1e-6) / 10));
       tag(g, 200, 200, 'DATA PIPELINES FOR ROBOTICS', { a: rbIn, bg: null, fg: 'rgba(255,255,255,0.7)', size: 13, anchor: 'bl', pad: 0 });
     }
-    return pending;
+    return trPending ? Promise.all([pending, trPending]) : pending;
   },
 });

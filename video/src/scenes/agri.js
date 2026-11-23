@@ -3,9 +3,11 @@
 import { addScene, h, put, prog, E, clamp, lerp, env, makeCanvas, rng, rgba, C, hash, rrect, keys, TIMELINE } from '../engine.js';
 import { makeHud, box, tag, recHud, brackets, FONT_UI } from '../lib/ui.js';
 
-import { FRAME, ROWS, ROW_X0, ROW_DX, PITCH, SPEED, pumpkinSprite, plantAt } from '../lib/field.js';
+import { FRAME, ROWS, ROW_X0, ROW_DX, PITCH, SPEED, plantAt } from '../lib/field.js';
 import { PLATES, makePlate, shotAt } from '../lib/shot.js';
 import TRACTOR from '../shots/tractor.js';
+import PACKLINE from '../shots/packline.js';
+import { PACK } from '../lib/pack.js';
 const COUNT_Y = FRAME.y + FRAME.h * 0.64;
 const ROW_COLORS = ['#ffb35c', '#ff7b6b', '#5fe0c2', '#ff8fc8', '#ffd76b', '#c8e86b'];
 const fmt = (n) => n.toLocaleString('en-US');
@@ -33,18 +35,10 @@ addScene({
     this.tractor = makePlate(R, 'tractor');
     this.feed = makePlate(R, 'feed', { x: FRAME.x, y: FRAME.y, w: FRAME.w, h: FRAME.h, radius: 18 });
     this.feed.el.style.transformOrigin = `${960 - FRAME.x}px ${531 - FRAME.y}px`;
-    for (const p of [this.feed, this.tractor]) R.prepend(p.el);
+    this.packPlate = makePlate(R, 'packline', { x: FRAME.x, y: FRAME.y, w: FRAME.w, h: FRAME.h, radius: 18 });
+    for (const p of [this.packPlate, this.feed, this.tractor]) R.prepend(p.el);
     const cv = makeCanvas(R);
     this.g = cv.ctx;
-    this.pumpkins = [['orange', 1], ['deep', 2], ['orange', 3], ['pale', 4], ['orange', 5], ['green', 6], ['deep', 7], ['orange', 8]].map(([k, s]) => pumpkinSprite(k, s));
-    // conveyor belt texture
-    const belt = makeCanvas(null, 480, 420, '');
-    const bg = belt.ctx;
-    bg.fillStyle = '#1d2024'; bg.fillRect(0, 0, 480, 420);
-    const br = rng(8);
-    for (let i = 0; i < 900; i++) { bg.fillStyle = `rgba(255,255,255,${br() * 0.035})`; bg.fillRect(br() * 480, br() * 420, 2, 2); }
-    for (let x = 0; x < 480; x += 120) { bg.fillStyle = 'rgba(0,0,0,0.35)'; bg.fillRect(x, 0, 6, 420); bg.fillStyle = 'rgba(255,255,255,0.05)'; bg.fillRect(x + 6, 0, 2, 420); }
-    this.belt = belt.c;
     // telemetry card (tractor shot)
     this.tele = h('div', { class: 'panel', style: { left: '1290px', top: '190px', width: '440px', padding: '22px 26px' } });
     this.teleRows = [['Plants detected', '0'], ['Row', '14 of 38'], ['Position', '41.12341, −98.45672'], ['Feed', 'Live']].map(([k, v]) => {
@@ -282,52 +276,36 @@ addScene({
       tag(g, 260, 180, 'FIELD MAP · EVERY PLANT GEO-LOCATED', { a: mapA * prog(t, cMap + 0.6, 0.5), font: FONT_UI, track: 0.16, bg: null, fg: 'rgba(255,255,255,0.7)', size: 13, anchor: 'bl', pad: 0 });
     }
 
-    // ================= D: packing line — ID, track, count
+    // ================= D: packing line — ID, track, count (Blender plate; overlays follow each pumpkin's export)
     const out = ctx.last ? prog(t, D - 0.8, 0.5, E.inCubic) : prog(t, D - 0.32, 0.32, E.inCubic); // leaves with the camera's fly-out
     const packA = env(t, cPack - 0.1, D + 1, 0.45, 0.01) * (1 - out);
-    const BV = 250, LINE_X = FRAME.x + 1080;
+    const LINE_X = PACK.LINE_X, by0 = PACK.by0, bh = PACK.bh;
     let packCount = 1038, inView = 0;
+    this.packPlate.el.style.display = packA > 0.001 ? 'block' : 'none';
     if (packA > 0.001) {
+      const t0p = PLATES.packline.t0({ cPack });
+      pending.push(this.packPlate.show(t, t0p));
+      put(this.packPlate.el, { o: packA });
+      const S = shotAt(PACKLINE, 'packline', t, t0p);
+      const tq = t0p + S.i / 30;
+      // the running count: every pumpkin past the line so far (the same model the plate was built from)
+      for (let k = 0; k < PACK.N; k++) if (FRAME.x - 110 + (tq - cPack - PACK.spawn(k)) * PACK.BV > LINE_X) packCount++;
+      const at = (i, k) => { const r = PACKLINE.pts.pumpkin[i]; const q = r && r[k]; return q ? { x: q[0] + FRAME.x, y: q[1] + FRAME.y, R: q[2] } : null; };
+      const items = Object.keys(S.pt('pumpkin') || {}).map((k) => ({ k: +k, ...at(S.i, k) }));
       g.save(); g.globalAlpha = packA;
       rrect(g, FRAME.x, FRAME.y, FRAME.w, FRAME.h, 18); g.clip();
-      g.fillStyle = '#121417'; g.fillRect(FRAME.x, FRAME.y, FRAME.w, FRAME.h);
-      const by0 = FRAME.y + 200, bh = 420;
-      const off = ((t * BV) % 480 + 480) % 480;
-      for (let x = FRAME.x - 480 + off; x < FRAME.x + FRAME.w; x += 480) g.drawImage(this.belt, x, by0, 480, bh);
-      // rails
-      [by0 - 40, by0 + bh].forEach((ry) => {
-        const rg = g.createLinearGradient(0, ry, 0, ry + 40);
-        rg.addColorStop(0, '#6c737b'); rg.addColorStop(0.5, '#9aa2aa'); rg.addColorStop(1, '#4c5259');
-        g.fillStyle = rg; g.fillRect(FRAME.x, ry, FRAME.w, 40);
-        for (let x = FRAME.x + 40; x < FRAME.x + FRAME.w; x += 160) { g.fillStyle = '#3a3f45'; g.beginPath(); g.arc(x, ry + 20, 5, 0, Math.PI * 2); g.fill(); }
-      });
-      g.fillStyle = 'rgba(0,0,0,0.35)'; g.fillRect(FRAME.x, by0, FRAME.w, 16);
-      // pumpkins
-      const spawn = (k) => cPack - 2.6 + k * 0.62 + (hash(k, 4) - 0.5) * 0.2;
-      const items = [];
-      for (let k = 0; k < 40; k++) {
-        const t0 = spawn(k);
-        const x = FRAME.x - 110 + (t - t0) * BV;
-        if (x < FRAME.x - 140 || x > FRAME.x + FRAME.w + 140) { if (x > LINE_X) packCount++; continue; }
-        const y = by0 + 90 + hash(k, 8) * (bh - 180) + Math.sin((t - t0) * 1.7 + k) * 6;
-        const R = 70 + hash(k, 11) * 26;
-        const rot = hash(k, 5) * 6 + (t - t0) * 0.15;
-        items.push({ k, x, y, R, rot, spr: this.pumpkins[k % this.pumpkins.length], t0 });
-        if (x > LINE_X) packCount++;
-      }
-      items.forEach((it) => { g.save(); g.translate(it.x, it.y); g.rotate(it.rot); g.drawImage(it.spr, -it.R * 1.19, -it.R * 1.19, it.R * 2.38, it.R * 2.38); g.restore(); });
-      // count line
-      g.strokeStyle = 'rgba(255,255,255,0.8)'; g.lineWidth = 2; g.setLineDash([10, 8]);
-      g.beginPath(); g.moveTo(LINE_X, by0 - 40); g.lineTo(LINE_X, by0 + bh + 40); g.stroke(); g.setLineDash([]);
-      tag(g, LINE_X + 10, by0 - 50, 'COUNT LINE', { bg: null, fg: 'rgba(255,255,255,0.8)', size: 11, anchor: 'bl', pad: 0 });
       const ovA = prog(t, cID - 0.2, 0.5);
+      // count line (once the camera has settled overhead)
+      g.strokeStyle = `rgba(255,255,255,${(0.8 * ovA).toFixed(3)})`; g.lineWidth = 2; g.setLineDash([10, 8]);
+      g.beginPath(); g.moveTo(LINE_X, by0 - 40); g.lineTo(LINE_X, by0 + bh + 40); g.stroke(); g.setLineDash([]);
+      tag(g, LINE_X + 10, by0 - 50, 'COUNT LINE', { bg: null, fg: 'rgba(255,255,255,0.8)', a: ovA, size: 11, anchor: 'bl', pad: 0 });
       items.forEach((it) => {
         const seen = clamp((it.x - FRAME.x - 20) / 60) * ovA;
         if (seen <= 0) return;
         inView += it.x < FRAME.x + FRAME.w ? 1 : 0;
-        // trail
+        // trail: where the plate showed this pumpkin over the last 1.2 s
         g.strokeStyle = rgba(C.sky, 0.8 * seen); g.lineWidth = 2.5; g.beginPath();
-        for (let s = 0; s <= 20; s++) { const tt = t - s * 0.06; const xx = FRAME.x - 110 + (tt - it.t0) * BV; const yy = by0 + 90 + hash(it.k, 8) * (bh - 180) + Math.sin((tt - it.t0) * 1.7 + it.k) * 6; if (xx < FRAME.x) break; s ? g.lineTo(xx, yy) : g.moveTo(xx, yy); }
+        for (let s2 = 0; s2 <= 20; s2++) { const q = at(S.i - Math.round(s2 * 1.8), String(it.k)); if (!q || q.x < FRAME.x) break; s2 ? g.lineTo(q.x, q.y) : g.moveTo(q.x, q.y); }
         g.stroke();
         const counted2 = it.x > LINE_X;
         const flash = counted2 ? clamp(1 - (it.x - LINE_X) / 90) : 0;

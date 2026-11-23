@@ -3,6 +3,13 @@
 import { addScene, h, svg, put, prog, E, clamp, lerp, env, makeCanvas, rng, rgba, C, keys, makeNoise, rrect } from '../engine.js';
 import { makeHud, words, revealWords, tag, reticle, brackets, placeCaret } from '../lib/ui.js';
 import { piece, storyIllustration, PIECE_KINDS } from '../lib/story-art.js';
+import { PLATES, makePlate, shotAt } from '../lib/shot.js';
+import BOARDSHOT from '../shots/board.js';
+
+// The board, the table and the pieces are a Blender plate (scripts/render_board.py): it shows the close-up, the
+// pull-back and the drops; after the pull-back (4.6 s) its camera holds and the scene's slow zoom is a scale on
+// the plate. The reticles, labels and relation lines follow each piece's exported screen position and radius.
+const PULL_END = 4.6, ZOOM_HOLD = 0.92;
 
 // board-space layout (origin = board center)
 const SLOTS = [
@@ -16,43 +23,6 @@ const BW = 1560, BH = 880, PD = 230; // board size, piece diameter
 const STORY_TITLE = 'The Slowest Guide in the Woods';
 const STORY_TEXT = 'Pip, Wren and Kai were racing to find the hidden temple. Then a sleepy sloth named Mo smiled, stretched, and showed them the way: one slow, happy step at a time.';
 const ILLUS_ORDER = ['sky', 'sun', 'hills', 'trees', 'path', 'heroes', 'sloth', 'sparkles'];
-
-function drawBoard() {
-  const { c, ctx: g } = makeCanvas(null, BW, BH, '');
-  const n = makeNoise(11);
-  rrect(g, 0, 0, BW, BH, 48); g.save(); g.clip();
-  const base = g.createLinearGradient(0, 0, BW, BH);
-  base.addColorStop(0, '#6b4529'); base.addColorStop(0.5, '#5a3920'); base.addColorStop(1, '#43291a');
-  g.fillStyle = base; g.fillRect(0, 0, BW, BH);
-  // wood grain
-  for (let i = 0; i < 180; i++) {
-    const y0 = (i / 180) * BH;
-    g.beginPath();
-    for (let x = 0; x <= BW; x += 12) {
-      const y = y0 + n.fbm(x * 0.0016, i * 0.07, 3) * 26 + Math.sin(x * 0.003 + i) * 3;
-      x === 0 ? g.moveTo(x, y) : g.lineTo(x, y);
-    }
-    const shade = n.n2(i * 0.3, 1.7);
-    g.strokeStyle = shade > 0 ? `rgba(255,220,170,${(0.035 + shade * 0.03).toFixed(3)})` : `rgba(20,10,4,${(0.07 - shade * 0.06).toFixed(3)})`;
-    g.lineWidth = 1 + Math.abs(shade) * 2.2;
-    g.stroke();
-  }
-  // bevel
-  const bev = g.createLinearGradient(0, 0, 0, BH);
-  bev.addColorStop(0, 'rgba(255,230,190,0.10)'); bev.addColorStop(0.08, 'rgba(255,230,190,0)'); bev.addColorStop(0.92, 'rgba(0,0,0,0)'); bev.addColorStop(1, 'rgba(0,0,0,0.35)');
-  g.fillStyle = bev; g.fillRect(0, 0, BW, BH);
-  // engraved slots
-  for (const s of SLOTS) {
-    const x = s.x + BW / 2, y = s.y + BH / 2, r = PD / 2 + 10;
-    const sg = g.createRadialGradient(x, y - 10, r * 0.6, x, y, r);
-    sg.addColorStop(0, 'rgba(20,10,4,0.55)'); sg.addColorStop(1, 'rgba(20,10,4,0.2)');
-    g.fillStyle = sg; g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fill();
-    g.strokeStyle = 'rgba(255,225,180,0.16)'; g.lineWidth = 2; g.beginPath(); g.arc(x, y + 2, r, 0.15 * Math.PI, 0.85 * Math.PI); g.stroke();
-    g.strokeStyle = 'rgba(0,0,0,0.35)'; g.lineWidth = 2; g.beginPath(); g.arc(x, y - 1, r, 1.15 * Math.PI, 1.85 * Math.PI); g.stroke();
-  }
-  g.restore();
-  return c;
-}
 
 addScene({
   id: 'story',
@@ -73,20 +43,8 @@ addScene({
     this.warm = h('div', { class: 'layer', style: { background: 'radial-gradient(ellipse 60% 55% at 50% 50%, rgba(255,170,90,0.10), transparent 70%)' } });
     R.append(this.warm);
 
-    this.table = h('div', { class: 'abs', style: { left: '0', top: '0', width: '4200px', height: '2600px', transformOrigin: '0 0',
-      background: 'radial-gradient(ellipse 45% 45% at 50% 50%, #2a1d14 0%, #17110c 55%, #0a0807 100%)' } });
-    this.table.append(h('div', { style: { position: 'absolute', inset: '0', opacity: 0.5, backgroundImage: 'repeating-linear-gradient(90deg, rgba(255,255,255,0.012) 0 1px, transparent 1px 5px), repeating-linear-gradient(0deg, rgba(0,0,0,0.05) 0 1px, transparent 1px 4px)' } }));
-    R.append(this.table);
-    this.board = drawBoard();
-    this.board.style.cssText = 'position:absolute;left:0;top:0;transform-origin:0 0;box-shadow:0 60px 120px -20px rgba(0,0,0,0.8), 0 0 0 2px rgba(0,0,0,0.4);border-radius:48px';
-    R.append(this.board);
-
-    this.pieces = SLOTS.map((s) => {
-      const shadow = h('div', { class: 'abs', style: { left: '0', top: '0', width: `${PD}px`, height: `${PD}px`, borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,0,0,0.55) 40%, rgba(0,0,0,0) 70%)', transformOrigin: '50% 50%' } });
-      const el = h('div', { class: 'abs', style: { left: '0', top: '0', width: `${PD}px`, height: `${PD}px`, transformOrigin: '50% 50%' } }, piece(s.kind, `p${s.kind}`));
-      R.append(shadow, el);
-      return { ...s, el, shadow };
-    });
+    this.boardPlate = makePlate(R, 'board');
+    this.pieces = SLOTS.map((s) => ({ ...s }));
 
     // overlay canvas: recognition rings, graph, particles
     const ov = makeCanvas(R);
@@ -173,32 +131,22 @@ addScene({
     g.clearRect(0, 0, 1920, 1080);
 
     // ---------- camera over the board
-    const hero = SLOTS[0];
     const zoom = keys(t, [[0, 1.75], [3.4, 1.85], [4.6, 0.92, E.inOutCubic], [cRec, 0.95], [cGen, 1.0]]);
-    const cx = keys(t, [[0, hero.x], [3.4, hero.x], [4.6, 0, E.inOutCubic]]);
-    const cy = keys(t, [[0, hero.y], [3.4, hero.y], [4.6, 10, E.inOutCubic]]);
     const toBook = prog(t, cGen - 0.25, 0.9, E.inOutCubic);
-    const W2 = (x, y) => ({ x: (x - cx) * zoom + 960, y: (y - cy) * zoom + 540 - toBook * 120 });
-    const b0 = W2(-BW / 2, -BH / 2);
     const boardO = prog(t, -0.2, 0.7) * (1 - toBook);
-    put(this.board, { x: b0.x, y: b0.y, s: zoom, o: boardO, blur: toBook * 8 });
-    const tb = W2(-2100, -1300);
-    put(this.table, { x: tb.x, y: tb.y, s: zoom, o: boardO });
+    const k = t > PULL_END ? zoom / ZOOM_HOLD : 1, ty = -toBook * 120;
+    const t0b = PLATES.board.t0();
+    this.boardPlate.el.style.display = boardO > 0.001 ? 'block' : 'none';
+    const pending = boardO > 0.001 ? this.boardPlate.show(t, t0b) : undefined;
+    put(this.boardPlate.el, { y: ty, s: k, o: boardO, blur: toBook * 8 });
     this.warm.style.opacity = (0.6 + 0.4 * prog(t, 0, 2)).toFixed(3);
 
-    // ---------- pieces: the sloth is present from the start (hero), others drop in on "places a few pieces"
-    const drops = [0.15, cPlace + 0.35, cPlace + 0.85, cPlace + 1.35];
+    // ---------- pieces: where the plate shows them (screen centre and rim radius), with the plate's scale
+    const shot = shotAt(BOARDSHOT, 'board', t, t0b);
     this.pieces.forEach((p, i) => {
-      const d = clamp((t - drops[i]) / 0.55);
-      const land = E.outCubic(d);
-      const hover = (1 - land) * 1;
-      const P = W2(p.x, p.y);
-      const sz = PD * zoom;
-      const lift = hover * 0.35;
-      const spin = i === 0 ? keys(t, [[0, -14], [3.6, 0, E.inOutSine]]) : (1 - land) * 18;
-      put(p.el, { x: P.x - PD / 2, y: P.y - PD / 2 - lift * 40 * zoom, s: zoom * (1 + lift), r: spin, o: clamp(d * 4) * (1 - toBook) });
-      put(p.shadow, { x: P.x - PD / 2 + 10 * zoom * (1 + lift * 3), y: P.y - PD / 2 + 16 * zoom * (1 + lift * 3), s: zoom * (1.05 + lift * 0.4), o: clamp(d * 3) * (0.55 - lift * 0.3) * (1 - toBook) });
-      p.screen = P; p.r = (PD / 2) * zoom;
+      const [px, py, pr] = shot.pt('piece')[i];
+      p.screen = { x: 960 + (px - 960) * k, y: 540 + (py - 540) * k + ty };
+      p.r = pr * k;
     });
 
     // hero glow + sparks rising from the sloth ("physical → personal")
@@ -326,5 +274,6 @@ addScene({
         this.pulseEls[i].setAttribute('opacity', (prog(t, cSys + 0.5 + i * 0.25, 0.3) * sysA * Math.sin(u * Math.PI)).toFixed(3));
       });
     }
+    return pending;
   },
 });
