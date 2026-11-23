@@ -3,49 +3,16 @@
 import { addScene, h, put, prog, E, clamp, lerp, env, makeCanvas, rng, rgba, C, hash, rrect, keys, TIMELINE } from '../engine.js';
 import { makeHud, box, tag, recHud, brackets, FONT_UI } from '../lib/ui.js';
 
-import { FRAME, ROWS, ROW_X0, ROW_DX, PITCH, SPEED, plantSprite, pumpkinSprite, soilTile, plantAt } from '../lib/field.js';
+import { FRAME, ROWS, ROW_X0, ROW_DX, PITCH, SPEED, pumpkinSprite, plantAt } from '../lib/field.js';
+import { PLATES, makePlate, shotAt } from '../lib/shot.js';
+import TRACTOR from '../shots/tractor.js';
 const COUNT_Y = FRAME.y + FRAME.h * 0.64;
 const ROW_COLORS = ['#ffb35c', '#ff7b6b', '#5fe0c2', '#ff8fc8', '#ffd76b', '#c8e86b'];
 const fmt = (n) => n.toLocaleString('en-US');
 
-// ------------------------------------------------------------ tractor (line art, side view)
-function drawTractor(g, t, ox, oy, S, camPulse, a) {
-  g.save(); g.globalAlpha = a; g.translate(ox, oy); g.scale(S, S);
-  g.lineJoin = 'round'; g.lineCap = 'round';
-  const ink = 'rgba(243,243,239,0.9)', fill = '#0f1216';
-  // boom + camera + FOV
-  g.strokeStyle = ink; g.lineWidth = 3;
-  g.beginPath(); g.moveTo(300, -40); g.lineTo(430, -120); g.lineTo(520, -120); g.stroke();
-  const fov = g.createLinearGradient(0, -110, 0, 95);
-  fov.addColorStop(0, `rgba(130,52,254,${0.35 + camPulse * 0.25})`); fov.addColorStop(1, 'rgba(130,52,254,0.04)');
-  g.fillStyle = fov; g.beginPath(); g.moveTo(520, -108); g.lineTo(420, 95); g.lineTo(650, 95); g.closePath(); g.fill();
-  g.strokeStyle = rgba(C.accent, 0.55); g.lineWidth = 1.5; g.beginPath(); g.moveTo(520, -108); g.lineTo(420, 95); g.moveTo(520, -108); g.lineTo(650, 95); g.stroke();
-  g.fillStyle = fill; g.strokeStyle = C.accent; g.lineWidth = 3; rrect(g, 500, -134, 42, 28, 6); g.fill(); g.stroke();
-  g.fillStyle = C.accent; g.beginPath(); g.arc(521, -106, 5, 0, Math.PI * 2); g.fill();
-  if (camPulse > 0) { g.strokeStyle = rgba(C.accent, camPulse); g.lineWidth = 2; g.beginPath(); g.arc(521, -120, 30 + (1 - camPulse) * 30, 0, Math.PI * 2); g.stroke(); }
-  // body
-  g.fillStyle = fill; g.strokeStyle = ink; g.lineWidth = 3;
-  g.beginPath(); g.moveTo(40, -40); g.lineTo(310, -52); g.quadraticCurveTo(334, -50, 336, -26); g.lineTo(336, 8); g.lineTo(40, 14); g.closePath(); g.fill(); g.stroke();
-  for (let i = 0; i < 4; i++) { g.beginPath(); g.moveTo(318, -40 + i * 11); g.lineTo(334, -40 + i * 11); g.stroke(); }
-  g.beginPath(); g.moveTo(180, -48); g.lineTo(180, -118); g.stroke();
-  // cabin
-  g.beginPath(); g.moveTo(-70, -40); g.lineTo(-58, -222); g.lineTo(96, -222); g.lineTo(118, -40); g.closePath(); g.fill(); g.stroke();
-  g.strokeStyle = 'rgba(243,243,239,0.35)'; g.lineWidth = 2; rrect(g, -44, -206, 128, 120, 8); g.stroke();
-  g.strokeStyle = ink; g.lineWidth = 3;
-  g.beginPath(); g.moveTo(-80, -226); g.lineTo(106, -226); g.stroke();
-  // wheels
-  const wheel = (x, y, R) => {
-    g.fillStyle = '#0b0d10'; g.beginPath(); g.arc(x, y, R, 0, Math.PI * 2); g.fill();
-    g.strokeStyle = ink; g.lineWidth = 3; g.stroke();
-    g.strokeStyle = 'rgba(243,243,239,0.5)'; g.lineWidth = 2; g.beginPath(); g.arc(x, y, R * 0.58, 0, Math.PI * 2); g.stroke();
-    const rot = -t * (SPEED * 0.9 / R);
-    for (let i = 0; i < 14; i++) { const an = rot + (i / 14) * Math.PI * 2; g.beginPath(); g.moveTo(x + Math.cos(an) * R * 0.78, y + Math.sin(an) * R * 0.78); g.lineTo(x + Math.cos(an) * R * 0.97, y + Math.sin(an) * R * 0.97); g.stroke(); }
-    g.fillStyle = ink; g.beginPath(); g.arc(x, y, R * 0.12, 0, Math.PI * 2); g.fill();
-  };
-  wheel(0, 0, 95);
-  wheel(262, 40, 55);
-  g.restore();
-}
+// The tractor and the crop feed are Blender plates (scripts/render_field.py): the tractor shot exports its boom
+// camera's lens and ground footprint per frame (shots/tractor.js); the feed is orthographic at the film's own
+// pixel scale and built from plantAt(), so the feed's overlays below land on the rendered plants unchanged.
 
 addScene({
   id: 'agri',
@@ -63,11 +30,13 @@ addScene({
         { label: 'Track', at: ctx.cue('a3', 1) },
       ],
     });
+    this.tractor = makePlate(R, 'tractor');
+    this.feed = makePlate(R, 'feed', { x: FRAME.x, y: FRAME.y, w: FRAME.w, h: FRAME.h, radius: 18 });
+    this.feed.el.style.transformOrigin = `${960 - FRAME.x}px ${531 - FRAME.y}px`;
+    for (const p of [this.feed, this.tractor]) R.prepend(p.el);
     const cv = makeCanvas(R);
     this.g = cv.ctx;
-    this.plants = Array.from({ length: 10 }, (_, i) => plantSprite(900 + i));
     this.pumpkins = [['orange', 1], ['deep', 2], ['orange', 3], ['pale', 4], ['orange', 5], ['green', 6], ['deep', 7], ['orange', 8]].map(([k, s]) => pumpkinSprite(k, s));
-    this.soil = soilTile(FRAME.w, 1200);
     // conveyor belt texture
     const belt = makeCanvas(null, 480, 420, '');
     const bg = belt.ctx;
@@ -121,44 +90,37 @@ addScene({
     const D = ctx.dur;
     const cCam = ctx.cue('a1', 1), cData = ctx.cue('a1', 2), cTr = ctx.cue('a2', 0), cCount = ctx.cue('a2', 1), cMap = ctx.cue('a2', 2), cPack = ctx.cue('a3', 0), cID = ctx.cue('a3', 1), cKeep = ctx.cue('a3', 2);
 
-    // ================= A: tractor establishing shot
+    // ================= A: tractor establishing shot (Blender plate; overlays at the boom camera from its export)
+    const pending = [];
     const trA = env(t, -0.3, cTr + 0.95, 0.5, 0.35);
+    this.tractor.el.style.opacity = trA.toFixed(3);
+    this.tractor.el.style.display = trA > 0.001 ? 'block' : 'none';
     if (trA > 0.001) {
+      const t0 = PLATES.tractor.t0();
+      pending.push(this.tractor.show(t, t0));
+      const S = shotAt(TRACTOR, 'tractor', t, t0);
+      const lens = S.pt('lens'), foot = S.pt('foot');
       const push = prog(t, cTr + 0.1, 0.9, E.inCubic);
-      const S = lerp(1.25, 3.6, push), ox = lerp(560, 960 - 535 * 3.6, push), oy = lerp(640, 540 - 95 * 3.6, push);
-      // horizon + ground + passing crop rows
-      g.save(); g.globalAlpha = trA;
-      const gy = oy + 95 * S;
-      const sky = g.createLinearGradient(0, 200, 0, gy);
-      sky.addColorStop(0, 'rgba(20,24,30,0)'); sky.addColorStop(1, 'rgba(40,46,52,0.35)');
-      g.fillStyle = sky; g.fillRect(0, 200, 1920, gy - 200);
-      g.strokeStyle = 'rgba(255,255,255,0.18)'; g.lineWidth = 1.5; g.beginPath(); g.moveTo(0, gy); g.lineTo(1920, gy); g.stroke();
-      g.fillStyle = '#0c0e10'; g.fillRect(0, gy, 1920, 1080 - gy);
-      // crop rows receding toward the viewer (perspective)
-      g.lineWidth = 1;
-      for (let i = -14; i <= 14; i++) {
-        const xv = 960 + i * 90 * S;
-        const grd = g.createLinearGradient(0, gy, 0, 1080);
-        grd.addColorStop(0, 'rgba(111,174,85,0.0)'); grd.addColorStop(1, 'rgba(111,174,85,0.16)');
-        g.strokeStyle = grd;
-        g.beginPath(); g.moveTo(960 + i * 20, gy); g.lineTo(xv, 1080 + 200); g.stroke();
-      }
-      for (let i = 0; i < 70; i++) {
-        const x = ((i * 64 - t * SPEED * 0.9 * (S / 1.25)) % (70 * 64) + 70 * 64) % (70 * 64) - 200;
-        const hh = 12 * S;
-        g.fillStyle = '#4f8a3f'; g.beginPath(); g.ellipse(x, gy - hh * 0.35, hh * 0.9, hh * 0.45, 0, Math.PI, Math.PI * 2); g.fill();
-        g.fillStyle = '#6fae55'; g.beginPath(); g.ellipse(x - hh * 0.3, gy - hh * 0.4, hh * 0.35, hh * 0.3, -0.5, 0, Math.PI * 2); g.fill();
-      }
+      const camPulse = env(t, cCam - 0.1, cCam + 1.2, 0.2, 0.8) * (1 - push);
+      g.save(); g.globalAlpha = trA * (1 - push);
+      // the camera's field of view, down to its footprint on the rows
+      const lx = lens[0], ly = lens[1];
+      const fov = g.createLinearGradient(lx, ly, lx, Math.max(...foot.map((q) => q[1])));
+      fov.addColorStop(0, `rgba(130,52,254,${(0.28 + camPulse * 0.25).toFixed(3)})`); fov.addColorStop(1, 'rgba(130,52,254,0.05)');
+      g.fillStyle = fov;
+      g.beginPath(); g.moveTo(foot[0][0], foot[0][1]); foot.forEach((q) => g.lineTo(q[0], q[1])); g.closePath(); g.fill();
+      g.strokeStyle = rgba(C.accent, 0.5); g.lineWidth = 1.5;
+      g.beginPath(); foot.forEach((q) => { g.moveTo(lx, ly); g.lineTo(q[0], q[1]); }); g.stroke();
+      g.beginPath(); g.moveTo(foot[0][0], foot[0][1]); foot.forEach((q) => g.lineTo(q[0], q[1])); g.closePath(); g.stroke();
+      if (camPulse > 0) { g.strokeStyle = rgba(C.accent, camPulse); g.lineWidth = 2; g.beginPath(); g.arc(lx, ly, 26 + (1 - camPulse) * 30, 0, Math.PI * 2); g.stroke(); }
       g.restore();
-      drawTractor(g, t, ox, oy, S, env(t, cCam - 0.1, cCam + 1.2, 0.2, 0.8) * (1 - push), trA);
-      if (t > cCam && push < 0.5) tag(g, ox + 560 * S, oy - 150 * S, 'CAMERA', { a: trA * prog(t, cCam, 0.4) * (1 - push * 2), size: 12 });
+      if (t > cCam && push < 0.5) tag(g, lx + 34, ly - 30, 'CAMERA', { a: trA * prog(t, cCam, 0.4) * (1 - push * 2), size: 12 });
       // data packets streaming from the camera to the telemetry card
       if (t > cData - 0.2 && push < 1) {
-        const cxp = ox + 521 * S, cyp = oy - 120 * S;
         for (let i = 0; i < 16; i++) {
           const u = ((t - cData) * 0.9 + i / 16) % 1;
           if (t - cData + i / 16 < 0) continue;
-          const x = lerp(cxp, 1290, E.inOutSine(u)), y = lerp(cyp, 260, E.inOutSine(u)) - Math.sin(u * Math.PI) * 120;
+          const x = lerp(lx, 1290, E.inOutSine(u)), y = lerp(ly, 260, E.inOutSine(u)) - Math.sin(u * Math.PI) * 120;
           g.fillStyle = rgba(C.accent, trA * Math.sin(u * Math.PI) * (1 - push));
           g.fillRect(x - 3, y - 3, 6, 6);
         }
@@ -171,7 +133,14 @@ addScene({
 
     // ================= B: live crop feed from the tractor camera
     const feedA = env(t, cTr + 0.7, cMap + 0.9, 0.35, 0.5);
-    const scroll = t * SPEED;
+    this.feed.el.style.display = feedA > 0.001 ? 'block' : 'none';
+    // the overlays follow the plate's own frame (the plate holds each frame for 1/30 s)
+    const tF = PLATES.feed.t0({ cTr }) + Math.floor((t - PLATES.feed.t0({ cTr })) * 30 + 1e-6) / 30;
+    const scroll = (feedA > 0.001 ? tF : t) * SPEED;
+    if (feedA > 0.001) {
+      pending.push(this.feed.show(t, PLATES.feed.t0({ cTr })));
+      put(this.feed.el, { s: 1 + (1 - prog(t, cTr + 0.7, 0.8, E.outCubic)) * 0.25, o: feedA });
+    }
     const crossedAt = (row, k) => (k * PITCH + plantAt(row, k).jy + FRAME.y - COUNT_Y) / SPEED; // time when plant k crosses the count line
     let counted = 0, gaps = 0, offs = 0;
     if (feedA > 0.001) {
@@ -179,9 +148,6 @@ addScene({
       const zoomIn = 1 + (1 - prog(t, cTr + 0.7, 0.8, E.outCubic)) * 0.25;
       g.translate(960, 531); g.scale(zoomIn, zoomIn); g.translate(-960, -531);
       rrect(g, FRAME.x, FRAME.y, FRAME.w, FRAME.h, 18); g.clip();
-      const sh = this.soil.height, oy = ((scroll % sh) + sh) % sh;
-      g.drawImage(this.soil, FRAME.x, FRAME.y + oy - sh);
-      g.drawImage(this.soil, FRAME.x, FRAME.y + oy);
       const ovA = prog(t, cTr + 1.0, 0.6, E.outCubic);
       const measureA = prog(t, cCount + 0.7, 0.6);
       // row lines (fitted)
@@ -201,7 +167,6 @@ addScene({
           const py = FRAME.y + FRAME.h + 120 - (k * PITCH - scroll + p.jy);
           if (py < FRAME.y - 80 || py > FRAME.y + FRAME.h + 80) { prev = p.missing ? prev : { x, y: py }; continue; }
           const sz = 116 * p.s;
-          if (!p.missing) g.drawImage(this.plants[p.v], x - sz / 2, py - sz / 2, sz, sz);
           if (ovA > 0) {
             const vis = clamp((py - FRAME.y - 30) / 60);
             const a = ovA * vis;
@@ -392,5 +357,6 @@ addScene({
     // hand-off: a violet line draws where the next scene's brief card opens
     const hp = this.handsOff ? prog(t, D - 0.55, 0.5, E.inOutCubic) : 0;
     put(this.handoff, { sx: hp, o: hp > 0 ? 1 : 0 });
+    return pending.length ? Promise.all(pending) : undefined;
   },
 });
