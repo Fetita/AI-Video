@@ -1,6 +1,6 @@
 # Eagerworks AI Studio — "From AI ideas to real-world products"
 
-Creative treatment for the 3:06 promotional film (1920×1080, 30 fps, stereo 48 kHz).
+Creative treatment for the 3:08 promotional film (1920×1080, 30 fps, stereo 48 kHz), rendered on the hero cut's cinematic pipeline (§13).
 Final deliverable: `out/eagerworks-ai-studio.mp4`.
 
 ---
@@ -55,29 +55,29 @@ Scene cuts are snapped to the music's half-bar grid (100 BPM), so every change l
 | 0:09.8 | **"AI as the product."** Glyphs scramble-decode into *the product*; the underline turns violet and glows. | Grey → violet underline |
 | 0:11.6 | The underline's energy becomes the three "E" strokes; the hexagon draws around them and fills (music hit); the wordmark and **AI Studio** slide out. | Strokes → logo |
 | 0:15.3 | `REAL PRODUCTS · WORKFLOWS · MEASURABLE OUTCOMES` appear as each is spoken. | — |
-| 0:18.7 | The lockup lifts away; a violet line draws exactly where the next scene's brief card opens. | Line → card |
+| 0:18.7 | The camera flies through the lockup into the next scene, crossed by a band of violet light. | Fly-through |
 
 ### 0:19.2 – 0:33.6 · Introduction: who we are → client work
 | Time | Visual |
 |---|---|
-| 0:19.2 | The hook's violet hand-off line stays on screen and becomes a divider. Kicker `WHO WE ARE`. |
+| 0:19.2 | The scene settles from further back on a violet line, which becomes a divider. Kicker `WHO WE ARE`. |
 | 0:19.7 | **"Designers & engineers."** rises out of the line. *"We build digital products, from the first idea to launch."* types in beneath it. |
 | 0:21.3 | Discipline pills pop in one by one: `Product strategy · UX / UI design · Software engineering · Cloud & data`. |
 | 0:26.3 | On "…runs on AI" the headline swaps to **"Products that run on AI."** and a glowing `Applied AI` pill joins the row (bell). |
 | 0:29.0 | Everything lifts away. Kicker `CLIENT WORK`, title **"Built for our clients."**, then an index of the five projects that follow (`01 Vision data for robotics`, `02 Field & packing-line analytics`, `03 Location search & recommendation`, `04 Physical-to-digital storytelling`, `05 Evidence review for audits`), with the violet line as row 01's underline. |
-| 0:32.4 | Rows 02–05 fade and row 01 lights up. The line is left alone in exactly the place where the next scene's API call card opens. |
+| 0:32.4 | Row 01 lights up and the whole index stays on screen as the camera flies through it into the first case. |
 
 ### 0:33.6 – 0:52.8 · 01 Computer vision · Custom models · Robotics (intensity peak)
 Stepper: `DETECT → TRACK → DATASET → TRAIN → BENCHMARK → ROBOTICS`
 | Time | Visual |
 |---|---|
-| 0:33.6 | The intro's violet line contracts and the API card opens from it: `vision.detect(frame)`, a single API call. On "…more than an API call" it greys out beside a coral *Not enough* badge and unfolds into the six-layer vision stack Eagerworks builds (Capture, Annotate, Dataset, Train, Evaluate, Deploy). |
+| 0:33.6 | The API card settles in: `vision.detect(frame)`, a single API call. On "…more than an API call" it greys out beside a coral *Not enough* badge and unfolds into the six-layer vision stack Eagerworks builds (Capture, Annotate, Dataset, Train, Evaluate, Deploy). |
 | 0:36.9 | The stack collapses into an egocentric workbench camera: two hands, per-hand boxes, 21 keypoints each, finger-coloured skeletons. |
-| 0:40.0 | Cut to a room view: three people, face boxes, then a privacy mosaic (`FACE · ANONYMIZED`). |
+| 0:40.0 | Cut to a room view (a Blender-rendered room of display mannequins): face boxes, then a privacy mosaic of the image under each box (`FACE · ANONYMIZED`). |
 | 0:41.6 | **Track:** 3D view of the head-camera frustum moving along its path; violet estimate vs. dashed ground truth; left/right wrist trails. |
 | 0:43.0 | **Dataset:** hundreds of annotated frames tile the screen and zoom out; panel lists annotation types and train/validation/test splits. |
 | 0:45.0 | **Train & benchmark:** loss curves for three models descend; precision–recall curves draw; the custom model's operating point is `SELECTED`. |
-| 0:47.4 | **Robotics:** a human-demonstration trajectory (dashed, with a ghost hand skeleton) is replayed by a robot arm that picks and places a part. |
+| 0:47.4 | **Robotics:** a photoreal robot arm (Blender) replays a human-demonstration trajectory (dashed, with a ghost hand skeleton), picking and placing an amber part while the camera dollies around the cell; trajectory, joint pose and telemetry are drawn in the same camera. |
 
 ### 0:52.8 – 1:12.0 · 02 Real-world AI · Detection · Tracking
 Stepper: `DETECT → COUNT → MEASURE → MAP → TRACK`
@@ -88,25 +88,25 @@ Stepper: `DETECT → COUNT → MEASURE → MAP → TRACK`
 | 0:58.9 | Every lettuce seedling gets a box and ID; fitted row lines; a count line; `GAP` and `OFF-ROW` flags with offsets; spacing ticks and diameter measurements; GPS tags as plants are counted; *Live field audit* panel updates. |
 | 1:01.5 | **Map:** the feed becomes a field map; every counted plant is a dot, issues in coral; one plant is called out with coordinates and size. |
 | 1:04.8 | **Track:** a packing-line conveyor of pumpkins. Each gets an `ID` on entry, a motion trail, a size measurement and a `✓ COUNTED` tag at the count line. |
-| 1:11.4 | The packing line clears and a violet line draws exactly where the next scene's brief card opens. |
+| 1:11.5 | The packing line stays live as the camera flies through it into the search case. |
 
 ### 1:12.0 – 1:32.4 · 03 Generative AI · Search · Recommendation
 Stepper: `PARSE → SEARCH → EVALUATE → RECOMMEND → REFINE`
 | Time | Visual |
 |---|---|
-| 1:12.0 | The brief card opens from the line drawn at the end of the packing line; the brief types in the client's own words (fictional production team, fictional brief). |
+| 1:12.0 | The brief card settles in; the brief types in the client's own words (fictional production team, fictional brief). |
 | 1:17.1 | **Parse:** seven phrases highlight; each flies out of the text into a *Structured requirements* panel (type, light, must-haves, capacity, travel, mood). |
 | 1:19.3 | **Search:** a 3D wall of ~300 location photos; a scan beam sweeps it and 14 matches light up while the rest dim. |
 | 1:20.8 | **Evaluate:** six candidates fly out of the wall; each is checked against every requirement (✓ / ~ / ✕) and tiered (`TIER 1`, `TIER 2`, `DISCARDED`). |
 | 1:23.4 | **Recommend:** the three Tier-1 cards grow into a personalised shortlist with a *why it fits* rationale per location. |
 | 1:26.9 | **Refine:** a chat panel slides in: *"Love the second one. Anything similar with a rooftop?"* → *"One similar space has a private rooftop. I've moved it to the top of your shortlist."* The shortlist re-ranks live and a new rooftop location enters at 01. |
-| 1:31.4 | The assistant's violet status dot flies to centre and carries into the next scene. |
+| 1:32.0 | The re-ranked shortlist stays on screen as the camera flies through it into the story. |
 
 ### 1:32.4 – 1:51.6 · 04 Generative AI · Physical to digital
 Stepper: `PLACE → RECOGNIZE → REASON → GENERATE`
 | Time | Visual |
 |---|---|
-| 1:32.4 | The dot becomes a reticle; beneath it a wooden sloth piece (Mo, meditating) rests on a walnut board. Warm sparks rise from it ("…something personal"). |
+| 1:32.4 | A reticle settles on a wooden sloth piece (Mo, meditating) rests on a walnut board. Warm sparks rise from it ("…something personal"). |
 | 1:36.0 | Camera pulls back to the whole board; scout, wizard and samurai pieces drop into their slots (wooden clacks). |
 | 1:39.8 | **Recognize:** a viewfinder frames the board; each piece is ringed and labelled (`CHARACTER · SLOTH`, `CHARACTER · SCOUT`, `CHARACTER · WIZARD`, `CHARACTER · SAMURAI`). |
 | 1:41.8 | **Reason:** a relation graph links the pieces: *guides*, *befriends*, *races*, *travels with*. |
@@ -132,7 +132,7 @@ Stepper: `DETECT → TRACK → COUNT → GRADE`
 | 2:11.4 | The card lifts away and a live monitor opens from its centre line (`Packing line · Overhead camera`, `MODE · COUNT & GRADE`, `● LIVE`). It plays the product footage in smooth slow motion: crates of apples on a roller conveyor, every apple tagged with its own ID and size (`#52 · 98 mm`), plus a live dashboard: apples counted, last item, throughput, average size, ripeness and size grade. |
 | 2:11.9 | A *What it does* column builds on the right. **Detect**, **Track** and **Count** light up as each is spoken. |
 | 2:23.0 | "As each apple crosses the line…": **Grade** lights up (size and ripeness), and a `One overhead camera` chip lands under the list. |
-| 2:31.5 | The monitor and column recede. |
+| 2:31.9 | The footage runs until the camera flies through the monitor into *How we work*. |
 
 The footage is Eagerworks' own product: one 10-second, 60 fps clip in `video/assets/inhouse/`, unpacked to frames by `scripts/extract_clips.sh`
 and shown frame-accurately (`video/src/lib/clip.js`). It plays at about 0.5× (every source frame, so the slow motion stays smooth) to span the whole section.
@@ -148,16 +148,17 @@ and shown frame-accurately (`video/src/lib/clip.js`). It plays at about 0.5× (e
 | 2:45.3 | **03 *Stay*** · *"Side by side, until it really works."* |
 | 2:49.2 | All three pillars light up together, then lift away into the finale. |
 
-### 2:50.4 – 3:06.0 · Finale: the studio
+### 2:50.4 – 3:08.4 · Finale: the studio
 | Time | Visual |
 |---|---|
 | 2:50.4 | The film's own frames assemble into a tilted 5×3 wall; a highlight pulses across all 15 capabilities. |
 | 2:52.3 | **"One team."** · `Design · Build · Ship` light up as spoken. |
-| 2:55.2 | Every tile flies onto one of the logo's three E strokes and becomes a line (reverse swell). |
-| 2:56.0 | The icon builds, fills on the music's final hit; wordmark + **AI Studio**. |
-| 2:58.8 | **"From AI ideas to real-world products."** |
-| 3:02.3 | CTA pill **"Let's build what's next →"** · `eagerworks.com`. |
-| 3:05.4 | Fade to black on the resolving chord. |
+| 2:55.3 | The wall collapses: every tile flies onto one of the logo's three strokes and becomes a bar of violet light. |
+| 2:56.0 | **3D logo sting** (Blender): the strokes are light tubes inside the Eagerworks icon, extruded as black glass; the camera orbits and pulls back, the glass turns white-hot and a ring of light leaves it (the music's biggest hit). |
+| 2:58.5 | The plate dissolves into the flat lockup as **"Eagerworks AI Studio."** is spoken; the wordmark slides out. |
+| 3:00.7 | **"From AI ideas to real-world products."** |
+| 3:04.2 | CTA pill **"Let's build what's next →"** · `eagerworks.com`. |
+| 3:07.6 | Fade to black on the resolving chord. |
 
 ---
 
@@ -246,13 +247,11 @@ Everything else on screen is diegetic interface content of fictional products, e
 3. Recognition ring → camera viewfinder (object becomes camera data).
 4. Four vignettes → 2×2 grid → one line (many capabilities, one studio).
 5. Line → underline → the logo's E strokes.
-6. Hook line → the intro's divider → row 01's underline in the client-work index → the line contracts and the API call card opens from it.
+6. Every scene change is now a camera fly-through (see §13); within the intro the line still goes divider → row 01's underline.
 7. API call → vision stack → the stack collapses into the camera feed.
 8. Camera's FOV footprint → top-down field feed; plant detections → map coordinates.
-9. Packing-line data → a violet line → the brief card opening from that exact line.
 10. Brief phrases → flying requirement chips (language becomes structured data).
 11. Requirements → 3D catalog wall → candidate cards emerge from their tiles (search result becomes a dataset of candidates).
-12. Chat status dot → recognition ring on the story board.
 13. Story → end-to-end system row (the book shrinks into its node).
 14. Evidence sentences → framework requirements (documents become structured requirements).
 15. Product dashboard → the headline "Not just another AI studio." with *another AI studio.* fading away (the hook's "not X" idea, turned on ourselves) → three pillars.
@@ -364,3 +363,24 @@ and the field scene ends without the violet hand-off line, since the search brie
 | 0:56.4 | 03 Document intelligence · AI auditing |
 | 1:12.0 | How we work |
 | 1:28.8 | Finale + CTA |
+
+## 13. The full film on the hero pipeline (3:08)
+
+`out/eagerworks-ai-studio.mp4` is now rendered with everything the hero cut (§11) introduced, so the long film and the LinkedIn overview share one look:
+
+- **The 3D shots:** the photoreal robot arm, the mannequin room for face detection, and the logo sting in the finale.
+- **The scene camera:** a slow push-in on every scene and a fly-through with a band of light at every one of the nine scene changes, with a whoosh and a soft thump.
+- **Motion blur** (6 sub-frames per frame, 180° shutter), the **atmosphere** behind every scene, and the **finishing grade** (glow, violet halation, curve, grain) in the delivery encode.
+- **The hook** with every input full-frame, and the longer robotics and logo beats (the film is 2.4 s longer: 3:06 → 3:08).
+
+The hero cut retired the old hand-off lines only at its own scene changes. The full film has four more that only exist here, and each one used to empty the frame before the cut so a single element could carry over. Each emptied frame now looks like a dropped shot ahead of the fly-through, so these scenes now hold their content and leave with the camera, like the rest:
+
+| Scene change | Before | Now |
+|---|---|---|
+| Intro → computer vision | Rows 02–05 faded; the violet line was left alone for the API card to open from | The index stays, row 01 lights up, the camera flies through |
+| Field & packing line → search | The packing line cleared; a violet line drew for the brief card | The conveyor stays live into the fly-through |
+| Search → story | The shortlist gathered into the assistant's dot, which became the story's reticle | The re-ranked shortlist stays; the reticle simply settles on the sloth piece |
+| In-house product → How we work | The monitor receded 0.85 s early | The footage runs into the fly-through |
+
+Their old sound cues (the intro's exit whoosh, the field's hand-off whoosh, the search riser, the in-house exit whoosh) are removed, since the scene-change whoosh now covers each cut. The burned-in captions stay a LinkedIn-only feature: the full film has none.
+

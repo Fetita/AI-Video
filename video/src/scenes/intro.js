@@ -1,6 +1,6 @@
 // Introduction — who Eagerworks is, then a "client work" index of the five projects that follow.
 // The hook's hand-off line becomes the divider under the headline, then the underline of row 01,
-// and finally hands off (same position) to the vision scene's API call card.
+// which lights up as the camera flies on into the vision scene.
 import { addScene, h, put, prog, E, clamp, lerp, env } from '../engine.js';
 import { words, revealWords } from '../lib/ui.js';
 
@@ -86,12 +86,13 @@ addScene({
 
     // ---- client work index
     const in2 = prog(t, c3 - 0.2, 0.6, E.outCubic);
-    const fadeRows = prog(t, D - 1.25, 0.45, E.inCubic); // rows 02–05 + titles leave, row 01 remains
+    // the index stays up and leaves with the camera's fly-out (the last scene of a cut fades it instead)
+    const fadeRows = ctx.last ? prog(t, D - 1.25, 0.45, E.inCubic) : prog(t, D - 0.32, 0.32, E.inCubic);
     put(this.kicker2, { y: (1 - in2) * 14, o: in2 * (1 - fadeRows) });
     put(this.head2, { y: (1 - in2) * 18, o: in2 * (1 - fadeRows) });
     this.rows.forEach((r, i) => {
       const q = prog(t, c3 + 0.1 + i * 0.2, 0.5, E.outCubic);
-      const leave = i === 0 ? prog(t, D - 0.7, 0.4, E.inCubic) : fadeRows;
+      const leave = fadeRows;
       put(r.el, { x: (1 - q) * 30, o: q * (1 - leave) });
       if (r.rule) { put(r.rule, { sx: prog(t, c3 + 0.1 + i * 0.2, 0.6, E.outCubic), o: 1 - fadeRows }); }
     });
@@ -99,10 +100,9 @@ addScene({
     const focus = prog(t, D - 1.25, 0.4);
     this.rows[0].el.children[1].style.color = focus > 0.5 ? '#ffffff' : 'var(--text)';
 
-    // ---- the shared line: full violet at hand-in, quiet hairline-ish while the text plays, violet again at hand-off
+    // ---- the shared line: full violet at the start, quiet hairline-ish while the text plays, violet again under row 01
     const quiet = env(t, 0.6, D - 1.0, 0.6, 0.6);
-    // past the cut the next scene owns the line (vision.js draws it and opens the API card from it)
-    this.line.style.opacity = t >= D ? '0' : lerp(1, 0.45, quiet).toFixed(3);
+    this.line.style.opacity = (lerp(1, 0.45, quiet) * (1 - fadeRows)).toFixed(3);
     this.line.style.boxShadow = `0 0 ${lerp(16, 0, quiet).toFixed(1)}px rgba(130,52,254,0.6)`;
   },
 });

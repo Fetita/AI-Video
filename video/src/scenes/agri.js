@@ -318,7 +318,8 @@ addScene({
     }
 
     // ================= D: packing line — ID, track, count
-    const packA = env(t, cPack - 0.1, D + 1, 0.45, 0.01) * (1 - prog(t, D - 0.8, 0.5, E.inCubic));
+    const out = ctx.last ? prog(t, D - 0.8, 0.5, E.inCubic) : prog(t, D - 0.32, 0.32, E.inCubic); // leaves with the camera's fly-out
+    const packA = env(t, cPack - 0.1, D + 1, 0.45, 0.01) * (1 - out);
     const BV = 250, LINE_X = FRAME.x + 1080;
     let packCount = 1038, inView = 0;
     if (packA > 0.001) {
@@ -383,7 +384,7 @@ addScene({
       g.strokeStyle = 'rgba(255,255,255,0.14)'; g.lineWidth = 1; rrect(g, FRAME.x + 0.5, FRAME.y + 0.5, FRAME.w, FRAME.h, 18); g.stroke();
       g.restore();
     }
-    const packPanelA = env(t, cID - 0.1, D + 1, 0.4, 0.01) * (1 - prog(t, D - 1.0, 0.5));
+    const packPanelA = env(t, cID - 0.1, D + 1, 0.4, 0.01) * (1 - out);
     put(this.pack, { y: (1 - prog(t, cID - 0.1, 0.5, E.outCubic)) * 20, o: packPanelA });
     this.pCount.v.textContent = fmt(packCount);
     this.pView.v.textContent = String(inView);

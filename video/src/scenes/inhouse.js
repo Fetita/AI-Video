@@ -82,7 +82,7 @@ addScene({
 
     // ---- monitor
     const pIn = prog(t, cShow - 0.45, 0.8, E.outQuart);
-    const pOut = prog(t, D - 0.85, 0.6, E.inCubic);
+    const pOut = ctx.last ? prog(t, D - 0.85, 0.6, E.inCubic) : prog(t, D - 0.32, 0.32, E.inCubic); // leaves with the camera's fly-out
     this.panel.style.clipPath = `inset(${((1 - pIn) * 50).toFixed(2)}% 0 ${((1 - pIn) * 50).toFixed(2)}% 0 round 18px)`;
     put(this.panel, { y: (1 - pIn) * 30 - pOut * 30, s: lerp(1, 0.95, pOut), o: (pIn > 0 ? 1 : 0) * (1 - pOut) });
 

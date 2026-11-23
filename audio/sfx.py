@@ -313,7 +313,6 @@ if 'intro' in SC:
     at(cI3 - 0.25, s_whoosh(0.5, 2200, 700, 31), -29)
     for i in range(5):
         at(cI3 + 0.1 + i * 0.2, s_tick(1500 + i * 160, 0.014), -31, -0.4 + i * 0.2)
-    at(s + D - 1.25, s_whoosh(0.5, 600, 2400, 32), -32)
 
 
 # ================================================================== SEARCH
@@ -350,7 +349,6 @@ if 'search' in SC:
     at(cF2 + 0.05, s_chime(), -27, 0.3)
     at(cF2 - 0.1, s_whoosh(0.7, 800, 2400, 13), -30, -0.4)
     at(cF2 + 0.5, s_bell(1760, 0.8, 0.3), -29, -0.6)
-    at(s + D - 0.95, s_rise(0.9, 400, 1100), -31)
 
 
 # ================================================================== STORY
@@ -443,7 +441,6 @@ if 'agri' in SC:
             at(enter, s_tick(2400, 0.012), -32, -0.8)
         if cross > cID - 0.2 and cross < s + D:
             at(cross, s_count(), -25, 0.25)
-    at(s + D - 0.55, s_whoosh(0.5, 1500, 5000, 35), -31)  # hand-off line into the search brief card
 
 
 # ================================================================== DOCS
@@ -486,7 +483,6 @@ if 'inhouse' in SC:
     for i, tt in enumerate(feat):
         at(tt - 0.1, s_lock() if i < 3 else s_pop(1000, 1500), -27, 0.5)
     at(cLineO + 3.3, s_pop(900, 1350), -30, 0.5)
-    at(s + D - 0.9, s_whoosh(0.6, 1800, 500, 37), -29)
 
 
 # ================================================================== PROMISE
@@ -526,6 +522,7 @@ if 'finale' in SC:
 
 # ================================================================== SCENE CHANGES
 # every cut is a camera move through the frame: air rushing past, a soft thump as the next scene lands
+# (these replace the old per-scene hand-off cues: the intro's line, the agri line, the search dot, the in-house exit)
 for i, sc in enumerate(TL['scenes'][1:]):
     T = sc['start']
     at(T - 0.52, s_whoosh(0.66, 450, 4200, 60 + i), -25, -0.2 + 0.4 * (i % 2))

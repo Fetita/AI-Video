@@ -219,7 +219,7 @@ addScene({
       }
       g.restore();
     }
-    // incoming handoff: the ring that the previous scene's dot became
+    // a reticle settles on the first piece as the scene lands
     const ringA = env(t, -0.2, 2.2, 0.3, 0.6);
     if (ringA > 0) {
       const P = this.pieces[0].screen;
