@@ -291,6 +291,8 @@ addScene({
       // the running count: every pumpkin past the line so far (the same model the plate was built from)
       for (let k = 0; k < PACK.N; k++) if (FRAME.x - 110 + (tq - cPack - PACK.spawn(k)) * PACK.BV > LINE_X) packCount++;
       const at = (i, k) => { const r = PACKLINE.pts.pumpkin[i]; const q = r && r[k]; return q ? { x: q[0] + FRAME.x, y: q[1] + FRAME.y, R: q[2] } : null; };
+      // first plate frame with the camera settled overhead (render_packline.py: settled 0.25 s before the overlays)
+      const settled = Math.ceil(((cID - cPack) + 0.1 - PACK.plateT0 - 0.35) * 30) + 1;
       const items = Object.keys(S.pt('pumpkin') || {}).map((k) => ({ k: +k, ...at(S.i, k) }));
       g.save(); g.globalAlpha = packA;
       rrect(g, FRAME.x, FRAME.y, FRAME.w, FRAME.h, 18); g.clip();
@@ -305,7 +307,7 @@ addScene({
         inView += it.x < FRAME.x + FRAME.w ? 1 : 0;
         // trail: where the plate showed this pumpkin over the last 1.2 s
         g.strokeStyle = rgba(C.sky, 0.8 * seen); g.lineWidth = 2.5; g.beginPath();
-        for (let s2 = 0; s2 <= 20; s2++) { const q = at(S.i - Math.round(s2 * 1.8), String(it.k)); if (!q || q.x < FRAME.x) break; s2 ? g.lineTo(q.x, q.y) : g.moveTo(q.x, q.y); }
+        for (let s2 = 0; s2 <= 20; s2++) { const j = S.i - Math.round(s2 * 1.8); if (j < settled) break; const q = at(j, String(it.k)); if (!q || q.x < FRAME.x) break; s2 ? g.lineTo(q.x, q.y) : g.moveTo(q.x, q.y); }
         g.stroke();
         const counted2 = it.x > LINE_X;
         const flash = counted2 ? clamp(1 - (it.x - LINE_X) / 90) : 0;
