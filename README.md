@@ -8,8 +8,9 @@ AI capabilities into real products, workflows and measurable outcomes.
 [`…-poster.jpg`](out/eagerworks-ai-studio-linkedin-poster.jpg)). The LinkedIn overview, rebuilt with the cinematic
 pipeline described below: 3D shots, motion blur, a moving camera and a finishing grade.
 **Full film:** [`out/eagerworks-ai-studio.mp4`](out/eagerworks-ai-studio.mp4) (3:08, same format, no captions), also on the
-cinematic pipeline, with its own scene changes moved to camera fly-throughs (treatment §13).
-**Themed LinkedIn cuts** (renders from the previous pipeline; rebuilding them with the commands below picks up the new look and timings):
+cinematic pipeline, with its own scene changes moved to camera fly-throughs (treatment §13) and every client case
+shot in 3D: the tractor and its top-down feed, the pumpkin packing line, the story board and the tracking bench (treatment §14).
+**Themed LinkedIn cuts** (same pipeline and 3D shots as the full film):
 [`linkedin-cv`](out/eagerworks-ai-studio-linkedin-cv.mp4) (1:50, every computer-vision case) ·
 [`linkedin-genai`](out/eagerworks-ai-studio-linkedin-genai.mp4) (1:44, generative and document AI)
 **Creative treatment** (narrative, storyboard, timings, VO script, on-screen text, visual & sound direction, reference mapping):
