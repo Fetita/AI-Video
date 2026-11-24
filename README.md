@@ -77,6 +77,8 @@ scripts/
   blender_common.py     shared bpy helpers for the shots below: materials, physical sky, haze, camera, keying,
                         Cycles settings, the resumable frame loop, and the per-frame overlay export
   render_field.py       --shot tractor (200 frames) and --shot feed (120 frames, orthographic) → video/build/plates/
+  render_plate.sh       two-stage plate render on the Mac's GPU (Metal): noisy EXRs, then denoise_frames.py; resumable
+  denoise_frames.py     stage 2: OIDN (accurate prefilter) + AgX/exposure in its own process → 16-bit PNG frames
   render_packline.py    the packing line (230 frames) → video/build/plates/packline/
   render_board.py       the story board and pieces (214 frames) → video/build/plates/board/
   render_tracking.py    the camera + wrist tracking set (60 frames) → video/build/plates/tracking/
@@ -84,7 +86,8 @@ scripts/
   extract_clips.sh      product clip + Blender plates → numbered frames in video/build/clips/ (needed before rendering)
   make_recap.sh         film frames → the finale's recap-wall thumbnails
   grade.filter          the finishing grade (ffmpeg filter graph) used by finalize.sh
-  finalize.sh           delivery encode (grade, grain, H.264 High, AAC, faststart)
+  finalize.sh           delivery encode (grade, grain, H.264 High, AAC, faststart); glow/halation fade out while the
+                        bright 3D plates are on screen (windows from video/tools/grade_windows.mjs <cut>)
   contact_sheet.py      stills → review sheet
 docs/creative-treatment.md
 out/                    delivery files (one per cut) and the hero cut's poster frame
@@ -107,8 +110,10 @@ python3 ../scripts/render_robot.py --samples 28 --res 0.6667 --exposure -0.25   
 python3 ../scripts/render_logo.py --samples 36 --res 0.75                       # ≈30 min
 python3 ../scripts/render_room.py
 node ../video/tools/dump_shot_inputs.mjs                                        # inputs for the four shots below
-python3 ../scripts/render_field.py --shot feed --res 0.6667 --samples 16        # ≈1 h
-python3 ../scripts/render_field.py --shot tractor --res 0.4 --samples 10 --exposure -0.2   # ≈2 h
+# the field plates: Blender.app (5.x) on the Apple GPU, two-stage (see scripts/render_plate.sh), 1080p native;
+#   long: run detached, e.g.  nohup caffeinate -dimsu ../scripts/render_plate.sh … > build/tractor.log 2>&1 &
+../scripts/render_plate.sh field tractor 200 --exposure -3.3 -- --res 1.0 --samples 256 --min-samples 64 --threshold 0.01   # ≈40 h on an M1 (≈11–17 min/frame)
+../scripts/render_plate.sh field feed 120 --exposure -3.3 -- --res 1.0 --samples 256 --min-samples 64 --threshold 0.01      # ≈8 h
 python3 ../scripts/render_packline.py --res 0.5 --samples 10                    # ≈1 h
 python3 ../scripts/render_board.py --res 0.45 --samples 10                      # ≈45 min
 python3 ../scripts/render_tracking.py --res 0.5 --samples 10                    # ≈10 min

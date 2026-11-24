@@ -136,6 +136,71 @@ class Nodes:
                 self.link(v, m.inputs[i])
         return m.outputs[0]
 
+    def sock(self, v, node_input):
+        if isinstance(v, (int, float)):
+            node_input.default_value = v
+        elif isinstance(v, tuple):
+            node_input.default_value = v
+        elif v is not None:
+            self.link(v, node_input)
+
+    def vmath(self, op, a, b=None, c=None):
+        """Vector math; returns the Vector output (or the Value output for DOT_PRODUCT / LENGTH / DISTANCE)."""
+        m = self.new("ShaderNodeVectorMath", _operation=op)
+        for i, v in enumerate((a, b, c)):
+            if v is None:
+                continue
+            if isinstance(v, (int, float)):
+                if op == "SCALE" and i == 1:
+                    m.inputs[3].default_value = v
+                else:
+                    m.inputs[i].default_value = (v, v, v)
+            elif isinstance(v, tuple):
+                m.inputs[i].default_value = v
+            else:
+                if op == "SCALE" and i == 1:
+                    self.link(v, m.inputs[3])
+                else:
+                    self.link(v, m.inputs[i])
+        return m.outputs[1] if op in ("DOT_PRODUCT", "LENGTH", "DISTANCE") else m.outputs[0]
+
+    def sep(self, v):
+        s = self.new("ShaderNodeSeparateXYZ")
+        self.link(v, s.inputs[0])
+        return s.outputs
+
+    def comb(self, x, y, z):
+        c = self.new("ShaderNodeCombineXYZ")
+        for i, v in enumerate((x, y, z)):
+            self.sock(v, c.inputs[i])
+        return c.outputs[0]
+
+    def mix(self, fac, a, b, blend="MIX"):
+        """Colour mix; a, b sockets or RGB tuples."""
+        m = self.new("ShaderNodeMix", _data_type="RGBA", _blend_type=blend)
+        self.sock(fac, m.inputs["Factor"])
+        for i, v in ((6, a), (7, b)):
+            if isinstance(v, tuple):
+                m.inputs[i].default_value = (*v[:3], 1)
+            else:
+                self.link(v, m.inputs[i])
+        return m.outputs[2]
+
+    def fmix(self, fac, a, b):
+        """Float lerp."""
+        m = self.new("ShaderNodeMix", _data_type="FLOAT")
+        self.sock(fac, m.inputs["Factor"])
+        self.sock(a, m.inputs[2])
+        self.sock(b, m.inputs[3])
+        return m.outputs[0]
+
+    def smooth(self, e0, e1, x):
+        """smoothstep(e0, e1, x) (e0 > e1 gives the falling step)."""
+        mr = self.new("ShaderNodeMapRange", _interpolation_type="SMOOTHSTEP")
+        mr.inputs["From Min"].default_value, mr.inputs["From Max"].default_value = e0, e1
+        self.link(x, mr.inputs["Value"])
+        return mr.outputs[0]
+
     def ramp(self, fac, stops):
         r = self.new("ShaderNodeValToRGB")
         el = r.color_ramp.elements
@@ -232,6 +297,73 @@ def sun(name, direction_target, power, color=(1, 1, 1), angle=2.0):
     return ob
 
 
+def mesh_object(name, verts, faces, mats=None, mat_index=None, smooth=True, link=True):
+    """A mesh object from flat python lists (fast path for big procedural meshes)."""
+    me = bpy.data.meshes.new(name)
+    me.from_pydata(verts, [], faces)
+    if mats:
+        for m in mats:
+            me.materials.append(m)
+        if mat_index is not None:
+            me.polygons.foreach_set("material_index", mat_index)
+    me.shade_smooth() if smooth else me.shade_flat()
+    me.validate(clean_customdata=False)
+    ob = bpy.data.objects.new(name, me)
+    if link:
+        bpy.context.scene.collection.objects.link(ob)
+    return ob
+
+
+def instancer(name, sources, pts):
+    """Geometry Nodes Instance on Points: thousands of copies of a few source objects as true Cycles instances
+    (one object in the scene, not one per copy). sources: objects (left unlinked from the scene, at the origin);
+    pts: iterable of (x, y, z, rx, ry, rz, sx, sy, sz, index)."""
+    src = bpy.data.collections.new(f"{name}_src")
+    for i, ob in enumerate(sources):
+        ob.name = f"{name}_{i:03d}"               # Collection Info's separate children come in name order
+        src.objects.link(ob)
+    import numpy as np
+    a = np.asarray(list(pts), dtype=np.float32).reshape(-1, 10)
+    me = bpy.data.meshes.new(name)
+    me.vertices.add(len(a))
+    me.vertices.foreach_set("co", a[:, 0:3].ravel())
+    for key, cols, kind in (("rot", slice(3, 6), "FLOAT_VECTOR"), ("scl", slice(6, 9), "FLOAT_VECTOR")):
+        at = me.attributes.new(key, kind, "POINT")
+        at.data.foreach_set("vector", a[:, cols].ravel())
+    at = me.attributes.new("idx", "INT", "POINT")
+    at.data.foreach_set("value", a[:, 9].astype(np.int32))
+    ob = bpy.data.objects.new(name, me)
+    bpy.context.scene.collection.objects.link(ob)
+    g = bpy.data.node_groups.new(name, "GeometryNodeTree")
+    g.interface.new_socket("Geometry", in_out="INPUT", socket_type="NodeSocketGeometry")
+    g.interface.new_socket("Geometry", in_out="OUTPUT", socket_type="NodeSocketGeometry")
+    N = g.nodes
+    gi, go = N.new("NodeGroupInput"), N.new("NodeGroupOutput")
+    iop = N.new("GeometryNodeInstanceOnPoints")
+    ci = N.new("GeometryNodeCollectionInfo")
+    ci.transform_space = "ORIGINAL"
+    ci.inputs["Collection"].default_value = src
+    ci.inputs["Separate Children"].default_value = True
+    ci.inputs["Reset Children"].default_value = True
+    def attr(key, kind):
+        n = N.new("GeometryNodeInputNamedAttribute")
+        n.data_type = kind
+        n.inputs["Name"].default_value = key
+        return n.outputs["Attribute"]
+    e2r = N.new("FunctionNodeEulerToRotation")
+    g.links.new(attr("rot", "FLOAT_VECTOR"), e2r.inputs[0])
+    g.links.new(gi.outputs[0], iop.inputs["Points"])
+    g.links.new(ci.outputs[0], iop.inputs["Instance"])
+    iop.inputs["Pick Instance"].default_value = True
+    g.links.new(attr("idx", "INT"), iop.inputs["Instance Index"])
+    g.links.new(e2r.outputs[0], iop.inputs["Rotation"])
+    g.links.new(attr("scl", "FLOAT_VECTOR"), iop.inputs["Scale"])
+    g.links.new(iop.outputs[0], go.inputs[0])
+    mod = ob.modifiers.new(name, "NODES")
+    mod.node_group = g
+    return ob
+
+
 # ---------------------------------------------------------------------------- realism helpers
 def physical_sky(sc, elevation_deg, rotation_deg, strength=1.0, air=1.0, aerosol=1.6, ozone=1.0, sun_disc=True, sun_intensity=1.0):
     """Blender's physically based (multiple-scattering) sky: real dusk colours from the sun's elevation."""
@@ -297,8 +429,9 @@ def wear(n, base_rough=0.4, spread=0.25, scale=6.0, scratches=0.0, coord="Object
 
 
 # ---------------------------------------------------------------------------- camera
-def camera(sc, f_px=1450.0, frame_w=1920, ortho_scale=None, dof=None):
-    """A camera whose focal length is given in pixels on a frame `frame_w` wide (sensor fit: horizontal)."""
+def camera(sc, f_px=1450.0, frame_w=1920, ortho_scale=None, dof=None, clip_end=400.0):
+    """A camera whose focal length is given in pixels on a frame `frame_w` wide (sensor fit: horizontal).
+    clip_end must reach past everything the shot can see, or distant objects pop in and out as the camera moves."""
     cd = bpy.data.cameras.new("cam")
     cd.sensor_fit = "HORIZONTAL"
     cd.sensor_width = 36.0
@@ -307,7 +440,7 @@ def camera(sc, f_px=1450.0, frame_w=1920, ortho_scale=None, dof=None):
         cd.ortho_scale = ortho_scale
     else:
         cd.lens = f_px / frame_w * 36.0
-    cd.clip_start, cd.clip_end = 0.05, 400.0
+    cd.clip_start, cd.clip_end = 0.05, clip_end
     if dof:
         cd.dof.use_dof = True
         cd.dof.aperture_fstop = dof
@@ -365,25 +498,55 @@ def frame_matrix(origin, x_axis, y_axis):
 
 
 # ---------------------------------------------------------------------------- render
-def setup_render(sc, samples, res, width=1920, height=1080, transparent=False, adaptive=0.04, bounces=(8, 3, 4, 4)):
+def use_device(sc, device="CPU"):
+    """Cycles compute device: CPU, METAL (Apple GPU) or METAL+CPU (GPU and CPU together). Returns the devices in use.
+    Exits if a GPU was asked for and none is there (the pip bpy module may ship without Metal: use Blender.app)."""
+    device = device.upper()
+    if device == "CPU":
+        sc.cycles.device = "CPU"
+        return ["CPU"]
+    prefs = bpy.context.preferences.addons["cycles"].preferences
+    prefs.compute_device_type = "METAL"
+    prefs.refresh_devices()
+    used = []
+    for d in prefs.devices:
+        d.use = d.type == "METAL" or (d.type == "CPU" and device == "METAL+CPU")
+        if d.use:
+            used.append(f"{d.name} [{d.type}]")
+    if not any(d.use and d.type == "METAL" for d in prefs.devices):
+        sys.exit(f"no Metal device available ({[(d.name, d.type) for d in prefs.devices]}): run with Blender.app")
+    sc.cycles.device = "GPU"
+    print("cycles devices:", ", ".join(used), flush=True)
+    return used
+
+
+def setup_render(sc, samples, res, width=1920, height=1080, transparent=False, adaptive=0.04, bounces=(8, 3, 4, 4),
+                 device="CPU", min_samples=0, clamp_indirect=8.0, persistent=True, transparent_bounces=8, exr=False):
+    """exr=True: render the noisy, scene-referred image with its denoising albedo and normal passes to a
+    multilayer EXR, and leave denoising and the view transform to scripts/denoise_frames.py in a separate process
+    (on an 8 GB Mac the denoiser and a big scene must not be in memory at the same time)."""
     sc.render.engine = "CYCLES"
     c = sc.cycles
-    c.device = "CPU"
+    use_device(sc, device)
     c.samples = samples
     c.use_adaptive_sampling = True
     c.adaptive_threshold = adaptive
+    c.adaptive_min_samples = min_samples
+    c.use_animated_seed = True        # a fresh noise pattern every frame: the denoiser's residue never sticks to the image
     c.use_denoising = True
     c.denoiser = "OPENIMAGEDENOISE"
     c.denoising_input_passes = "RGB_ALBEDO_NORMAL"
+    c.denoising_prefilter = "ACCURATE"
     c.max_bounces, c.diffuse_bounces, c.glossy_bounces, c.transmission_bounces = bounces
+    c.transparent_max_bounces = transparent_bounces
     c.caustics_reflective = c.caustics_refractive = False
-    c.sample_clamp_indirect = 8.0
+    c.sample_clamp_indirect = clamp_indirect
     c.volume_step_rate = 4.0          # coarser volume marching: haze is soft anyway, and it is the slow part on a CPU
     c.volume_max_steps = 256
     c.use_light_tree = True
     sc.render.use_motion_blur = True
     sc.render.motion_blur_shutter = 0.5
-    sc.render.use_persistent_data = True
+    sc.render.use_persistent_data = persistent
     sc.render.film_transparent = transparent
     sc.render.resolution_x, sc.render.resolution_y = int(round(width * res)), int(round(height * res))
     sc.render.resolution_percentage = 100
@@ -394,6 +557,16 @@ def setup_render(sc, samples, res, width=1920, height=1080, transparent=False, a
     sc.render.image_settings.file_format = "PNG"
     sc.render.image_settings.color_mode = "RGBA" if transparent else "RGB"
     sc.render.image_settings.compression = 15
+    if exr:
+        c.use_denoising = False
+        sc.view_layers[0].cycles.denoising_store_passes = True
+        if hasattr(sc.render.image_settings, "media_type"):     # Blender 5: multilayer is a media type
+            sc.render.image_settings.media_type = "MULTI_LAYER_IMAGE"
+            sc.render.image_settings.file_format = "OPEN_EXR_MULTILAYER"
+        else:
+            sc.render.image_settings.file_format = "OPEN_EXR_MULTILAYER"
+        sc.render.image_settings.color_depth = "16"
+        sc.render.image_settings.exr_codec = "ZIP"
 
 
 # ---------------------------------------------------------------------------- export for the film's overlays
@@ -443,6 +616,11 @@ def args(default_out, extra=None):
     ap.add_argument("--samples", type=int, default=32)
     ap.add_argument("--res", type=float, default=0.6667)
     ap.add_argument("--exposure", type=float, default=0.0)
+    ap.add_argument("--device", default="CPU", type=str.upper, choices=["CPU", "METAL", "METAL+CPU"],
+                    help="Cycles device: CPU, METAL (Apple GPU) or METAL+CPU")
+    ap.add_argument("--threshold", type=float, default=None, help="adaptive sampling noise threshold")
+    ap.add_argument("--min-samples", type=int, default=0, help="adaptive sampling minimum samples")
+    ap.add_argument("--exr", action="store_true", help="render noisy EXRs (+albedo/normal) for scripts/denoise_frames.py")
     ap.add_argument("--export-only", action="store_true", help="write the overlay data, render nothing")
     ap.add_argument("--no-export", action="store_true")
     ap.add_argument("--out", default=os.path.join(ROOT, "video", "build", "plates", default_out))
@@ -454,12 +632,33 @@ def args(default_out, extra=None):
 def render_frames(sc, a, nframes):
     os.makedirs(a.out, exist_ok=True)
     frames = a.frames if a.frames else list(range(*(a.range or (0, nframes)), a.step))
+    stats = {"last": ""}
+
+    def on_stats(s):                      # Cycles' status line ("... Mem:..., Peak:...") as it renders
+        stats["last"] = s if isinstance(s, str) else str(s)
+    bpy.app.handlers.render_stats.append(on_stats)
+    exr = sc.render.image_settings.file_format in ("OPEN_EXR", "OPEN_EXR_MULTILAYER")
+    if exr:
+        os.makedirs(os.path.join(a.out, "exr"), exist_ok=True)
     for f in frames:
         path = os.path.join(a.out, f"{f:04d}.png")
+        if exr:
+            if os.path.exists(path):
+                continue
+            path = os.path.join(a.out, "exr", f"{f:04d}.exr")
         if os.path.exists(path):
             continue
         t0 = time.time()
         sc.frame_set(f)
         sc.render.filepath = path
+        tmp = path[:-4] + ".tmp" + path[-4:]   # written under a temporary name, so an interrupted frame is never kept
+        sc.render.filepath = tmp
         bpy.ops.render.render(write_still=True)
-        print(f"frame {f:4d}  {time.time() - t0:5.1f}s", flush=True)
+        os.replace(tmp, path)
+        peak = ""
+        for part in stats["last"].split("|"):
+            if "Peak" in part or "Mem" in part:
+                peak += part.strip() + " "
+        if not peak and os.environ.get("STATS_DEBUG"):
+            peak = repr(stats["last"])[:300]
+        print(f"frame {f:4d}  {time.time() - t0:6.1f}s  {peak.strip()}", flush=True)

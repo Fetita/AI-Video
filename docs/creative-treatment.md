@@ -393,7 +393,7 @@ film's overlays drawn on top in the same camera.
 
 | Beat | Shot | What it shows |
 |---|---|---|
-| 02 Field · establishing (0–6.6 s of the chapter) | `tractor` | Golden hour on a lettuce field ringed by woods, the sun a few degrees above the horizon behind the machine. A graphite tractor with mud on its paint, dusty treaded tyres and its work lights on drives the rows; its boom camera reaches over them. The camera tracks alongside, then pushes in behind the boom camera and looks down where it looks: the cut to its feed. The `CAMERA` tag, the violet field of view and the data packets start from the lens and footprint the shot exports. |
+| 02 Field · establishing (0–6.6 s of the chapter) | `tractor` | Late-afternoon gold: the sun 15° up as a 3/4 backlight, long shadows raking across the rows, a clear sky with sunlit clouds and a crisp horizon. The lettuce field runs to the horizon over rising terrain, past grass verges, a dirt track with puddles, a fence, utility poles, an irrigation main, a farmstead and hedgerows, woods and poplar windbreaks. A graphite tractor, modelled down to the lugged tyres, grille, cab interior, hoses and hitch, with mud and dust on its paint, drives the rows in its own ruts; its boom camera reaches over them. The camera tracks alongside, then pushes in behind the boom camera and looks down where it looks: the cut to its feed. The `CAMERA` tag, the violet field of view and the data packets start from the lens and footprint the shot exports. |
 | 02 Field · live feed | `feed` | That feed, straight down under the boom's LED flood: butterhead lettuces with translucent, ruffled leaves and dew, tilled loam with clods, stones and straw. The camera is orthographic at the film's own pixel scale and every plant comes from the film's field model, so the boxes, IDs, GAP and OFF-ROW flags, measurements and GPS tags land on the rendered plants unchanged. |
 | 02 Field · packing line | `packline` | A packhouse conveyor at night: worn cleated belt, brushed steel rails, hanging LED fixtures, an epoxy floor. Ribbed orange, deep, pale and green pumpkins ride their lanes. The shot opens low and oblique and rises to the overhead line camera before the IDs appear; boxes, trails and diameters follow each pumpkin's exported position. |
 | 04 Story · board | `board` | A varnished walnut board with engraved slots on an oak table, window light and a warm lamp. The pieces are thick bevelled beech discs with the characters printed on an inset face. The sloth lands in close-up, the camera pulls back to the whole board, and the other three drop in with a small hop and settle (each hop has its own soft clack). Reticles, labels and relation lines follow the exported pieces. |
@@ -401,3 +401,29 @@ film's overlays drawn on top in the same camera.
 
 The map beat (every counted plant on a field outline) and the document and search interfaces stay graphic on purpose:
 they are data views, not places.
+
+### The tractor shot at full realism
+
+The establishing shot was rebuilt to stand next to live action, still with nothing downloaded: every model, texture,
+the sky and the clouds are procedural (`scripts/render_field.py`).
+
+- **Light.** A physical sky (multiple scattering, aerosol 0.4) with a matching 0.5° sun lamp at 15° elevation and 150°
+  azimuth, a 3/4 backlight. A procedural cloud deck is lit by the same sun. The old coloured fill lights are gone; the
+  only violet is the tractor's LED stripe and the boom camera's ring. AgX, Medium High Contrast.
+- **Depth.** Terrain to 9 km. Modelled lettuce, with the beds, ruts and tyre tread truly displaced, out to 150 m;
+  past that, rows that fade out as they shrink below a pixel, so the distance neither shimmers nor pops. Aerial
+  perspective begins only beyond ~180 m: no haze in front of the machine.
+- **Landscape.** About 8,700 trees from a procedural generator (eight species and shapes: oaks, ash, poplars, willow,
+  shrubs), ~30,000 grass clumps, the fence, poles and wires, the irrigation main and the farmstead, all instanced.
+- **Camera.** The original move, boom geometry and tractor speed, now with f/4.5 depth of field and motion blur
+  (shutter 0.5); the wheels turn with the distance driven.
+- **Rendering.** Cycles on the M1 GPU (Metal) at 1080p native: adaptive sampling (threshold 0.01, 64–256 samples),
+  light tree, indirect clamp 10, animated seed. Rendering is in two stages so an 8 GB Mac never holds the scene and the
+  denoiser at once. `scripts/render_plate.sh` writes noisy EXRs with albedo and normal passes, two frames per Blender
+  process. `scripts/denoise_frames.py` then runs OpenImageDenoise (accurate prefilter) and the view transform. About 11–17
+  minutes per frame, peaking near 4.5 GB.
+- **Grade.** The finishing grade's glow and halation suit the film's dark interface scenes but veil a daylight plate.
+  `video/tools/grade_windows.mjs` computes, per cut, when the tractor, feed, packline and board plates are on screen.
+  `scripts/finalize.sh` fades both effects out there, following the plates' own fades (0.35–0.7 s). Curves and grain
+  stay everywhere.
+
