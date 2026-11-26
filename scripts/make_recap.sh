@@ -3,6 +3,7 @@
 # before the final render): each tile is a frame of its chapter, scaled to 768×432.
 # Times are offsets from the start of the tile's scene, so reordering scenes keeps them valid.
 set -euo pipefail
+export LC_ALL=C           # decimal points in printf, whatever the Mac's region
 cd "$(dirname "$0")/../video"
 TILES=(
   hands:vision:6.05 faces:vision:7.65 tracking3d:vision:8.85 dataset:vision:10.95 benchmark:vision:13.65 robot:vision:17.30

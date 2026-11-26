@@ -112,8 +112,8 @@ python3 ../scripts/render_room.py
 node ../video/tools/dump_shot_inputs.mjs                                        # inputs for the four shots below
 # the field plates: Blender.app (5.x) on the Apple GPU, two-stage (see scripts/render_plate.sh), 1080p native;
 #   long: run detached, e.g.  nohup caffeinate -dimsu ../scripts/render_plate.sh … > build/tractor.log 2>&1 &
-../scripts/render_plate.sh field tractor 200 --exposure -3.3 -- --res 1.0 --samples 256 --min-samples 64 --threshold 0.01   # ≈40 h on an M1 (≈11–17 min/frame)
-../scripts/render_plate.sh field feed 120 --exposure -3.3 -- --res 1.0 --samples 256 --min-samples 64 --threshold 0.01      # ≈8 h
+../scripts/render_plate.sh field tractor 200 --exposure -3.3 -- --res 1.0 --samples 256 --min-samples 64 --threshold 0.01   # ≈30 h on an M1 (≈9–16 min/frame)
+../scripts/render_plate.sh field feed 120 --exposure -3.3 -- --res 1.0 --samples 256 --min-samples 64 --threshold 0.01      # ≈8 h (≈3.5–6.5 min/frame)
 python3 ../scripts/render_packline.py --res 0.5 --samples 10                    # ≈1 h
 python3 ../scripts/render_board.py --res 0.45 --samples 10                      # ≈45 min
 python3 ../scripts/render_tracking.py --res 0.5 --samples 10                    # ≈10 min

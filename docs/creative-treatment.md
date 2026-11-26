@@ -420,8 +420,8 @@ the sky and the clouds are procedural (`scripts/render_field.py`).
 - **Rendering.** Cycles on the M1 GPU (Metal) at 1080p native: adaptive sampling (threshold 0.01, 64–256 samples),
   light tree, indirect clamp 10, animated seed. Rendering is in two stages so an 8 GB Mac never holds the scene and the
   denoiser at once. `scripts/render_plate.sh` writes noisy EXRs with albedo and normal passes, two frames per Blender
-  process. `scripts/denoise_frames.py` then runs OpenImageDenoise (accurate prefilter) and the view transform. About 11–17
-  minutes per frame, peaking near 4.5 GB.
+  process. `scripts/denoise_frames.py` then runs OpenImageDenoise (accurate prefilter) and the view transform. About 9–16
+  minutes per frame (about 30 h for the 200 frames), peaking near 4.5 GB.
 - **Grade.** The finishing grade's glow and halation suit the film's dark interface scenes but veil a daylight plate.
   `video/tools/grade_windows.mjs` computes, per cut, when the tractor, feed, packline and board plates are on screen.
   `scripts/finalize.sh` fades both effects out there, following the plates' own fades (0.35–0.7 s). Curves and grain

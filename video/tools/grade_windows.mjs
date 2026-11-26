@@ -124,7 +124,7 @@ if (flag('probe')) {
     fs.createReadStream(file).pipe(res);
   });
   await new Promise((r) => server.listen(0, '127.0.0.1', r));
-  const browser = await chromium.launch();
+  const browser = await chromium.launch(process.env.PW_CHROMIUM ? { executablePath: process.env.PW_CHROMIUM } : {});
   const page = await browser.newPage({ viewport: { width: 1920, height: 1080 } });
   await page.goto(`http://127.0.0.1:${server.address().port}/index.html${cut ? `?cut=${cut}` : ''}`);
   await page.waitForFunction(() => window.__ready || window.__error, null, { timeout: 120000 });
